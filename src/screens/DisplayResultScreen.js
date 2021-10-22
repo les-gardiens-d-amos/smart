@@ -28,6 +28,9 @@ const DisplayResultScreen = ({ navigation, route }) => {
 	const [conceptList, setConceptList] = useState(null);
 	const [amosToCapture, setAmosToCapture] = useState(undefined);
 
+	const { location, localisation } = route.params;
+	console.log(localisation);
+
 	useEffect(() => {
 		capture();
 	}, []);
@@ -40,7 +43,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
 				{
 					data: {
 						image: {
-							base64: picture.base64,
+							// base64: picture.base64,
 							url: TestUrls["cat"],
 						},
 					},
