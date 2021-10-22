@@ -40,7 +40,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
 				{
 					data: {
 						image: {
-							base64: picture.base64,
+							// base64: picture.base64,
 							url: TestUrls["cat"],
 						},
 					},
