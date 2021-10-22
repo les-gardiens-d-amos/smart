@@ -8,12 +8,39 @@ import { API_URL } from "@env";
 
 const LoginScreen = (props) => {
     const [isNewUser, setIsNewUser] = useState(false);
+    const [userIsRegister, setUserIsRegister] = useState(false);
     const [email, setEmail] = useState("");
     const [name, setName] = useState("");
     const [password, setPassword] = useState("");
 
     const switchLoginRegister = () => {
         setIsNewUser(!isNewUser);
+    }
+
+    const registerUser = () => {
+        var data = JSON.stringify({
+            "name": name,
+            "email": email,
+            "password": password
+        });
+
+        var config = {
+            method: 'post',
+            url: API_URL + 'users?controller=users&action=create',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data : data
+        };
+
+        axios(config).then(response => {
+            if (response.status === 201) {
+                setUserIsRegister(true);
+                login();
+            }
+        }).catch(error => {
+            console.log(error);
+        });
     }
 
     const loginUser = () => {
@@ -75,6 +102,12 @@ const LoginScreen = (props) => {
         return (
             <View style={styles.container}>
                 <Text>Register :)</Text>
+                { userIsRegister ?
+                    <View style={styles.flashMessage}>
+                        <Text style={{color:'white'}}>Welcome to the adventure</Text>
+                    </View>
+                    : null
+                }
                 <TextInput
                     style={styles.input}
                     placeholder="Enter your email..."
@@ -96,7 +129,7 @@ const LoginScreen = (props) => {
                 />
                 <Button
                     title="Register"
-                    onPress={login}
+                    onPress={registerUser}
                 />
                 <Button 
                     title="You have an account ? can you login to your account"
@@ -124,6 +157,14 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderBottomColor: "#000",
         fontSize: 25,
+        margin: 15
+    },
+    flashMessage:{
+        backgroundColor:'green', 
+        width:'70%', 
+        justifyContent:'center', 
+        alignItems:'center',           
+        height:40,
         margin: 15
     }
 });
