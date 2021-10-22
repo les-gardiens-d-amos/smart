@@ -12,6 +12,7 @@
     "@react-native-material/core": "^1.1.0",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
+    "axios": "^0.23.0",
     "expo": "~42.0.1",
     "expo-camera": "~11.2.2",
     "expo-location": "~12.1.2",
@@ -26,7 +27,8 @@
     "react-native-web": "~0.13.12",
     "react-redux": "^7.2.5",
     "redux": "^4.1.1",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "expo-secure-store": "~10.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",

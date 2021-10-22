@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, View, Button, TextInput, SafeAreaView } from "react-native";
 
+import axios from "axios";
+import * as SecureStore from 'expo-secure-store';
+
 const LoginScreen = (props) => {
     const [isNewUser, setIsNewUser] = useState(false);
     const [email, setEmail] = useState("");
@@ -11,12 +14,34 @@ const LoginScreen = (props) => {
         setIsNewUser(!isNewUser);
     }
 
+    const loginUser = () => {
+        let userInfo = JSON.stringify({"email": email, "password": password});
+
+        var config = {
+            method: 'post',
+            // TODO: stock url in .env files 
+            url: 'https://happy-amos.herokuapp.com/' + "login",
+            headers: { 
+                'Content-Type': 'application/json'
+            },
+            data : userInfo
+        };
+
+        axios(config).then(response => {
+            manageLoginResponse(response.data);
+        }).catch(error => {
+            console.log(error);
+        });
+    }
+
+    const manageLoginResponse = (data) => {
+        SecureStore.setItemAsync("jwt", data.token);
+        login();
+    }
+
     const login = () => {
         props.onLogin();
     }
-
-    console.log(email);
-    console.log(password);
 
     if (!isNewUser) {
         return (
@@ -37,7 +62,7 @@ const LoginScreen = (props) => {
                 />
                 <Button
                     title="Login"
-                    onPress={login}
+                    onPress={loginUser}
                 />
                 <Button 
                     title="New user ? can you create an account"

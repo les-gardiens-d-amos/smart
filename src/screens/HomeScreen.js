@@ -2,7 +2,12 @@ import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Button } from "@react-native-material/core";
 
+import * as SecureStore from 'expo-secure-store';
+
 const HomeScreen = ({ navigation, route }) => {
+	// console.log("store : ");
+	// SecureStore.getItemAsync("jwt").then(response => console.log(response));
+
 	return (
 		<View style={styles.container}>
 			<Button
