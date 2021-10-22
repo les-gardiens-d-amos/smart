@@ -28,6 +28,9 @@ const DisplayResultScreen = ({ navigation, route }) => {
 	const [conceptList, setConceptList] = useState(null);
 	const [amosToCapture, setAmosToCapture] = useState(undefined);
 
+	const { location, localisation } = route.params;
+	console.log(localisation);
+
 	useEffect(() => {
 		capture();
 	}, []);
