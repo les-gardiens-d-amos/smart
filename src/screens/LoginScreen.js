@@ -4,6 +4,8 @@ import { StyleSheet, Text, View, Button, TextInput, SafeAreaView } from "react-n
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 
+import { API_URL } from "@env";
+
 const LoginScreen = (props) => {
     const [isNewUser, setIsNewUser] = useState(false);
     const [email, setEmail] = useState("");
@@ -19,8 +21,7 @@ const LoginScreen = (props) => {
 
         var config = {
             method: 'post',
-            // TODO: stock url in .env files 
-            url: 'https://happy-amos.herokuapp.com/' + "login",
+            url: API_URL + "login",
             headers: { 
                 'Content-Type': 'application/json'
             },
