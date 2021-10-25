@@ -1,5 +1,6 @@
 class Amos {
 	// A titre indicatif
+
 	private static typesEN: Array<string> = [
 		"Mammal",
 		"Bird",
@@ -8,14 +9,27 @@ class Amos {
 		"Reptile",
 		"Invertebrate",
 	];
-	private static typesFR: Array<string> = [
-		"Mammifère",
-		"Oiseau",
-		"Poisson",
-		"Amphibien",
-		"Reptile",
-		"Invertébré",
-	];
+	private static typesFR = {
+		mammal: "Mammifère",
+		bird: "Oiseau",
+		fish: "Poisson",
+		amphibian: "Amphibien",
+		reptile: "Reptile",
+		invertebrate: "Invertébré",
+	};
+
+	private static speciesFR = {
+		cat: "Chat",
+		dog: "Chien",
+		squirrel: "Ecureuil",
+		pigeon: "Pigeon",
+		seagull: "Mouette",
+		goeland: "Goéland",
+		cormoran: "Cormoran",
+		turtle: "Tortue",
+		frog: "Grenouille",
+		snail: "Escargot",
+	};
 
 	// Currently registered animals/amos
 	public static families: Array<string> = [
@@ -40,7 +54,7 @@ class Amos {
 	];
 
 	public idAmos: number;
-	public owner: string;
+	public idOwner: number;
 	public id: number;
 	public level: number;
 	public type: string;
@@ -55,30 +69,41 @@ class Amos {
 	}
 
 	constructor(
+		idAmos: number,
+		idOwner: number,
+		id: number,
 		species: string,
 		type: string,
 		name: string,
 		level: number,
 		date: string
 	) {
-		this.species = species.charAt(0).toUpperCase();
+		this.idAmos = idAmos;
+		this.id = id;
+		this.idOwner = idOwner;
+		this.species = species;
 		this.type = type;
 		this.name = name === this.species ? this.species : name;
 		this.level = level > 1 ? level : 1;
-		this.date = new Date();
+		this.date = new Date(date);
 	}
 
 	public serialize(): Object {
 		return {
 			idAmos: this.idAmos,
-			owner: this.owner,
+			idOwner: this.idOwner,
 			id: this.id,
-			species: this.species,
-			type: this.type,
+			species: this.capitalize(Amos.speciesFR[this.species]),
+			type: this.capitalize(Amos.typesFR[this.type]),
 			name: this.name,
 			level: this.level,
 			capturedAt: this.capturedAt(),
 		};
+	}
+
+	private capitalize(str): string {
+		let capi = str.charAt(0).toUpperCase();
+		return capi + str.slice(1);
 	}
 
 	private capturedAt(): string {
