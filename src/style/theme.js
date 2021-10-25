@@ -5,6 +5,7 @@ export const colors = {
 	quaternary_c: "#B79D94",
 	warning_c: "#DDB771",
 	error_c: "#A30B37",
+	success_c: "#5cd65c",
 	// quinary: "#B79D94",
 	// senary: "#B79D94",
 

@@ -5,7 +5,12 @@ import { Header } from 'react-native-elements';
 
 import { primary_c } from "../style/theme";
 
+import * as SecureStore from 'expo-secure-store';
+
 const HomeScreen = ({ navigation, route }) => {
+	// console.log("store : ");
+	// SecureStore.getItemAsync("jwt").then(response => console.log(response));
+
 	return (
 		<View style={styles.container}>
 			<Header
