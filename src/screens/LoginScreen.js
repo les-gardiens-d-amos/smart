@@ -22,19 +22,19 @@ const LoginScreen = (props) => {
     }
 
     const registerUser = () => {
-        var data = JSON.stringify({
+        let userInfo = JSON.stringify({
             "name": name,
             "email": email,
             "password": password
         });
 
-        var config = {
+        let config = {
             method: 'post',
             url: API_URL + 'users?controller=users&action=create',
             headers: {
                 'Content-Type': 'application/json'
             },
-            data : data
+            data : userInfo
         };
 
         axios(config).then(response => {
@@ -50,7 +50,7 @@ const LoginScreen = (props) => {
     const loginUser = () => {
         let userInfo = JSON.stringify({"email": email, "password": password});
 
-        var config = {
+        let config = {
             method: 'post',
             url: API_URL + "login",
             headers: { 
