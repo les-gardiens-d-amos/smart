@@ -13,7 +13,7 @@ import LoginScreen from "../screens/LoginScreen";
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
-  const [isConnected, setIsConnected] = useState(false);
+  const [isConnected, setIsConnected] = useState(true);
 
   const login = () => {
     setIsConnected(true);
