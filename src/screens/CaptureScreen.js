@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import { Camera } from "expo-camera";
+import { Header } from 'react-native-elements';
+
+import { primary_c } from "../style/theme";
 
 import * as Location from 'expo-location';
 
@@ -55,6 +58,11 @@ const CaptureScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
+      <Header
+				backgroundColor={primary_c}
+				placement="center"
+				centerComponent={{ text: 'Capture', style: { color: '#fff', fontSize: 20 } }}
+			/>
       <Camera ref={cam} style={styles.camera} type={type}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity

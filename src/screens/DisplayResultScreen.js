@@ -7,7 +7,7 @@ import {
 	Image,
 	TouchableOpacity,
 } from "react-native";
-import { Divider } from "react-native-elements";
+import { Divider, Header } from "react-native-elements";
 
 import { CLARIFAI_API_KEY } from "@env";
 
@@ -134,6 +134,11 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
 	return (
 		<View style={styles.container}>
+			<Header
+				backgroundColor={primary}
+				placement="center"
+				centerComponent={{ text: 'Capture', style: { color: '#fff', fontSize: 20 } }}
+			/>
 			<Image
 				style={styles.image}
 				source={{
