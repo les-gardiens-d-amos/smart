@@ -1,5 +1,9 @@
+import Constants from "expo-constants";
+
+export const StatusBarHeight = Constants.statusBarHeight;
+
 export const colors = {
-  primary_c: "#253D5B",
+  primary_c: "#495E78",
   secondary_c: "#67697C",
   tertiary_c: "#969696",
   quaternary_c: "#B79D94",
@@ -9,10 +13,19 @@ export const colors = {
   // quinary: "#B79D94",
   // senary: "#B79D94",
 
-  mammal_c: "#ED3C7C",
+  mammal_c: "#F887B0",
   bird_c: "#7EDCE6",
-  fish_c: "#253D5B",
+  fish_c: "#3289F6",
   amphibian_c: "#63BC55",
-  reptile_c: "#1B5A3C",
-  invertebrate_c: "#2A0F45",
+  reptile_c: "#2D8159",
+  invertebrate_c: "#783BB6",
+};
+
+export const colorForType = {
+  mammal: colors.mammal_c,
+  bird: colors.bird_c,
+  fish: colors.fish_c,
+  amphibian: colors.amphibian_c,
+  reptile: colors.reptile_c,
+  invertebrate: colors.invertebrate_c,
 };

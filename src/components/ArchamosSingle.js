@@ -1,29 +1,17 @@
 import React, { useState } from "react";
 import { Pressable, Image, StyleSheet, Text, View } from "react-native";
-import { Divider } from "react-native-elements";
-
-import amosIcons from "../../assets/amosIcons";
-
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "../style/theme";
-const {
-  primary,
-  secondary,
-  tertiary,
-  error,
-  mammal_c,
-  bird_c,
-  fish_c,
-  amphibian_c,
-  reptile_c,
-  invertebrate_c,
-} = colors;
+const { primary_c, secondary_c } = colors;
 
 const ArchamosSingle = ({ amos }) => {
   const amosData = amos.item;
 
+  console.log("amosData", amosData);
+
   const handleAddRemove = () => {
     console.log("ArchamosSingle handleAddRemove function");
-    // using amosData.idAmos
+    // using amosData.idAmos and isTeammate useState variable
     // Add into current team (of 3)
     // If the current team is already full,
     // opens a modal box to choose the amos to replace
@@ -36,10 +24,7 @@ const ArchamosSingle = ({ amos }) => {
     <View style={styles.container}>
       <View style={styles.amosContainer}>
         <View style={styles.photoWrapper}>
-          <Image style={styles.photo} source={amosIcons.cat} />
-
-          {/* <Image> */}
-          {/* {amosData.url} */}
+          <Image style={styles.photo} source={amosData.image_path} />
         </View>
 
         <Text style={styles.name}>{amosData.name}</Text>
@@ -48,16 +33,18 @@ const ArchamosSingle = ({ amos }) => {
 
         <Text style={styles.level}>Niveau: {amosData.level}</Text>
 
-        <View style={styles.iconWrapper}>
-          <Image style={styles.typeIcon} source={amosIcons.cat} />
+        <View
+          style={[styles.iconWrapper, { backgroundColor: amosData.typeColor }]}
+        >
+          <Image style={styles.typeIcon} source={amosData.icon} />
         </View>
 
         <Pressable
           style={styles.BtnaddRemove}
-          color={primary}
           onPress={() => handleAddRemove()}
         >
-          <Text>+</Text>
+          <MaterialCommunityIcons name="plus" color="white" size={26} />
+          {/* <MaterialCommunityIcons name="minus" color="white" size={26} /> */}
         </Pressable>
       </View>
     </View>
@@ -77,40 +64,43 @@ const styles = StyleSheet.create({
   amosContainer: {
     flex: 1,
     minHeight: 150,
-    backgroundColor: secondary,
-    padding: 20,
-    alignItems: "center",
+    backgroundColor: secondary_c,
     width: "90%",
     marginTop: 30,
     paddingVertical: 8,
     borderWidth: 2,
-    borderColor: "#20232a",
     borderRadius: 20,
-    backgroundColor: secondary,
-    color: "#20232a",
   },
   photoWrapper: {
     position: "absolute",
-    left: 10,
-    top: -20,
+    left: -15,
+    top: -15,
     borderWidth: 2,
     borderRadius: 10,
     width: 110,
     height: 110,
   },
-  photo: { width: 110, height: 110 },
+  photo: {
+    borderRadius: 10,
+    width: "100%",
+    height: "100%",
+  },
   name: {
     position: "absolute",
-    left: 125,
+    left: 105,
     textAlign: "center",
     fontSize: 30,
     fontWeight: "bold",
   },
-  species: { position: "absolute", top: 45, left: 125 },
+  species: {
+    position: "absolute",
+    top: 55,
+    left: 105,
+  },
   level: {
     position: "absolute",
-    top: 65,
-    left: 125,
+    top: 75,
+    left: 105,
   },
   typeIcon: {
     width: 50,
@@ -124,6 +114,7 @@ const styles = StyleSheet.create({
     bottom: 10,
   },
   BtnaddRemove: {
+    backgroundColor: primary_c,
     width: 50,
     height: 50,
     position: "absolute",
