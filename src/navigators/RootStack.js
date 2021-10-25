@@ -8,6 +8,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import HomeScreen from "../screens/HomeScreen";
 import CaptureScreen from "../screens/CaptureScreen";
 import DisplayResultScreen from "../screens/DisplayResultScreen";
+import ArchamosScreen from "../screens/ArchamosScreen";
 
 import LoginScreen from "../screens/LoginScreen";
 import { primary_c } from "../style/theme"
@@ -50,10 +51,10 @@ const RootStack = () => {
             }} 
           />
           <Stack.Screen 
-            name="DisplayResultScreen" 
-            component={DisplayResultScreen}
+            name="ArchamosScreen" 
+            component={ArchamosScreen}
             options={{
-              tabBarLabel: 'Result',
+              tabBarLabel: 'Archamos',
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons name="clipboard-file" color={color} size={26} />
               ),

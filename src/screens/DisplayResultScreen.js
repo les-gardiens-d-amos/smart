@@ -185,10 +185,6 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	list: {
-		flex: 1,
-		width: "100%",
-	},
 	item: { textAlign: "center" },
 	image: { flex: 1, width: "100%" },
 	buttonContainer: {
@@ -223,25 +219,3 @@ const styles = StyleSheet.create({
 		fontSize: 20,
 	},
 });
-
-{
-	/* <FlatList
-	style={styles.list}
-	data={conceptList}
-	keyExtractor={(item) => item.id}
-	renderItem={({ item }) => (
-		<>
-			{item.value > 0.9 && (
-				<>
-					<Text style={styles.item}>name: {item.name}</Text>
-					<Text style={styles.item}>ratio: {item.value}</Text>
-					<Divider
-						orientation="horizontal"
-						subHeaderStyle={{ color: tertiary }}
-					/>
-				</>
-			)}
-		</>
-	)}
-/> */
-}

@@ -7,6 +7,9 @@ import { primary_c } from "../style/theme";
 
 import * as SecureStore from 'expo-secure-store';
 
+import { colors } from "../style/theme";
+const { primary, secondary, tertiary, error } = colors;
+
 const HomeScreen = ({ navigation, route }) => {
 	// console.log("store : ");
 	// SecureStore.getItemAsync("jwt").then(response => console.log(response));
@@ -21,8 +24,14 @@ const HomeScreen = ({ navigation, route }) => {
 			<Button
 				onPress={() => navigation.navigate("CaptureScreen")}
 				title="Capture page"
-				color="#841584"
+				color={primary}
 				accessibilityLabel="Capture page"
+			/>
+			<Button
+				onPress={() => navigation.navigate("ArchamosScreen")}
+				title="Archamos"
+				color={primary}
+				accessibilityLabel="Archamos"
 			/>
 		</View>
 	);
