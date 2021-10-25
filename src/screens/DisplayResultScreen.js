@@ -7,7 +7,7 @@ import {
 	Image,
 	TouchableOpacity,
 } from "react-native";
-import { Divider } from "react-native-elements";
+import { Divider, Header } from "react-native-elements";
 
 import { CLARIFAI_API_KEY } from "@env";
 
@@ -28,6 +28,9 @@ const DisplayResultScreen = ({ navigation, route }) => {
 	const [conceptList, setConceptList] = useState(null);
 	const [amosToCapture, setAmosToCapture] = useState(undefined);
 
+	const { location, localisation } = route.params;
+	console.log(localisation);
+
 	useEffect(() => {
 		capture();
 	}, []);
@@ -40,7 +43,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
 				{
 					data: {
 						image: {
-							base64: picture.base64,
+							// base64: picture.base64,
 							url: TestUrls["cat"],
 						},
 					},
@@ -131,6 +134,11 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
 	return (
 		<View style={styles.container}>
+			<Header
+				backgroundColor={primary}
+				placement="center"
+				centerComponent={{ text: 'Capture', style: { color: '#fff', fontSize: 20 } }}
+			/>
 			<Image
 				style={styles.image}
 				source={{

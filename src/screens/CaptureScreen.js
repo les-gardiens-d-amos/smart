@@ -1,21 +1,38 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import { Camera } from "expo-camera";
+import { Header } from 'react-native-elements';
+
+import { primary_c } from "../style/theme";
+
+import * as Location from 'expo-location';
 
 const CaptureScreen = ({ navigation, route }) => {
   console.log("CaptureScreen load");
 
-  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraPermission, setCameraPermission] = useState(null);
+  const [locationPermission, setLocationPermission] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
+  const [location, setLocation] = useState(null);
 
   const cam = useRef();
 
   useEffect(() => {
     (async () => {
       const { status } = await Camera.requestPermissionsAsync();
-      setHasPermission(status === "granted");
+      setCameraPermission(status === "granted");
+      manageLocationPermission();
     })();
   }, []);
+
+  const manageLocationPermission = async () => {
+		let { status } = await Location.requestForegroundPermissionsAsync();
+    setLocationPermission(status === "granted");
+		if (status === "granted") {
+      let loc = await Location.getCurrentPositionAsync({});
+      setLocation(loc);
+    }
+	}
 
   const takeShot = async () => {
     const option = { quality: 0.5, base64: true, skipProcessing: false };
@@ -23,18 +40,29 @@ const CaptureScreen = ({ navigation, route }) => {
     navigation.navigate("DisplayResultScreen", {
       picture,
       shotUrl: picture.uri,
+      localisation: location
     });
   };
 
-  if (hasPermission === null) {
+  if (cameraPermission === null) {
     return <View />;
   }
-  if (hasPermission === false) {
-    return <Text>No access to camera</Text>;
+
+  if (cameraPermission === false) {
+    return <Text>No access to camera !</Text>;
+  }
+
+  if (locationPermission === false) {
+    return <Text>No access to location !</Text>
   }
 
   return (
     <View style={styles.container}>
+      <Header
+				backgroundColor={primary_c}
+				placement="center"
+				centerComponent={{ text: 'Capture', style: { color: '#fff', fontSize: 20 } }}
+			/>
       <Camera ref={cam} style={styles.camera} type={type}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity
