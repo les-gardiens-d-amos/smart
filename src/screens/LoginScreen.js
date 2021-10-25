@@ -1,10 +1,14 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, Button, TextInput, SafeAreaView } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
+import { Button } from "@react-native-material/core";
+import { Header } from 'react-native-elements';
 
 import axios from "axios";
 import * as SecureStore from 'expo-secure-store';
 
 import { API_URL } from "@env";
+
+import { success_c, primary_c, tertiary_c } from "../style/theme";
 
 const LoginScreen = (props) => {
     const [isNewUser, setIsNewUser] = useState(false);
@@ -73,8 +77,12 @@ const LoginScreen = (props) => {
 
     if (!isNewUser) {
         return (
-            <SafeAreaView style={styles.container}>
-                <Text style={styles.title}>Login :)</Text>
+            <View style={styles.container}>
+                <Header
+                    backgroundColor={primary_c}
+                    placement="center"
+                    centerComponent={{ text: 'Login', style: { color: '#fff', fontSize: 20 } }}
+                />
                 <TextInput
                     style={styles.input}
                     placeholder="Enter your email..."
@@ -89,19 +97,25 @@ const LoginScreen = (props) => {
                     secureTextEntry={true}
                 />
                 <Button
+                    style={styles.btn}
                     title="Login"
                     onPress={loginUser}
                 />
                 <Button 
+                    style={styles.btn}
                     title="New user ? can you create an account"
                     onPress={switchLoginRegister}
                 />
-            </SafeAreaView>
+            </View>
         );
     } else {
         return (
             <View style={styles.container}>
-                <Text>Register :)</Text>
+                <Header
+                    backgroundColor={primary_c}
+                    placement="center"
+                    centerComponent={{ text: 'Register', style: { color: '#fff', fontSize: 20 } }}
+                />
                 { userIsRegister ?
                     <View style={styles.flashMessage}>
                         <Text style={{color:'white'}}>Welcome to the adventure</Text>
@@ -113,6 +127,7 @@ const LoginScreen = (props) => {
                     placeholder="Enter your email..."
                     onChangeText={setEmail}
                     value={email}
+                    secureTextEntry={false}
                 />
                 <TextInput
                     style={styles.input}
@@ -128,10 +143,12 @@ const LoginScreen = (props) => {
                     secureTextEntry={true}
                 />
                 <Button
+                    style={styles.btn}
                     title="Register"
                     onPress={registerUser}
                 />
                 <Button 
+                    style={styles.btn}
                     title="You have an account ? can you login to your account"
                     onPress={switchLoginRegister}
                 />
@@ -144,10 +161,7 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
 		alignItems: "center",
-		justifyContent: "center",
-        marginTop: 25
 	},
     title: {
         fontSize: 35
@@ -159,8 +173,14 @@ const styles = StyleSheet.create({
         fontSize: 25,
         margin: 15
     },
+    btn: {
+        backgroundColor: primary_c,
+        color: tertiary_c,
+        margin: 15,
+        textAlign: "center"
+    },
     flashMessage:{
-        backgroundColor:'green', 
+        backgroundColor: success_c, 
         width:'70%', 
         justifyContent:'center', 
         alignItems:'center',           
