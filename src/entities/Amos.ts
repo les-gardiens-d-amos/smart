@@ -2,8 +2,6 @@ import { colorForType } from "../style/theme";
 import amosIcons from "../../assets/amosIcons";
 
 class Amos {
-  // A titre indicatif
-  
   private static typesFR = {
     mammal: "Mammifère",
     bird: "Oiseau",
@@ -59,17 +57,11 @@ class Amos {
   public species: string;
   public date: Date;
 
-  public static isRegistered(name: string) {
-    // Check if the animal is registered in the database and return its data, returns undefined otherwise
-    // for now uses amosData dictionary
-    // return Amos.amosData[name];
-  }
-
   constructor(
     idAmos: number,
     idOwner: number,
     id: number,
-	image_path: string,
+    image_path: string,
     species: string,
     type: string,
     name: string,
@@ -79,7 +71,7 @@ class Amos {
     this.idAmos = idAmos;
     this.id = id;
     this.idOwner = idOwner;
-	this.image_path = image_path;
+    this.image_path = image_path;
     this.species = species;
     this.type = type;
     this.name = name === this.species ? this.species : name;
@@ -92,18 +84,18 @@ class Amos {
       idAmos: this.idAmos,
       idOwner: this.idOwner,
       id: this.id,
-	  image_path: this.image_path,
-	  icon: amosIcons[this.species],
+      image_path: this.image_path,
+      icon: amosIcons[this.species],
       species: this.capitalize(Amos.speciesFR[this.species]),
       type: this.capitalize(Amos.typesFR[this.type]),
-	  typeColor: colorForType[this.type],
+      typeColor: colorForType[this.type],
       name: this.name,
       level: this.level,
       capturedAt: this.capturedAt(),
     };
   }
 
-  private capitalize(str): string {
+  private capitalize(str: string): string {
     let capi = str.charAt(0).toUpperCase();
     return capi + str.slice(1);
   }
