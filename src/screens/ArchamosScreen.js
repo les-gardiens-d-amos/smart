@@ -30,7 +30,7 @@ const ArchamosScreen = () => {
         amos.idAmos,
         amos.idOwner,
         amos.id,
-        amos.image_path,
+        amos.imagePath,
         amos.species,
         amos.type,
         amos.name,

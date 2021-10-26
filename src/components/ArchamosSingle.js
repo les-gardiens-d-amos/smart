@@ -24,7 +24,7 @@ const ArchamosSingle = ({ amos }) => {
     <View style={styles.container}>
       <View style={styles.amosContainer}>
         <View style={styles.photoWrapper}>
-          <Image style={styles.photo} source={amosData.image_path} />
+          <Image style={styles.photo} source={amosData.imagePath} />
         </View>
 
         <Text style={styles.name}>{amosData.name}</Text>
