@@ -2,8 +2,6 @@ import { colorForType } from "../style/theme";
 import amosIcons from "../../assets/amosIcons";
 
 class Amos {
-  // A titre indicatif
-  
   private static typesFR = {
     mammal: "Mammifère",
     bird: "Oiseau",

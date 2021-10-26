@@ -1,16 +1,14 @@
 import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
-  Text,
   View,
   ScrollView,
-  ActivityIndicator,
   FlatList,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 import { Header } from "react-native-elements";
 
-import { colors, StatusBarHeight } from "../style/theme";
+import { colors } from "../style/theme";
 const { primary_c } = colors;
 
 import dataAmosList from "../tempData/ArchamosData"; // To replace with supabase data
@@ -18,7 +16,7 @@ import Amos from "../entities/Amos";
 import ArchamosSingle from "../components/ArchamosSingle";
 
 const ArchamosScreen = () => {
-  const [searchInput, setSearchInput] = useState("");
+  const [searchInput, _setSearchInput] = useState("");
   const [amosList, setAmosList] = useState([]);
 
   useEffect(() => {

@@ -3,18 +3,15 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   Image,
   TouchableOpacity,
 } from "react-native";
-import { Divider, Header } from "react-native-elements";
+import { Header } from "react-native-elements";
 
 import { CLARIFAI_API_KEY } from "@env";
 
 import { colors } from "../style/theme";
-const { primary, secondary, tertiary, error } = colors;
-
-import Amos from "../entities/Amos";
+const { primary, error } = colors;
 
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
@@ -22,14 +19,13 @@ import AmosData from "../tempData/AmosData";
 const DisplayResultScreen = ({ navigation, route }) => {
   console.log("DisplayResultScreen load");
 
-  const { picture, shotUrl } = route.params;
+  const { shotUrl } = route.params;
 
   const [capturing, setCapturing] = useState(true);
-  const [conceptList, setConceptList] = useState(null);
+  const [_conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
 
-  const { location, localisation } = route.params;
-  console.log(localisation);
+  const { localisation } = route.params;
 
   useEffect(() => {
     capture();

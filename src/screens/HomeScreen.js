@@ -3,13 +3,10 @@ import { StyleSheet, View } from "react-native";
 import { Button } from "@react-native-material/core";
 import { Header } from "react-native-elements";
 
-import * as SecureStore from "expo-secure-store";
-
 import { colors } from "../style/theme";
-const { primary_c, secondary_c, tertiary_c, error_c } = colors;
+const { primary_c } = colors;
 
 const HomeScreen = ({ navigation, route }) => {
-  // console.log("store : ");
   // SecureStore.getItemAsync("jwt").then(response => console.log(response));
 
   return (

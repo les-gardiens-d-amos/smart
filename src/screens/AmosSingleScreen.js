@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 
-const AmosSingleScreen = ({ navigation, route }) => {
+const AmosSingleScreen = ({ route }) => {
   const { amos } = route.params;
 
   return (

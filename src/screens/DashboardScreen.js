@@ -5,7 +5,7 @@ import { Header } from "react-native-elements";
 import { VictoryBar, VictoryPie, VictoryChart, VictoryTheme } from "victory-native";
 
 import { colors } from "../style/theme";
-const { primary_c, secondary_c, tertiary_c, error_c } = colors;
+const { primary_c } = colors;
 
 const DashboardScreen = () => {
   const data = [
