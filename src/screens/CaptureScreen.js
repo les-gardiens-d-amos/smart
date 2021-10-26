@@ -3,7 +3,8 @@ import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
 import { Camera } from "expo-camera";
 import { Header } from "react-native-elements";
 
-import { primary_c } from "../style/theme";
+import { colors } from "../style/theme";
+const { primary_c } = colors;
 
 import * as Location from "expo-location";
 

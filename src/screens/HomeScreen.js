@@ -3,12 +3,10 @@ import { StyleSheet, Text, View } from "react-native";
 import { Button } from "@react-native-material/core";
 import { Header } from "react-native-elements";
 
-import { primary_c } from "../style/theme";
-
 import * as SecureStore from "expo-secure-store";
 
 import { colors } from "../style/theme";
-const { primary, secondary, tertiary, error } = colors;
+const { primary_c, secondary_c, tertiary_c, error_c } = colors;
 
 const HomeScreen = ({ navigation, route }) => {
   // console.log("store : ");
@@ -27,13 +25,13 @@ const HomeScreen = ({ navigation, route }) => {
       <Button
         onPress={() => navigation.navigate("CaptureScreen")}
         title="Capture page"
-        color={primary}
+        color={primary_c}
         accessibilityLabel="Capture page"
       />
       <Button
         onPress={() => navigation.navigate("ArchamosScreen")}
         title="Archamos"
-        color={primary}
+        color={primary_c}
         accessibilityLabel="Archamos"
       />
     </View>

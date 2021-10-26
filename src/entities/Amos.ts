@@ -1,14 +1,9 @@
+import { colorForType } from "../style/theme";
+import amosIcons from "../../assets/amosIcons";
+
 class Amos {
   // A titre indicatif
-
-  private static typesEN: Array<string> = [
-    "Mammal",
-    "Bird",
-    "Fish",
-    "Amphibian",
-    "Reptile",
-    "Invertebrate",
-  ];
+  
   private static typesFR = {
     mammal: "Mammifère",
     bird: "Oiseau",
@@ -43,6 +38,7 @@ class Amos {
     "Testudinidé",
     "Testudinidé",
   ];
+
   public static order: Array<string> = [
     "Carnivore",
     "Rongeur",
@@ -56,6 +52,7 @@ class Amos {
   public idAmos: number;
   public idOwner: number;
   public id: number;
+  public image_path: string;
   public level: number;
   public type: string;
   public name: string;
@@ -72,6 +69,7 @@ class Amos {
     idAmos: number,
     idOwner: number,
     id: number,
+	image_path: string,
     species: string,
     type: string,
     name: string,
@@ -81,6 +79,7 @@ class Amos {
     this.idAmos = idAmos;
     this.id = id;
     this.idOwner = idOwner;
+	this.image_path = image_path;
     this.species = species;
     this.type = type;
     this.name = name === this.species ? this.species : name;
@@ -93,8 +92,11 @@ class Amos {
       idAmos: this.idAmos,
       idOwner: this.idOwner,
       id: this.id,
+	  image_path: this.image_path,
+	  icon: amosIcons[this.species],
       species: this.capitalize(Amos.speciesFR[this.species]),
       type: this.capitalize(Amos.typesFR[this.type]),
+	  typeColor: colorForType[this.type],
       name: this.name,
       level: this.level,
       capturedAt: this.capturedAt(),

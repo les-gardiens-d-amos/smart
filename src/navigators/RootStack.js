@@ -11,7 +11,8 @@ import DisplayResultScreen from "../screens/DisplayResultScreen";
 import ArchamosScreen from "../screens/ArchamosScreen";
 
 import LoginScreen from "../screens/LoginScreen";
-import { primary_c } from "../style/theme";
+import { colors } from "../style/theme";
+const { primary_c } = colors;
 
 const Stack = createMaterialBottomTabNavigator();
 

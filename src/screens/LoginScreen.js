@@ -8,7 +8,8 @@ import * as SecureStore from "expo-secure-store";
 
 import { API_URL } from "@env";
 
-import { success_c, primary_c, tertiary_c } from "../style/theme";
+import { colors } from "../style/theme";
+const { success_c, primary_c, tertiary_c } = colors;
 
 const LoginScreen = (props) => {
   const [isNewUser, setIsNewUser] = useState(false);
