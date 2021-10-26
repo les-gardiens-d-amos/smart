@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { Divider, Header } from "react-native-elements";
 
+import axios from "axios";
+
 import { CLARIFAI_API_KEY } from "@env";
 
 import { colors } from "../style/theme";
@@ -29,7 +31,6 @@ const DisplayResultScreen = ({ navigation, route }) => {
   const [amosToCapture, setAmosToCapture] = useState(undefined);
 
   const { location, localisation } = route.params;
-  console.log(localisation);
 
   useEffect(() => {
     capture();
@@ -81,6 +82,25 @@ const DisplayResultScreen = ({ navigation, route }) => {
     // geolocalisation stats to register
     // handling image and upload
   };
+
+  const saveAmosImage = () => {}
+
+  const saveAmos = () => {
+    let config = {
+      method: 'post',
+      // change params by body in happy api ?
+      // url: 'https://happy-amos.herokuapp.com/amos?user_id=1dcdecd4-c2a2-4a5e-b242-0843eed16c2a&animal_id=1&species=Chat&amos_type=mammifère&name=Chat&image_path=./path/img',
+      headers: { /** add token authorization after returning the login page */ }
+    };
+    
+    axios(config).then(response => {
+      console.log(response.data);
+    }).catch(error => {
+      console.log(error);
+    });    
+  }
+
+  const saveLocation = () => {}
 
   const release = () => {
     console.log("Chosen to realease the AMOS");
