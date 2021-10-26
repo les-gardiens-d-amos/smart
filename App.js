@@ -4,8 +4,10 @@ import { StyleSheet, Text, View } from "react-native";
 
 import RootStack from "./src/navigators/RootStack";
 
-export default function App() {
+const App = () => {
   return <RootStack />;
 }
 
 const styles = StyleSheet.create({});
+
+export default App;
