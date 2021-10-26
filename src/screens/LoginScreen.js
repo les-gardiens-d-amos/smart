@@ -83,14 +83,6 @@ const LoginScreen = (props) => {
   if (!isNewUser) {
     return (
       <View style={styles.container}>
-        {/* <Header
-          backgroundColor={primary_c}
-          placement="center"
-          centerComponent={{
-            text: "Login",
-            style: { color: "#fff", fontSize: 20 },
-          }}
-        /> */}
         <TextInput
           style={styles.input}
           placeholder="Enter your email..."

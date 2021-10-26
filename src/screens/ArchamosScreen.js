@@ -53,14 +53,7 @@ const ArchamosScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Header
-        backgroundColor={primary_c}
-        placement="center"
-        centerComponent={{
-          text: "Archamos",
-          style: { color: "#fff", fontSize: 20 },
-        }}
-      /> */}
+
       <SearchBar
         lightTheme={true}
         style={styles.searchBar}

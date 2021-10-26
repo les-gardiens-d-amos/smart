@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button } from "@react-native-material/core";
 import { Header } from "react-native-elements";
 
@@ -14,14 +14,6 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Header
-        backgroundColor={primary_c}
-        placement="center"
-        centerComponent={{
-          text: "Home",
-          style: { color: "#fff", fontSize: 20 },
-        }}
-      /> */}
       <View style={styles.buttonsWrapper}>
         <Button
           style={styles.buttons}
@@ -36,6 +28,13 @@ const HomeScreen = ({ navigation, route }) => {
           title="Archamos"
           color={primary_c}
           accessibilityLabel="Archamos"
+        />
+        <Button
+          style={styles.buttons}
+          onPress={() => navigation.navigate("DashboardScreen")}
+          title="Tableau de bord"
+          color={primary_c}
+          accessibilityLabel="Dashboard"
         />
       </View>
     </View>

@@ -8,6 +8,7 @@ import HomeScreen from "../screens/HomeScreen";
 import CaptureScreen from "../screens/CaptureScreen";
 import ArchamosScreen from "../screens/ArchamosScreen";
 import AmosSingleScreen from "../screens/AmosSingleScreen";
+import DashboardScreen from "../screens/DashboardScreen";
 
 import LoginScreen from "../screens/LoginScreen";
 import { colors } from "../style/theme";
@@ -55,6 +56,13 @@ const RootStack = () => {
             name="AmosSingleScreen"
             component={AmosSingleScreen}
             options={{ title: "Amos" }}
+          />
+          <Stack.Screen
+            name="DashboardScreen"
+            component={DashboardScreen}
+            options={{
+              title: "Tableau de bord",
+            }}
           />
         </Stack.Navigator>
       </NavigationContainer>

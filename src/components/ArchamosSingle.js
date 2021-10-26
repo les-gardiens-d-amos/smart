@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { Pressable, Image, StyleSheet, View } from "react-native";
+import { Pressable, Image, StyleSheet, View, Text } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "../style/theme";
 const { primary_c, secondary_c } = colors;
-import { Tooltip, Text } from "react-native-elements";
+import { Tooltip } from "react-native-elements";
 
 const ArchamosSingle = ({ amos, goToSinglePage }) => {
   const amosData = amos.item;

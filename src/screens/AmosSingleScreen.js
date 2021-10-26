@@ -44,14 +44,6 @@ const AmosSingleScreen = ({ navigation, route }) => {
     <View style={styles.container}>
       {amos && (
         <>
-          {/* <Header
-            backgroundColor={primary_c}
-            placement="center"
-            centerComponent={{
-              text: `${amos.name}`,
-              style: { color: "#fff", fontSize: 20 },
-            }}
-          /> */}
           <View style={styles.nameWrapper}>
             <Button
               onPress={() => changeName()}
@@ -62,15 +54,10 @@ const AmosSingleScreen = ({ navigation, route }) => {
             <Text style={styles.name}>{amos.name}</Text>
           </View>
 
-          {/* <Pressable style={styles.btnChangeName} onPress={() => changeName()}>
-            <Text style={styles.name}>{amos.name}</Text>
-          </Pressable> */}
-
           <Text style={styles.type}>{amos.type}</Text>
           <View style={styles.speciesLvlWrapper}>
-            <Text style={styles.level}>{amos.species + " "}</Text>
-            de niveau
-            <Text style={styles.level}>{" " + amos.level}</Text>
+            <Text style={styles.level}>{amos.species}</Text>
+            <Text style={styles.level}>{" de niveau " + amos.level}</Text>
           </View>
           <Text style={styles.date}>{amos.date}</Text>
         </>
@@ -89,7 +76,7 @@ const styles = StyleSheet.create({
   },
   btnChangeName: {},
   nameWrapper: {
-    paddin: 10,
+    padding: 10,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
