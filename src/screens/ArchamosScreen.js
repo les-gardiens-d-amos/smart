@@ -17,7 +17,7 @@ import dataAmosList from "../tempData/ArchamosData"; // To replace with supabase
 import Amos from "../entities/Amos";
 import ArchamosSingle from "../components/ArchamosSingle";
 
-const ArchamosScreen = () => {
+const ArchamosScreen = ({ navigation, route }) => {
   const [searchInput, setSearchInput] = useState("");
   const [amosList, setAmosList] = useState([]);
 
@@ -39,7 +39,6 @@ const ArchamosScreen = () => {
         amos.level,
         amos.date
       ).serialize();
-      // console.log("Amos generated", amm);
       newList.push(amm);
     }
 
@@ -48,16 +47,20 @@ const ArchamosScreen = () => {
 
   // <ActivityIndicator size="large" color={primary} />
 
+  const goToSinglePage = (amosData) => {
+    navigation.navigate("AmosSingleScreen", { amosData });
+  };
+
   return (
     <View style={styles.container}>
-      <Header
+      {/* <Header
         backgroundColor={primary_c}
         placement="center"
         centerComponent={{
           text: "Archamos",
           style: { color: "#fff", fontSize: 20 },
         }}
-      />
+      /> */}
       <SearchBar
         lightTheme={true}
         style={styles.searchBar}
@@ -69,9 +72,11 @@ const ArchamosScreen = () => {
       <ScrollView style={styles.listWrapper}>
         <FlatList
           style={styles.list}
-					keyExtractor={(item, index) => item + index.toString()}
+          keyExtractor={(item, index) => item + index.toString()}
           data={amosList}
-          renderItem={(item) => <ArchamosSingle amos={item} />}
+          renderItem={(item) => (
+            <ArchamosSingle amos={item} goToSinglePage={goToSinglePage} />
+          )}
         />
       </ScrollView>
     </View>
