@@ -7,8 +7,9 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // Screens
 import HomeScreen from "../screens/HomeScreen";
 import CaptureScreen from "../screens/CaptureScreen";
-import DisplayResultScreen from "../screens/DisplayResultScreen";
+// import DisplayResultScreen from "../screens/DisplayResultScreen";
 import ArchamosScreen from "../screens/ArchamosScreen";
+import DashboardScreen from "../screens/DashboardScreen";
 
 import LoginScreen from "../screens/LoginScreen";
 import { colors } from "../style/theme";
@@ -63,6 +64,20 @@ const RootStack = () => {
               tabBarIcon: ({ color }) => (
                 <MaterialCommunityIcons
                   name="clipboard-file"
+                  color={color}
+                  size={26}
+                />
+              ),
+            }}
+          />
+          <Stack.Screen
+            name="DashboardScreen"
+            component={DashboardScreen}
+            options={{
+              tabBarLabel: "Dashboard",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons
+                  name="view-dashboard"
                   color={color}
                   size={26}
                 />
