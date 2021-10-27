@@ -70,13 +70,12 @@ const CameraScreen = () => {
   const takePicture = async () => {
     const result = await ImagePicker.launchCameraAsync(options)
     const location = await Location.getCurrentPositionAsync({});
-    dispatch(setCapturedImageAction({ data: result, path: result.uri, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude } }));
-    dispatch(setPreviewVisibleAction(true))
+    dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude } }));
   }
 
   return (
     <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', flexDirection: 'row' }}>
-      {cameraState.previewVisible ? (
+      {cameraState.capturedImage ? (
         <PreviewScreen image={cameraState.capturedImage} />
       ) : (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row' }}>

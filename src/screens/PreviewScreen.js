@@ -8,16 +8,12 @@ const { primary_c, secondary_c, tertiary_c, error_c } = colors;
 
 
 const PreviewScreen = ({ image }) => {
-  const [animalDetected, setAnimalDetected] = useState([]);
+  console.log(image.path)
   const dispatch = useDispatch();
 
   var myHeaders = new Headers();
   myHeaders.append("Authorization", "Key 61e0d916658f40d5876a16e9c0bf054d");
   myHeaders.append("Content-Type", "application/json");
-
-  const detectAnimal = (data) => {
-
-  }
 
   const savePhoto = () => {
 
@@ -59,7 +55,6 @@ const PreviewScreen = ({ image }) => {
 
   const cancelPicture = () => {
     dispatch(setCapturedImageAction({}))
-    dispatch(setPreviewVisibleAction(false))
   }
 
 
