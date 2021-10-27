@@ -13,6 +13,7 @@ import DashboardScreen from "../screens/DashboardScreen";
 
 import LoginScreen from "../screens/LoginScreen";
 import { colors } from "../style/theme";
+import CameraScreen from '../screens/CameraScreen';
 const { primary_c } = colors;
 
 const Stack = createMaterialBottomTabNavigator();
@@ -43,8 +44,8 @@ const RootStack = () => {
             }}
           />
           <Stack.Screen
-            name="CaptureScreen"
-            component={CaptureScreen}
+            name="CameraScreen"
+            component={CameraScreen}
             options={{
               tabBarLabel: "Capture",
               tabBarIcon: ({ color }) => (

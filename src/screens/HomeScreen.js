@@ -23,10 +23,10 @@ const HomeScreen = ({ navigation, route }) => {
         }}
       />
       <Button
-        onPress={() => navigation.navigate("CaptureScreen")}
-        title="Capture page"
+        onPress={() => navigation.navigate("CameraScreen")}
+        title="Camera page"
         color={primary_c}
-        accessibilityLabel="Capture page"
+        accessibilityLabel="Camera page"
       />
       <Button
         onPress={() => navigation.navigate("ArchamosScreen")}
