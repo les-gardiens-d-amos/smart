@@ -10,6 +10,7 @@ import {
 import { Divider, Header } from "react-native-elements";
 
 import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 
 import { CLARIFAI_API_KEY } from "@env";
 
@@ -31,10 +32,26 @@ const DisplayResultScreen = ({ navigation, route }) => {
   const [capturing, setCapturing] = useState(true);
   const [conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
+  const [userId, setUserId] = useState(null);
+  const [userToken, setUserToken] = useState(null);
 
   useEffect(() => {
-    capture();
+    getUserId();
+    getUserToken();
   }, []);
+
+  const getUserId = () => {
+    SecureStore.getItemAsync("user_id").then(response => {
+      setUserId(response);
+    });
+  }
+
+  const getUserToken = () => {
+    SecureStore.getItemAsync("jwt").then(response => {
+      setUserToken(response)
+      capture();
+    });
+  }
 
   const capture = async () => {
     const apiKey = `${CLARIFAI_API_KEY}`;
@@ -78,11 +95,11 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
   const keep = () => {
     console.log("Chosen to keep the captured AMOS", amosToCapture);
-    // Place the Amos in the Amos pull of the player
-    // geolocalisation stats to register
-    // handling image and upload
-
-    saveAmosImage();
+    console.log("id =>");
+    console.log(userId);
+    console.log("token => ");
+    console.log(userToken);
+    // saveAmosImage();
   };
 
   const saveAmosImage = () => {
@@ -114,7 +131,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
   const saveAmos = (imgPath) => {
     // replace by user id in secure store
     let amos = JSON.stringify({
-      "user_id": "ae500d19-b07e-4e6f-b1a2-ffabfa7a01d8",
+      "user_id": userId,
       "animal_id": amosToCapture.id,
       "species": amosToCapture.species,
       "amos_type": amosToCapture.type,

@@ -19,7 +19,7 @@ const { primary_c } = colors;
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
-  const [isConnected, setIsConnected] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
 
   const login = () => {
     setIsConnected(true);
