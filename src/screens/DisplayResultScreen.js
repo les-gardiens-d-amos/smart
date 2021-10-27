@@ -20,6 +20,7 @@ import Amos from "../entities/Amos";
 
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
+import testUrls from "../tempData/TestUrls";
 
 const DisplayResultScreen = ({ navigation, route }) => {
   console.log("DisplayResultScreen load");
@@ -30,6 +31,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
   const [capturing, setCapturing] = useState(true);
   const [conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
+  const [imgurPath, setImgurPath] = useState("");
 
   useEffect(() => {
     capture();
@@ -80,18 +82,47 @@ const DisplayResultScreen = ({ navigation, route }) => {
     // Place the Amos in the Amos pull of the player
     // geolocalisation stats to register
     // handling image and upload
+
+    saveAmosImage();
   };
 
-  const saveAmosImage = () => {}
+  const saveAmosImage = () => {
+    let FormData = require('form-data');
+    let requestInfo = new FormData();
+    // replace test url by image in base64
+    requestInfo.append('image', testUrls["cat"]);
+    // replace type of img by base64
+    requestInfo.append('type', 'url');
+
+    let config = {
+      method: 'post',
+      url: 'https://api.imgur.com/3/upload',
+      headers: { 
+        'Authorization': 'Bearer Client-ID b81cd4b478ce34377f2bc06d1a6ce66b225760a4'
+      },
+      data : requestInfo
+    };
+
+    axios(config).then(response => {
+      if (response.data.success && response.data.status === 200) {
+        // console.log("image path => ");
+        // console.log(response.data.data.link);
+        setImgurPath(response.data.data.link);
+      }
+    }).catch(error => {
+      console.log(error);
+    });
+  }
 
   const saveAmos = () => {
     let amos = JSON.stringify({
+      // replace by user id in secure store
       "user_id": "ae500d19-b07e-4e6f-b1a2-ffabfa7a01d8",
       "animal_id": amosToCapture.id,
       "species": amosToCapture.species,
       "amos_type": amosToCapture.type,
       "name": amosToCapture.name,
-      "image_path": "./path/imgur"
+      "image_path": imgurPath
     });
 
     let config = {
