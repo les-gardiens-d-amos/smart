@@ -95,11 +95,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
   const keep = () => {
     console.log("Chosen to keep the captured AMOS", amosToCapture);
-    console.log("id =>");
-    console.log(userId);
-    console.log("token => ");
-    console.log(userToken);
-    // saveAmosImage();
+    saveAmosImage();
   };
 
   const saveAmosImage = () => {
@@ -129,7 +125,6 @@ const DisplayResultScreen = ({ navigation, route }) => {
   }
 
   const saveAmos = (imgPath) => {
-    // replace by user id in secure store
     let amos = JSON.stringify({
       "user_id": userId,
       "animal_id": amosToCapture.id,
@@ -143,6 +138,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
       method: 'post',
       url: 'https://happy-amos.herokuapp.com/amos',
       headers: { 
+        'Authorization': 'Bearer ' + userToken,
         'Content-Type': 'application/json'
       },
       data : amos
@@ -169,6 +165,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
       method: 'post',
       url: 'https://happy-amos.herokuapp.com/catches',
       headers: { 
+        'Authorization': 'Bearer ' + userToken,
         'Content-Type': 'application/json'
       },
       data : coordInfo
