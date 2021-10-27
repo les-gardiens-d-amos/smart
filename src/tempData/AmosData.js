@@ -1,6 +1,6 @@
 const amosData = {
   // temporary =>
-  chat: {
+  cat: {
     id: 1,
     type: "Mammifère",
     species: "Chat",
