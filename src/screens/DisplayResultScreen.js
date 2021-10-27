@@ -32,6 +32,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
   const [conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
   const [imgurPath, setImgurPath] = useState("");
+  const [amosId, setAmosId] = useState("");
 
   useEffect(() => {
     capture();
@@ -104,10 +105,12 @@ const DisplayResultScreen = ({ navigation, route }) => {
     };
 
     axios(config).then(response => {
+      console.log("-----------");
+      console.log("imgur response => ")
+      console.log(response.data);
       if (response.data.success && response.data.status === 200) {
-        // console.log("image path => ");
-        // console.log(response.data.data.link);
         setImgurPath(response.data.data.link);
+        saveAmos();
       }
     }).catch(error => {
       console.log(error);
@@ -115,8 +118,8 @@ const DisplayResultScreen = ({ navigation, route }) => {
   }
 
   const saveAmos = () => {
+    // replace by user id in secure store
     let amos = JSON.stringify({
-      // replace by user id in secure store
       "user_id": "ae500d19-b07e-4e6f-b1a2-ffabfa7a01d8",
       "animal_id": amosToCapture.id,
       "species": amosToCapture.species,
@@ -127,7 +130,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
     let config = {
       method: 'post',
-      url: 'http://localhost:3000/amos',
+      url: 'https://happy-amos.herokuapp.com/amos',
       headers: { 
         'Content-Type': 'application/json'
       },
@@ -135,10 +138,13 @@ const DisplayResultScreen = ({ navigation, route }) => {
     };
     
     axios(config).then(response => {
+      console.log("------------");
+      console.log("happy amos response => ");
       console.log(response.data);
+      setAmosId(response.data.id);
     }).catch(error => {
       console.log(error);
-    });    
+    });  
   }
 
   const saveLocation = () => {
