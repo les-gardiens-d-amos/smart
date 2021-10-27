@@ -25,12 +25,11 @@ const DisplayResultScreen = ({ navigation, route }) => {
   console.log("DisplayResultScreen load");
 
   const { picture, shotUrl } = route.params;
+  const { location, localisation } = route.params;
 
   const [capturing, setCapturing] = useState(true);
   const [conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
-
-  const { location, localisation } = route.params;
 
   useEffect(() => {
     capture();
@@ -86,11 +85,22 @@ const DisplayResultScreen = ({ navigation, route }) => {
   const saveAmosImage = () => {}
 
   const saveAmos = () => {
+    let amos = JSON.stringify({
+      "user_id": "ae500d19-b07e-4e6f-b1a2-ffabfa7a01d8",
+      "animal_id": amosToCapture.id,
+      "species": amosToCapture.species,
+      "amos_type": amosToCapture.type,
+      "name": amosToCapture.name,
+      "image_path": "./path/imgur"
+    });
+
     let config = {
       method: 'post',
-      // change params by body in happy api ?
-      // url: 'https://happy-amos.herokuapp.com/amos?user_id=1dcdecd4-c2a2-4a5e-b242-0843eed16c2a&animal_id=1&species=Chat&amos_type=mammifère&name=Chat&image_path=./path/img',
-      headers: { /** add token authorization after returning the login page */ }
+      url: 'http://localhost:3000/amos',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : amos
     };
     
     axios(config).then(response => {
@@ -100,7 +110,9 @@ const DisplayResultScreen = ({ navigation, route }) => {
     });    
   }
 
-  const saveLocation = () => {}
+  const saveLocation = () => {
+    // console.log(location);
+  }
 
   const release = () => {
     console.log("Chosen to realease the AMOS");
