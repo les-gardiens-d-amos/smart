@@ -31,8 +31,6 @@ const DisplayResultScreen = ({ navigation, route }) => {
   const [capturing, setCapturing] = useState(true);
   const [conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
-  const [imgurPath, setImgurPath] = useState("");
-  const [amosId, setAmosId] = useState("");
 
   useEffect(() => {
     capture();
@@ -105,19 +103,15 @@ const DisplayResultScreen = ({ navigation, route }) => {
     };
 
     axios(config).then(response => {
-      console.log("-----------");
-      console.log("imgur response => ")
-      console.log(response.data);
       if (response.data.success && response.data.status === 200) {
-        setImgurPath(response.data.data.link);
-        saveAmos();
+        saveAmos(response.data.data.link);
       }
     }).catch(error => {
       console.log(error);
     });
   }
 
-  const saveAmos = () => {
+  const saveAmos = (imgPath) => {
     // replace by user id in secure store
     let amos = JSON.stringify({
       "user_id": "ae500d19-b07e-4e6f-b1a2-ffabfa7a01d8",
@@ -125,7 +119,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
       "species": amosToCapture.species,
       "amos_type": amosToCapture.type,
       "name": amosToCapture.name,
-      "image_path": imgurPath
+      "image_path": imgPath
     });
 
     let config = {
@@ -138,17 +132,36 @@ const DisplayResultScreen = ({ navigation, route }) => {
     };
     
     axios(config).then(response => {
-      console.log("------------");
-      console.log("happy amos response => ");
-      console.log(response.data);
-      setAmosId(response.data.id);
+      saveLocation(response.data.id);
     }).catch(error => {
       console.log(error);
     });  
   }
 
-  const saveLocation = () => {
-    // console.log(location);
+  const saveLocation = (idAmos) => {
+    let coords = localisation.coords;
+    let coordInfo = JSON.stringify({
+      "long": coords.longitude,
+      "lat": coords.latitude,
+      "altitude": coords.altitude,
+      "accuracy": coords.accuracy,
+      "amos_id": idAmos
+    });
+
+    let config = {
+      method: 'post',
+      url: 'https://happy-amos.herokuapp.com/catches',
+      headers: { 
+        'Content-Type': 'application/json'
+      },
+      data : coordInfo
+    };
+
+    axios(config).then(response => {
+      console.log(response.data);
+    }).catch(error => {
+      console.log(error);
+    });
   }
 
   const release = () => {
