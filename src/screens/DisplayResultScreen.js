@@ -10,14 +10,8 @@ import {
 import { API, CLARIFAI, IMGUR } from "../../locales/axios";
 import * as SecureStore from "expo-secure-store";
 
-import { CLARIFAI_API_KEY, IMGUR_KEY } from "@env";
-
-import { colors } from "../style/theme";
-const { primary, error } = colors;
-
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
-import testUrls from "../tempData/TestUrls";
 
 const DisplayResultScreen = ({ navigation, route }) => {
   console.log("DisplayResultScreen load");

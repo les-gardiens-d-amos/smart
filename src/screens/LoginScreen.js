@@ -6,8 +6,6 @@ import { Header } from "react-native-elements";
 import { API } from "../../locales/axios";
 import * as SecureStore from "expo-secure-store";
 
-import { API_URL } from "@env";
-
 import { colors } from "../style/theme";
 const { success_c, primary_c, tertiary_c } = colors;
 
