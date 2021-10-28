@@ -23,7 +23,7 @@ import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
 
 const DisplayResultScreen = ({ navigation }) => {
-  console.log("DisplayResultScreen load");
+
   const cameraState = useSelector(state => state.camera);
   const picture = cameraState.capturedImage.data;
   const shortUrl = cameraState.capturedImage.path;

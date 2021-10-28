@@ -53,22 +53,27 @@ const CameraScreen = () => {
     }
   }
 
+  const getLocation = async () => await Location.getCurrentPositionAsync({})
+
+
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64: true
     });
 
     if (!result.cancelled) {
-      setImage(result.uri);
+      const location = await getLocation();
+      dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude } }));
     }
   };
 
   const takePicture = async () => {
     const result = await ImagePicker.launchCameraAsync(options)
-    const location = await Location.getCurrentPositionAsync({});
+    const location = await getLocation();
     dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude } }));
   }
 

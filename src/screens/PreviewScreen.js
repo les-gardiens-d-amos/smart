@@ -22,8 +22,6 @@ const PreviewScreen = ({ image }) => {
   const cancelPicture = () => {
     dispatch(setCapturedImageAction({}))
   }
-
-
   return (
     <View style={styles.container}>
       {getInfo ?
