@@ -17,7 +17,7 @@ const CameraScreen = () => {
   const options = {
     base64: true,
     allowsEditing: true,
-    aspect: [4, 3],
+    aspect: [4, 4],
     quality: 1,
   }
 
@@ -60,7 +60,7 @@ const CameraScreen = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
-      aspect: [4, 3],
+      aspect: [4, 4],
       quality: 1,
       base64: true
     });

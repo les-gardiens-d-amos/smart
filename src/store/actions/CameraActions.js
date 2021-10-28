@@ -22,4 +22,4 @@ const setCapturedImageAction = (image) => {
 
 
 
-export { startCameraAction, takePictureAction, setPreviewVisibleAction, setCapturedImageAction };
+export { takePictureAction, setPreviewVisibleAction, setCapturedImageAction };
