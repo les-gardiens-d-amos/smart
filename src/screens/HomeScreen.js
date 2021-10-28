@@ -1,14 +1,11 @@
 import React from "react";
 import { StyleSheet, View } from "react-native";
 import { Button } from "@react-native-material/core";
-import { Header } from "react-native-elements";
 
 import { colors } from "../style/theme";
 const { primary_c } = colors;
 
 const HomeScreen = ({ navigation, route }) => {
-  // SecureStore.getItemAsync("jwt").then(response => console.log(response));
-
   return (
     <View style={styles.container}>
       <View style={styles.buttonsWrapper}>
