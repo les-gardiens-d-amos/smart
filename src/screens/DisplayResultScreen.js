@@ -21,7 +21,6 @@ import testUrls from "../tempData/TestUrls";
 
 const DisplayResultScreen = ({ navigation, route }) => {
   console.log("DisplayResultScreen load");
-  console.log('APIS:',API, CLARIFAI, IMGUR)
 
   const { shotUrl } = route.params;
   const { localisation } = route.params;
@@ -67,8 +66,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
     CLARIFAI.post('', raw)
     .then(response => {
-      console.log('request clarifai response',response)
-      const pictureData = JSON.parse(response).outputs[0].data.concepts;
+      const pictureData = response.data.outputs[0].data.concepts;
       setConceptList(pictureData);
       checkForExistingAmos(pictureData);
       setCapturing(false);
@@ -98,7 +96,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
         saveAmos(response.data.data.link);
       }
     })
-    .catch(error => console.log("IMGUR.post",error))
+    .catch(error => console.log("IMGUR.post", error))
   }
 
   const saveAmos = (imgPath) => {
@@ -115,7 +113,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
       headers: { 'Authorization': 'Bearer ' + userToken, }
     })
     .then(response => { saveLocation(response.data.id); })
-    .catch(error => console.log(error))
+    .catch(error => console.log("API.post amos", error))
   }
 
   const saveLocation = (idAmos) => {
@@ -131,7 +129,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
     API.post('catches', coordInfo, {
       headers: { 'Authorization': 'Bearer ' + userToken, }
     })
-    .then(response => { saveLocation(response.data.id); })
+    .then(response => { console.log(response.data); })
     .catch(error => console.log(error))
   }
 
@@ -187,14 +185,6 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Header
-        backgroundColor={primary}
-        placement="center"
-        centerComponent={{
-          text: "Capture",
-          style: { color: "#fff", fontSize: 20 },
-        }}
-      /> */}
       <Image
         style={styles.image}
         source={{
