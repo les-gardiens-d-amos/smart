@@ -3,11 +3,9 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   Image,
   TouchableOpacity,
 } from "react-native";
-import { Divider, Header } from "react-native-elements";
 
 import { API, CLARIFAI, IMGUR } from "../../locales/axios";
 import * as SecureStore from "expo-secure-store";
@@ -15,9 +13,7 @@ import * as SecureStore from "expo-secure-store";
 import { CLARIFAI_API_KEY, IMGUR_KEY } from "@env";
 
 import { colors } from "../style/theme";
-const { primary, secondary, tertiary, error } = colors;
-
-import Amos from "../entities/Amos";
+const { primary, error } = colors;
 
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
@@ -27,11 +23,11 @@ const DisplayResultScreen = ({ navigation, route }) => {
   console.log("DisplayResultScreen load");
   console.log('APIS:',API, CLARIFAI, IMGUR)
 
-  const { picture, shotUrl } = route.params;
-  const { location, localisation } = route.params;
+  const { shotUrl } = route.params;
+  const { localisation } = route.params;
 
   const [capturing, setCapturing] = useState(true);
-  const [conceptList, setConceptList] = useState(null);
+  const [_conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);

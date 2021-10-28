@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Pressable, Image, StyleSheet, View, Text } from "react-native";
+import React from "react";
+import { Pressable, Image, StyleSheet, Text, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "../style/theme";
 const { primary_c, secondary_c } = colors;
@@ -7,8 +7,6 @@ import { Tooltip } from "react-native-elements";
 
 const ArchamosSingle = ({ amos, goToSinglePage }) => {
   const amosData = amos.item;
-
-  // console.log("amosData", amosData);
 
   const handleAddRemove = () => {
     // using amosData.idAmos and isTeammate useState variable
@@ -24,7 +22,7 @@ const ArchamosSingle = ({ amos, goToSinglePage }) => {
     <View style={styles.container}>
       <View style={styles.amosContainer}>
         <View style={styles.photoWrapper}>
-          <Image style={styles.photo} source={amosData.image_path} />
+          <Image style={styles.photo} source={amosData.imagePath} />
         </View>
 
         <Text style={styles.name}>{amosData.name}</Text>
@@ -68,7 +66,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     alignItems: "center",
-    // justifyContent: "center",
   },
   amosContainer: {
     flex: 1,

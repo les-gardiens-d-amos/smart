@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Button } from "react-native";
+import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import { Camera } from "expo-camera";
 import { Header } from "react-native-elements";
 
@@ -8,7 +8,7 @@ const { primary_c } = colors;
 
 import * as Location from "expo-location";
 
-const CaptureScreen = ({ navigation, route }) => {
+const CaptureScreen = ({ navigation }) => {
   console.log("CaptureScreen load");
 
   const [cameraPermission, setCameraPermission] = useState(null);
