@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { Button } from "@react-native-material/core";
 import { Header } from "react-native-elements";
 
@@ -14,26 +14,29 @@ const HomeScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Header
-        backgroundColor={primary_c}
-        placement="center"
-        centerComponent={{
-          text: "Home",
-          style: { color: "#fff", fontSize: 20 },
-        }}
-      />
-      <Button
-        onPress={() => navigation.navigate("CaptureScreen")}
-        title="Capture page"
-        color={primary_c}
-        accessibilityLabel="Capture page"
-      />
-      <Button
-        onPress={() => navigation.navigate("ArchamosScreen")}
-        title="Archamos"
-        color={primary_c}
-        accessibilityLabel="Archamos"
-      />
+      <View style={styles.buttonsWrapper}>
+        <Button
+          style={styles.buttons}
+          onPress={() => navigation.navigate("CaptureScreen")}
+          title="Capture page"
+          color={primary_c}
+          accessibilityLabel="Capture"
+        />
+        <Button
+          style={styles.buttons}
+          onPress={() => navigation.navigate("ArchamosScreen")}
+          title="Archamos"
+          color={primary_c}
+          accessibilityLabel="Archamos"
+        />
+        <Button
+          style={styles.buttons}
+          onPress={() => navigation.navigate("DashboardScreen")}
+          title="Tableau de bord"
+          color={primary_c}
+          accessibilityLabel="Dashboard"
+        />
+      </View>
     </View>
   );
 };
@@ -41,7 +44,13 @@ const HomeScreen = ({ navigation, route }) => {
 export default HomeScreen;
 
 const styles = StyleSheet.create({
-  container: {
+  container: {},
+  buttonsWrapper: {
+    marginTop: 20,
     alignItems: "center",
+  },
+  buttons: {
+    width: "50%",
+    marginTop: 20,
   },
 });
