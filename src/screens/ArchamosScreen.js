@@ -6,10 +6,6 @@ import {
   FlatList,
 } from "react-native";
 import { SearchBar } from "react-native-elements";
-import { Header } from "react-native-elements";
-
-import { colors } from "../style/theme";
-const { primary_c } = colors;
 
 import dataAmosList from "../tempData/ArchamosData"; // To replace with supabase data
 import Amos from "../entities/Amos";
@@ -32,16 +28,15 @@ const ArchamosScreen = () => {
     setAmosList(newList);
   }, []);
 
+  // <ActivityIndicator size="large" color={primary} />
+
+  const goToSinglePage = (amosData) => {
+    navigation.navigate("AmosSingleScreen", { amosData });
+  };
+
   return (
     <View style={styles.container}>
-      <Header
-        backgroundColor={primary_c}
-        placement="center"
-        centerComponent={{
-          text: "Archamos",
-          style: { color: "#fff", fontSize: 20 },
-        }}
-      />
+
       <SearchBar
         lightTheme={true}
         style={styles.searchBar}
@@ -53,9 +48,11 @@ const ArchamosScreen = () => {
       <ScrollView style={styles.listWrapper}>
         <FlatList
           style={styles.list}
-					keyExtractor={(item, index) => item + index.toString()}
+          keyExtractor={(item, index) => item + index.toString()}
           data={amosList}
-          renderItem={(item) => <ArchamosSingle amos={item} />}
+          renderItem={(item) => (
+            <ArchamosSingle amos={item} goToSinglePage={goToSinglePage} />
+          )}
         />
       </ScrollView>
     </View>

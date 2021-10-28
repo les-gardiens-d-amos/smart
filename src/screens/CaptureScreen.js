@@ -59,14 +59,7 @@ const CaptureScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Header
-        backgroundColor={primary_c}
-        placement="center"
-        centerComponent={{
-          text: "Capture",
-          style: { color: "#fff", fontSize: 20 },
-        }}
-      />
+
       <Camera ref={cam} style={styles.camera} type={type}>
         <View style={styles.buttonContainer}>
           <TouchableOpacity

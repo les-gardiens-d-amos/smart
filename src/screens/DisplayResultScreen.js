@@ -130,14 +130,14 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      <Header
+      {/* <Header
         backgroundColor={primary}
         placement="center"
         centerComponent={{
           text: "Capture",
           style: { color: "#fff", fontSize: 20 },
         }}
-      />
+      /> */}
       <Image
         style={styles.image}
         source={{

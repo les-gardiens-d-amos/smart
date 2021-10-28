@@ -3,12 +3,12 @@ import { Pressable, Image, StyleSheet, Text, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "../style/theme";
 const { primary_c, secondary_c } = colors;
+import { Tooltip } from "react-native-elements";
 
-const ArchamosSingle = ({ amos }) => {
+const ArchamosSingle = ({ amos, goToSinglePage }) => {
   const amosData = amos.item;
 
   const handleAddRemove = () => {
-    console.log("ArchamosSingle handleAddRemove function");
     // using amosData.idAmos and isTeammate useState variable
     // Add into current team (of 3)
     // If the current team is already full,
@@ -34,7 +34,9 @@ const ArchamosSingle = ({ amos }) => {
         <View
           style={[styles.iconWrapper, { backgroundColor: amosData.typeColor }]}
         >
-          <Image style={styles.typeIcon} source={amosData.icon} />
+          <Tooltip popover={<Text>{amosData.type}</Text>}>
+            <Image style={styles.typeIcon} source={amosData.icon} />
+          </Tooltip>
         </View>
 
         <Pressable
@@ -43,6 +45,13 @@ const ArchamosSingle = ({ amos }) => {
         >
           <MaterialCommunityIcons name="plus" color="white" size={26} />
           {/* <MaterialCommunityIcons name="minus" color="white" size={26} /> */}
+        </Pressable>
+
+        <Pressable
+          style={styles.btnDetails}
+          onPress={() => goToSinglePage(amosData)}
+        >
+          <Text>Détails</Text>
         </Pressable>
       </View>
     </View>
@@ -119,6 +128,24 @@ const styles = StyleSheet.create({
     right: 10,
     borderRadius: 10,
     elevation: 3,
+    borderWidth: 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnDetailsWrapper: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  btnDetails: {
+    backgroundColor: secondary_c,
+    width: 100,
+    height: 30,
+    position: "absolute",
+    bottom: 10,
+    left: 10,
+    borderRadius: 10,
     borderWidth: 2,
     alignItems: "center",
     justifyContent: "center",

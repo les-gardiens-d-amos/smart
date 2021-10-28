@@ -17,14 +17,7 @@ const DashboardScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Header
-        backgroundColor={primary_c}
-        placement="center"
-        centerComponent={{
-          text: "Dashboard",
-          style: { color: "#fff", fontSize: 20 },
-        }}
-      />
+
       <ScrollView>
         <VictoryChart width={400} theme={VictoryTheme.material}>
           <VictoryBar data={data} x="quarter" y="earnings" />
