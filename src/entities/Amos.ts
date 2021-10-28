@@ -8,10 +8,12 @@ class Amos {
     'name', 'imagePath', 'level', 
     'type', 'name', 'species', 'date'
   ];
-  private static readonly EXPECTED_PROPS = ['name'];
+  private static readonly EXPECTED_PROPS = ['name', 'species', 'type'];
 
   private static validate(data: Object): void {
     let keys = Object.keys(data);
+    let speciesKeys = Object.keys(content.species);
+    let typesKeys = Object.keys(content.types);
 
     Amos.EXPECTED_PROPS.forEach(el => {
       if (!keys.includes(el)) throw new Error(`Expected key ${el} is missing`);
@@ -20,6 +22,10 @@ class Amos {
     keys.forEach(el => {
       if (!Amos.AVAILABLE_PROPS.includes(el)) throw new Error(`Unexpected extra property ${el}`);
     });
+
+    if(!speciesKeys.includes(data.species)) throw new Error(`Unexpected species ${data.species}`)
+
+    if(!typesKeys.includes(data.type)) throw new Error(`Unexpected types ${data.type}`)
   }
 
   public idAmos: number;

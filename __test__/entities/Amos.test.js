@@ -18,6 +18,25 @@ describe('constructor', () => {
       level: 22, date: "Tue Oct 26 2021 20:57:16"}
     )).toThrowError();
   });
+
+  it('return error with unknow type', () => {
+    expect(() => new Amos(
+      {idAmos: 5, idOwner: "DaUser", id: 1,
+      imagePath: "https://imgur.com/toto.jpg",
+      species: "cat", type: "toto", name: "Pitichat",
+      level: 22, date: "Tue Oct 26 2021 20:57:16"}
+    )).toThrowError();
+  });
+
+
+  it('return error with unknow species', () => {
+    expect(() => new Amos(
+      {idAmos: 5, idOwner: "DaUser", id: 1,
+      imagePath: "https://imgur.com/toto.jpg",
+      species: "toto", type: "mammal", name: "Pitichat",
+      level: 22, date: "Tue Oct 26 2021 20:57:16"}
+    )).toThrowError();
+  });
 });
 
 describe('#serialize()', () => {
