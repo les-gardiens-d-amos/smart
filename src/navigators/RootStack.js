@@ -5,13 +5,14 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Screens
 import HomeScreen from "../screens/HomeScreen";
-import CaptureScreen from "../screens/CaptureScreen";
+// import DisplayResultScreen from "../screens/DisplayResultScreen";
 import ArchamosScreen from "../screens/ArchamosScreen";
 import AmosSingleScreen from "../screens/AmosSingleScreen";
 import DashboardScreen from "../screens/DashboardScreen";
 
 import LoginScreen from "../screens/LoginScreen";
 import { colors } from "../style/theme";
+import CameraScreen from '../screens/CameraScreen';
 const { primary_c } = colors;
 
 // const Stack = createMaterialBottomTabNavigator();
@@ -43,9 +44,18 @@ const RootStack = () => {
             options={{ title: "Accueil" }}
           />
           <Stack.Screen
-            name="CaptureScreen"
-            component={CaptureScreen}
-            options={{ title: "Capture" }}
+            name="CameraScreen"
+            component={CameraScreen}
+            options={{
+              tabBarLabel: "Capture",
+              tabBarIcon: ({ color }) => (
+                <MaterialCommunityIcons
+                  name="camera-plus"
+                  color={color}
+                  size={26}
+                />
+              ),
+            }}
           />
           <Stack.Screen
             name="ArchamosScreen"

@@ -7,6 +7,9 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
+
+import { useDispatch, useSelector } from 'react-redux';
+
 import { Divider, Header } from "react-native-elements";
 
 import { CLARIFAI_API_KEY } from "@env";
@@ -19,17 +22,18 @@ import Amos from "../entities/Amos";
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
 
-const DisplayResultScreen = ({ navigation, route }) => {
+const DisplayResultScreen = ({ navigation }) => {
   console.log("DisplayResultScreen load");
-
-  const { picture, shotUrl } = route.params;
+  const cameraState = useSelector(state => state.camera);
+  const picture = cameraState.capturedImage.data;
+  const shortUrl = cameraState.capturedImage.path;
 
   const [capturing, setCapturing] = useState(true);
   const [conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
 
-  const { location, localisation } = route.params;
-  console.log(localisation);
+  // const { location, localisation } = route.params;
+  // console.log(localisation);
 
   useEffect(() => {
     capture();
@@ -37,14 +41,14 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
   const capture = async () => {
     const apiKey = `${CLARIFAI_API_KEY}`;
-
+    console.log(apiKey)
     let raw = JSON.stringify({
       inputs: [
         {
           data: {
             image: {
-              // base64: picture.base64,
-              url: TestUrls["cat"],
+              base64: picture.base64
+              // url: TestUrls["cat"],
             },
           },
         },
@@ -64,7 +68,9 @@ const DisplayResultScreen = ({ navigation, route }) => {
     )
       .then((response) => response.text())
       .then((result) => {
+        console.log(' console.log(result)', result)
         const pictureData = JSON.parse(result).outputs[0].data.concepts;
+
         setConceptList(pictureData);
         checkForExistingAmos(pictureData);
         setCapturing(false);
@@ -123,7 +129,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
         <TouchableOpacity
           style={(styles.buttons, styles.buttonRelease)}
           onPress={() => {
-            navigation.navigate("CaptureScreen");
+            navigation.navigate("CameraScreen");
           }}
         >
           <Text style={styles.text}> Retourner </Text>
@@ -145,7 +151,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
       <Image
         style={styles.image}
         source={{
-          uri: shotUrl,
+          uri: shortUrl,
         }}
       />
 
