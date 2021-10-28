@@ -9,6 +9,7 @@ import CaptureScreen from "../screens/CaptureScreen";
 import ArchamosScreen from "../screens/ArchamosScreen";
 import AmosSingleScreen from "../screens/AmosSingleScreen";
 import DashboardScreen from "../screens/DashboardScreen";
+import DisplayResultScreen from "../screens/DisplayResultScreen";
 
 import LoginScreen from "../screens/LoginScreen";
 import { colors } from "../style/theme";
@@ -18,7 +19,7 @@ const { primary_c } = colors;
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
-  const [isConnected, setIsConnected] = useState(true);
+  const [isConnected, setIsConnected] = useState(false);
 
   const login = () => {
     setIsConnected(true);
@@ -63,6 +64,11 @@ const RootStack = () => {
             options={{
               title: "Tableau de bord",
             }}
+          />
+          <Stack.Screen
+            name="DisplayResultScreen"
+            component={DisplayResultScreen}
+            options={{ title: "Capture" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
