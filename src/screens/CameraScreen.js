@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react'
-import { View, Button, Platform, Text } from 'react-native'
+import React, { useEffect } from 'react'
+import { View, Button, Platform } from 'react-native'
 import PreviewScreen from './PreviewScreen';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Location from 'expo-location';
@@ -7,7 +7,7 @@ import * as Location from 'expo-location';
 
 
 import * as ImagePicker from 'expo-image-picker';
-import { setCapturedImageAction, setPreviewVisibleAction } from '../store/actions/CameraActions';
+import { setCapturedImageAction } from '../store/actions/CameraActions';
 
 const CameraScreen = () => {
 

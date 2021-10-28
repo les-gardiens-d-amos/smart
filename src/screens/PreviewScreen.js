@@ -1,11 +1,10 @@
-import React, { useState, setState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, ImageBackground, Image } from 'react-native'
+import React, { useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import { useDispatch } from 'react-redux';
-import { setCapturedImageAction, setPreviewVisibleAction } from '../store/actions/CameraActions';
-import store from '../store/Store';
+import { setCapturedImageAction } from '../store/actions/CameraActions';
+
 import { colors } from "../style/theme";
-import { Button } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+
 import DisplayResultScreen from './DisplayResultScreen';
 const { primary_c, secondary_c, tertiary_c, error_c } = colors;
 
@@ -58,7 +57,6 @@ const PreviewScreen = ({ image }) => {
             </View>
           </View>
         )
-
       }
 
     </View>

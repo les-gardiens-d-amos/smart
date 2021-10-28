@@ -1,11 +1,5 @@
 import * as actionTypes from "./ActionTypes";
 
-const startCameraAction = () => {
-  return {
-    type: actionTypes.SET_START_CAMERA,
-  }
-}
-
 const takePictureAction = () => {
   return {
     type: actionTypes.TAKE_PICTURE,

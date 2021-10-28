@@ -1,6 +1,6 @@
 import * as actionTypes from "../actions/ActionTypes";
 
-const camera = { st: false, capturedImage: null, cameraLocation: null };
+const camera = { capturedImage: null, cameraLocation: null };
 
 const cameraSlice = (state = camera, action) => {
 
