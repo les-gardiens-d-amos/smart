@@ -15,48 +15,9 @@ const PreviewScreen = ({ image }) => {
   const dispatch = useDispatch();
   const [getInfo, setGetInfo] = useState(false)
 
-  var myHeaders = new Headers();
-  myHeaders.append("Authorization", "Key 61e0d916658f40d5876a16e9c0bf054d");
-  myHeaders.append("Content-Type", "application/json");
-
   const savePhoto = () => {
-
-    // const data = JSON.stringify({
-    //   "inputs": [
-    //     {
-    //       "data": {
-    //         "image": {
-    //           "base64": image.data.base64
-    //         },
-    //       }
-    //     }
-    //   ],
-    //   "model": {
-    //     "output_info": {
-    //       "output_config": {
-    //         "min_value": 0.8
-    //       }
-    //     }
-    //   }
-    // });
-
-    // var requestOptions = {
-    //   method: 'POST',
-    //   headers: myHeaders,
-    //   body: data,
-    //   redirect: 'follow'
-    // };
-
-    // fetch("https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs", requestOptions)
-    //   .then(response => response.text())
-    //   .then(result => {
-    //     console.log(JSON.parse(result).outputs[0].data.concepts)
-    //     setAnimalDetected(JSON.parse(result).outputs[0].data.concepts)
-    //   })
-    //   .catch(error => console.log('error', error));
     setGetInfo(true);
   }
-
 
   const cancelPicture = () => {
     dispatch(setCapturedImageAction({}))

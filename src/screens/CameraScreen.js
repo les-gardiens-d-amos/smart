@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { View, Button, Platform, Text } from 'react-native'
 import PreviewScreen from './PreviewScreen';
-import store from '../store/Store';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Location from 'expo-location';
 
