@@ -3,41 +3,53 @@ import {
   StyleSheet,
   Text,
   View,
-  FlatList,
   Image,
   TouchableOpacity,
 } from "react-native";
 
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 
-import { Divider, Header } from "react-native-elements";
+import axios from "axios";
+import * as SecureStore from "expo-secure-store";
 
 import { CLARIFAI_API_KEY } from "@env";
 
 import { colors } from "../style/theme";
-const { primary, secondary, tertiary, error } = colors;
+const { primary, error } = colors;
 
-import Amos from "../entities/Amos";
-
-import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
+import testUrls from "../tempData/TestUrls";
 
 const DisplayResultScreen = ({ navigation }) => {
 
   const cameraState = useSelector(state => state.camera);
   const picture = cameraState.capturedImage.data;
   const shortUrl = cameraState.capturedImage.path;
+  const { localisation } = route.params;
 
   const [capturing, setCapturing] = useState(true);
-  const [conceptList, setConceptList] = useState(null);
+  const [_conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
-
-  // const { location, localisation } = route.params;
-  // console.log(localisation);
+  const [userId, setUserId] = useState(null);
+  const [userToken, setUserToken] = useState(null);
 
   useEffect(() => {
-    capture();
+    getUserId();
+    getUserToken();
   }, []);
+
+  const getUserId = () => {
+    SecureStore.getItemAsync("user_id").then(response => {
+      setUserId(response);
+    });
+  }
+
+  const getUserToken = () => {
+    SecureStore.getItemAsync("jwt").then(response => {
+      setUserToken(response)
+      capture();
+    });
+  }
 
   const capture = async () => {
     const apiKey = `${CLARIFAI_API_KEY}`;
@@ -83,10 +95,88 @@ const DisplayResultScreen = ({ navigation }) => {
 
   const keep = () => {
     console.log("Chosen to keep the captured AMOS", amosToCapture);
-    // Place the Amos in the Amos pull of the player
-    // geolocalisation stats to register
-    // handling image and upload
+    saveAmosImage();
   };
+
+  const saveAmosImage = () => {
+    let FormData = require('form-data');
+    let requestInfo = new FormData();
+    // replace test url by image in base64
+    requestInfo.append('image', testUrls["cat"]);
+    // replace type of img by base64
+    requestInfo.append('type', 'url');
+
+    let config = {
+      method: 'post',
+      url: 'https://api.imgur.com/3/upload',
+      headers: { 
+        'Authorization': 'Bearer Client-ID b81cd4b478ce34377f2bc06d1a6ce66b225760a4'
+      },
+      data : requestInfo
+    };
+
+    axios(config).then(response => {
+      if (response.data.success && response.data.status === 200) {
+        saveAmos(response.data.data.link);
+      }
+    }).catch(error => {
+      console.log(error);
+    });
+  }
+
+  const saveAmos = (imgPath) => {
+    let amos = JSON.stringify({
+      "user_id": userId,
+      "animal_id": amosToCapture.id,
+      "species": amosToCapture.species,
+      "amos_type": amosToCapture.type,
+      "name": amosToCapture.name,
+      "image_path": imgPath
+    });
+
+    let config = {
+      method: 'post',
+      url: 'https://happy-amos.herokuapp.com/amos',
+      headers: { 
+        'Authorization': 'Bearer ' + userToken,
+        'Content-Type': 'application/json'
+      },
+      data : amos
+    };
+    
+    axios(config).then(response => {
+      saveLocation(response.data.id);
+    }).catch(error => {
+      console.log(error);
+    });  
+  }
+
+  const saveLocation = (idAmos) => {
+    let coords = localisation.coords;
+    let coordInfo = JSON.stringify({
+      "long": coords.longitude,
+      "lat": coords.latitude,
+      "altitude": coords.altitude,
+      "accuracy": coords.accuracy,
+      "amos_id": idAmos
+    });
+
+    let config = {
+      method: 'post',
+      url: 'https://happy-amos.herokuapp.com/catches',
+      headers: { 
+        'Authorization': 'Bearer ' + userToken,
+        'Content-Type': 'application/json'
+      },
+      data : coordInfo
+    };
+
+    axios(config).then(response => {
+      console.log(response.data);
+    }).catch(error => {
+      console.log(error);
+    });
+  }
 
   const release = () => {
     console.log("Chosen to realease the AMOS");

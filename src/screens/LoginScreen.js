@@ -72,7 +72,9 @@ const LoginScreen = (props) => {
   };
 
   const manageLoginResponse = (data) => {
+    console.log(data);
     SecureStore.setItemAsync("jwt", data.token);
+    SecureStore.setItemAsync("user_id", data.user_info.id);
     login();
   };
 
@@ -83,23 +85,37 @@ const LoginScreen = (props) => {
   if (!isNewUser) {
     return (
       <View style={styles.container}>
+        <Header
+          backgroundColor={primary_c}
+          placement="center"
+          centerComponent={{
+            text: "Connexion",
+            style: { color: "#fff", fontSize: 20 },
+          }}
+        />
         <TextInput
           style={styles.input}
-          placeholder="Enter your email..."
+          placeholder="e-mail"
           onChangeText={setEmail}
           value={email}
         />
         <TextInput
           style={styles.input}
-          placeholder="Enter your password..."
+          placeholder="mot de passe"
           onChangeText={setPassword}
           value={password}
           secureTextEntry={true}
         />
-        <Button style={styles.btn} title="Login" onPress={loginUser} />
+        <Button 
+          color={primary_c}
+          style={styles.btn} 
+          title="Se connecter" 
+          onPress={loginUser}
+        />
         <Button
+          color={primary_c}
           style={styles.btn}
-          title="New user ? can you create an account"
+          title="Nouveau par ici ? créez cotre compte"
           onPress={switchLoginRegister}
         />
       </View>
@@ -111,39 +127,45 @@ const LoginScreen = (props) => {
           backgroundColor={primary_c}
           placement="center"
           centerComponent={{
-            text: "Register",
+            text: "Inscription",
             style: { color: "#fff", fontSize: 20 },
           }}
         />
         {userIsRegister ? (
           <View style={styles.flashMessage}>
-            <Text style={{ color: "white" }}>Welcome to the adventure</Text>
+            <Text style={{ color: "white" }}>Bienvenue dans l'aventure</Text>
           </View>
         ) : null}
         <TextInput
           style={styles.input}
-          placeholder="Enter your email..."
+          placeholder="e-mail"
           onChangeText={setEmail}
           value={email}
           secureTextEntry={false}
         />
         <TextInput
           style={styles.input}
-          placeholder="Enter your name..."
+          placeholder="nom ou pseudo"
           onChangeText={setName}
           value={name}
         />
         <TextInput
           style={styles.input}
-          placeholder="Enter your password..."
+          placeholder="mot de passe"
           onChangeText={setPassword}
           value={password}
           secureTextEntry={true}
         />
-        <Button style={styles.btn} title="Register" onPress={registerUser} />
+        <Button 
+          color={primary_c} 
+          style={styles.btn} 
+          title="S'inscrire" 
+          onPress={registerUser} 
+        />
         <Button
+          color={primary_c}
           style={styles.btn}
-          title="You have an account ? can you login to your account"
+          title="Vous avez déjà un compte ? connectez vous"
           onPress={switchLoginRegister}
         />
       </View>

@@ -9,9 +9,6 @@ import { colors } from "../style/theme";
 const { primary_c, secondary_c, tertiary_c, error_c } = colors;
 
 const HomeScreen = ({ navigation, route }) => {
-  // console.log("store : ");
-  // SecureStore.getItemAsync("jwt").then(response => console.log(response));
-
   return (
     <View style={styles.container}>
       <View style={styles.buttonsWrapper}>
