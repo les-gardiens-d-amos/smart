@@ -39,6 +39,5 @@ export const content: Object = {
     "Testudine",
     "Stylommatophore"  
   ]
-
 }
   

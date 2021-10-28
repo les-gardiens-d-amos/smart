@@ -22,29 +22,15 @@ const ArchamosScreen = () => {
   useEffect(() => {
     // Populate list with the player's amos with request database
     // Uses temp data for now
-
     let newList = [];
 
     for (const amos of dataAmosList) {
-      let amm = new Amos(
-        amos.idAmos,
-        amos.idOwner,
-        amos.id,
-        amos.imagePath,
-        amos.species,
-        amos.type,
-        amos.name,
-        amos.level,
-        amos.date
-      ).serialize();
-      // console.log("Amos generated", amm);
+      let amm = new Amos(amos).serialize();
       newList.push(amm);
     }
 
     setAmosList(newList);
   }, []);
-
-  // <ActivityIndicator size="large" color={primary} />
 
   return (
     <View style={styles.container}>
@@ -81,11 +67,8 @@ export default ArchamosScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingTop: StatusBarHeight + 30,
     width: "100%",
     height: "100%",
-    // alignItems: "center",
-    // justifyContent: "center",
   },
   searchBar: {},
   listWrapper: {

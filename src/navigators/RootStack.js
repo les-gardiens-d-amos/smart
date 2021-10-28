@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createMaterialBottomTabNavigator } from "@react-navigation/material-bottom-tabs";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
@@ -7,7 +6,6 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 // Screens
 import HomeScreen from "../screens/HomeScreen";
 import CaptureScreen from "../screens/CaptureScreen";
-// import DisplayResultScreen from "../screens/DisplayResultScreen";
 import ArchamosScreen from "../screens/ArchamosScreen";
 import DashboardScreen from "../screens/DashboardScreen";
 
@@ -93,5 +91,3 @@ const RootStack = () => {
 };
 
 export default RootStack;
-
-const styles = StyleSheet.create({});

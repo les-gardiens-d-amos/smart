@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 
 const AmosSingleScreen = ({ route }) => {
   const { amos } = route.params;
@@ -13,5 +13,3 @@ const AmosSingleScreen = ({ route }) => {
 };
 
 export default AmosSingleScreen;
-
-const styles = StyleSheet.create({});

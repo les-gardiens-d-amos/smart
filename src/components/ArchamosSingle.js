@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Pressable, Image, StyleSheet, Text, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "../style/theme";
@@ -6,8 +6,6 @@ const { primary_c, secondary_c } = colors;
 
 const ArchamosSingle = ({ amos }) => {
   const amosData = amos.item;
-
-  console.log("amosData", amosData);
 
   const handleAddRemove = () => {
     console.log("ArchamosSingle handleAddRemove function");
@@ -59,7 +57,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     alignItems: "center",
-    // justifyContent: "center",
   },
   amosContainer: {
     flex: 1,

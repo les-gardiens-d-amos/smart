@@ -1,6 +1,6 @@
 import { colorForType } from "../style/theme";
 import amosIcons from "../../assets/amosIcons";
-import {content} from "../../locales/fr"
+import { content } from "../../locales/fr"
 
 class Amos {
   private static readonly AVAILABLE_PROPS = [
