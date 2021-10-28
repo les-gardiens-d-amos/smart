@@ -1,16 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Text, View, StyleSheet } from "react-native";
 import { Button } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Header } from "react-native-elements";
 
-import { colors, StatusBarHeight } from "../style/theme";
-const { primary_c, secondary_c } = colors;
+import { colors } from "../style/theme";
+const { primary_c } = colors;
 
 import Amos from "../entities/Amos";
 import archamosData from "../tempData/ArchamosData";
 
-const AmosSingleScreen = ({ navigation, route }) => {
+const AmosSingleScreen = ({ route }) => {
   const { amosData } = route.params;
 
   const [amos, setAmos] = useState();
@@ -21,17 +20,7 @@ const AmosSingleScreen = ({ navigation, route }) => {
     // For now get the amos from the tempData
     const foundAmos = archamosData.find((x) => x.idAmos === amosData.idAmos);
 
-    const cleanAmos = new Amos(
-      foundAmos.idAmos,
-      foundAmos.idOwner,
-      foundAmos.id,
-      foundAmos.image_path,
-      foundAmos.species,
-      foundAmos.type,
-      foundAmos.name,
-      foundAmos.level,
-      foundAmos.date
-    ).serialize();
+    const cleanAmos = new Amos(foundAmos).serialize();
 
     setAmos(cleanAmos);
   }, []);
