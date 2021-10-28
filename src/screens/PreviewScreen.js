@@ -4,12 +4,16 @@ import { useDispatch } from 'react-redux';
 import { setCapturedImageAction, setPreviewVisibleAction } from '../store/actions/CameraActions';
 import store from '../store/Store';
 import { colors } from "../style/theme";
+import { Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import DisplayResultScreen from './DisplayResultScreen';
 const { primary_c, secondary_c, tertiary_c, error_c } = colors;
 
 
 const PreviewScreen = ({ image }) => {
-  console.log(image.path)
+
   const dispatch = useDispatch();
+  const [getInfo, setGetInfo] = useState(false)
 
   var myHeaders = new Headers();
   myHeaders.append("Authorization", "Key 61e0d916658f40d5876a16e9c0bf054d");
@@ -17,39 +21,40 @@ const PreviewScreen = ({ image }) => {
 
   const savePhoto = () => {
 
-    const data = JSON.stringify({
-      "inputs": [
-        {
-          "data": {
-            "image": {
-              "base64": image.data.base64
-            },
-          }
-        }
-      ],
-      "model": {
-        "output_info": {
-          "output_config": {
-            "min_value": 0.8
-          }
-        }
-      }
-    });
+    // const data = JSON.stringify({
+    //   "inputs": [
+    //     {
+    //       "data": {
+    //         "image": {
+    //           "base64": image.data.base64
+    //         },
+    //       }
+    //     }
+    //   ],
+    //   "model": {
+    //     "output_info": {
+    //       "output_config": {
+    //         "min_value": 0.8
+    //       }
+    //     }
+    //   }
+    // });
 
-    var requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      body: data,
-      redirect: 'follow'
-    };
+    // var requestOptions = {
+    //   method: 'POST',
+    //   headers: myHeaders,
+    //   body: data,
+    //   redirect: 'follow'
+    // };
 
-    fetch("https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs", requestOptions)
-      .then(response => response.text())
-      .then(result => {
-        console.log(JSON.parse(result).outputs[0].data.concepts)
-        setAnimalDetected(JSON.parse(result).outputs[0].data.concepts)
-      })
-      .catch(error => console.log('error', error));
+    // fetch("https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs", requestOptions)
+    //   .then(response => response.text())
+    //   .then(result => {
+    //     console.log(JSON.parse(result).outputs[0].data.concepts)
+    //     setAnimalDetected(JSON.parse(result).outputs[0].data.concepts)
+    //   })
+    //   .catch(error => console.log('error', error));
+    setGetInfo(true);
   }
 
 
@@ -59,35 +64,47 @@ const PreviewScreen = ({ image }) => {
 
 
   return (
-    <View style={styles.screenView}>
-      <Image
-        source={{ uri: image.path }}
-        style={{
-          flex: 1
-        }}
-      >
-      </Image>
-      <View style={styles.imageBackgroundView}>
-        <View style={styles.buttonsContainerView}>
-          <TouchableOpacity
-            onPress={cancelPicture}
-            style={styles.buttons}
-          >
-            <Text style={styles.buttonsText}>
-              CANCEL
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={savePhoto}
-            style={styles.buttons}
-          >
-            <Text style={styles.buttonsText}>
-              SAVE
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+    <View style={styles.container}>
+      {getInfo ?
+        (
+          <DisplayResultScreen />
+        ) : (
+          <View style={styles.screenView}>
+            <Image
+              source={{ uri: image.path }}
+              style={{
+                flex: 1
+              }}
+            >
+            </Image>
+            <View style={styles.imageBackgroundView}>
+              <View style={styles.buttonsContainerView}>
+                <TouchableOpacity
+                  onPress={cancelPicture}
+                  style={styles.buttons}
+                >
+                  <Text style={styles.buttonsText}>
+                    CANCEL
+                  </Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={savePhoto}
+                  style={styles.buttons}
+                >
+                  <Text style={styles.buttonsText}>
+                    SAVE
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        )
+
+      }
+
     </View>
+
+
   )
 }
 
