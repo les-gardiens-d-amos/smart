@@ -22,7 +22,12 @@ const ArchamosSingle = ({ amos, goToSinglePage }) => {
     <View style={styles.container}>
       <View style={styles.amosContainer}>
         <View style={styles.photoWrapper}>
-          <Image style={styles.photo} source={amosData.imagePath} />
+          <Image
+            style={styles.photo}
+            source={{
+              uri: amosData.image_path,
+            }}
+          />
         </View>
 
         <Text style={styles.name}>{amosData.name}</Text>
@@ -34,7 +39,7 @@ const ArchamosSingle = ({ amos, goToSinglePage }) => {
         <View
           style={[styles.iconWrapper, { backgroundColor: amosData.typeColor }]}
         >
-          <Tooltip popover={<Text>{amosData.type}</Text>}>
+          <Tooltip popover={<Text>{amosData.amos_type}</Text>}>
             <Image style={styles.typeIcon} source={amosData.icon} />
           </Tooltip>
         </View>

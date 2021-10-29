@@ -18,11 +18,11 @@ const AmosSingleScreen = ({ route }) => {
     // Request to get information on this particular amos
     // Stats, how many fights, geoloc etc
     // For now get the amos from the tempData
-    const foundAmos = archamosData.find((x) => x.idAmos === amosData.idAmos);
+    // const foundAmos = archamosData.find((x) => x.idAmos === amosData.idAmos);
 
-    const cleanAmos = new Amos(foundAmos).serialize();
+    // const cleanAmos = new Amos(amosData).serialize();
 
-    setAmos(cleanAmos);
+    setAmos(amosData);
   }, []);
 
   const changeName = () => {
@@ -43,12 +43,17 @@ const AmosSingleScreen = ({ route }) => {
             <Text style={styles.name}>{amos.name}</Text>
           </View>
 
-          <Text style={styles.type}>{amos.type}</Text>
+          <Text style={styles.type}>{amos.amos_type}</Text>
           <View style={styles.speciesLvlWrapper}>
             <Text style={styles.level}>{amos.species}</Text>
             <Text style={styles.level}>{" de niveau " + amos.level}</Text>
           </View>
-          <Text style={styles.date}>{amos.date}</Text>
+
+          <View style={styles.dateWrapper}>
+            <Text style={styles.date}>
+              {"Date de capture : " + amos.capturedAt}
+            </Text>
+          </View>
         </>
       )}
     </View>
@@ -92,5 +97,13 @@ const styles = StyleSheet.create({
   },
   species: {},
   level: {},
-  date: {},
+  dateWrapper: {
+    padding: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  date: {
+    textAlign: "center",
+    fontWeight: "bold",
+  },
 });
