@@ -4,7 +4,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
 // Screens
 import HomeScreen from "../screens/HomeScreen";
-// import DisplayResultScreen from "../screens/DisplayResultScreen";
 import ArchamosScreen from "../screens/ArchamosScreen";
 import AmosSingleScreen from "../screens/AmosSingleScreen";
 import DashboardScreen from "../screens/DashboardScreen";

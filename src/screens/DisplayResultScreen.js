@@ -53,7 +53,6 @@ const DisplayResultScreen = ({ navigation }) => {
 
   const capture = async () => {
     const apiKey = `${CLARIFAI_API_KEY}`;
-    console.log(apiKey)
     let raw = JSON.stringify({
       inputs: [
         {
@@ -80,9 +79,7 @@ const DisplayResultScreen = ({ navigation }) => {
     )
       .then((response) => response.text())
       .then((result) => {
-        console.log(' console.log(result)', result)
         const pictureData = JSON.parse(result).outputs[0].data.concepts;
-
         setConceptList(pictureData);
         checkForExistingAmos(pictureData);
         setCapturing(false);
@@ -109,10 +106,10 @@ const DisplayResultScreen = ({ navigation }) => {
     let config = {
       method: 'post',
       url: 'https://api.imgur.com/3/upload',
-      headers: { 
+      headers: {
         'Authorization': 'Bearer Client-ID b81cd4b478ce34377f2bc06d1a6ce66b225760a4'
       },
-      data : requestInfo
+      data: requestInfo
     };
 
     axios(config).then(response => {
@@ -137,18 +134,18 @@ const DisplayResultScreen = ({ navigation }) => {
     let config = {
       method: 'post',
       url: 'https://happy-amos.herokuapp.com/amos',
-      headers: { 
+      headers: {
         'Authorization': 'Bearer ' + userToken,
         'Content-Type': 'application/json'
       },
-      data : amos
+      data: amos
     };
-    
+
     axios(config).then(response => {
       saveLocation(response.data.id);
     }).catch(error => {
       console.log(error);
-    });  
+    });
   }
 
   const saveLocation = (idAmos) => {
@@ -164,11 +161,11 @@ const DisplayResultScreen = ({ navigation }) => {
     let config = {
       method: 'post',
       url: 'https://happy-amos.herokuapp.com/catches',
-      headers: { 
+      headers: {
         'Authorization': 'Bearer ' + userToken,
         'Content-Type': 'application/json'
       },
-      data : coordInfo
+      data: coordInfo
     };
 
     axios(config).then(response => {

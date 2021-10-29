@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import { useDispatch } from 'react-redux';
 import { setCapturedImageAction } from '../store/actions/CameraActions';
-
 import { colors } from "../style/theme";
-
 import DisplayResultScreen from './DisplayResultScreen';
-const { primary_c, secondary_c, tertiary_c, error_c } = colors;
 
 
 const PreviewScreen = ({ image }) => {
