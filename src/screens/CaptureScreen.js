@@ -67,14 +67,14 @@ const CameraScreen = () => {
 
     if (!result.cancelled) {
       const location = await getLocation();
-      dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude } }));
+      dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude, altitude: location.coords.altitude, accuracy: location.coords.accuracy } }));
     }
   };
 
   const takePicture = async () => {
     const result = await ImagePicker.launchCameraAsync(options)
     const location = await getLocation();
-    dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude } }));
+    dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude, altitude: location.coords.altitude, accuracy: location.coords.accuracy } }));
   }
 
   return (

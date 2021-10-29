@@ -9,6 +9,8 @@ import {
 
 import { API, CLARIFAI, IMGUR } from "../store/axios";
 import * as SecureStore from "expo-secure-store";
+import { useSelector } from 'react-redux';
+
 
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
@@ -16,18 +18,21 @@ const { primary_c, error_c } = colors;
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
 
-const DisplayResultScreen = ({ navigation, route }) => {
+const DisplayResultScreen = ({ navigation }) => {
   const cameraState = useSelector(state => state.camera);
 
   const picture = cameraState.capturedImage.data;
   const shortUrl = cameraState.capturedImage.path;
-  const { localisation } = route.params;
+  const localisation = cameraState.cameraLocation;
 
   const [capturing, setCapturing] = useState(true);
   const [_conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
+
+  console.log('localisation', localisation)
+
 
   useEffect(() => {
     getUserId();
@@ -65,6 +70,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
     CLARIFAI.post('', raw)
       .then(response => {
         const pictureData = response.data.outputs[0].data.concepts;
+        console.log(pictureData)
         setConceptList(pictureData);
         checkForExistingAmos(pictureData);
         setCapturing(false);
@@ -75,6 +81,8 @@ const DisplayResultScreen = ({ navigation, route }) => {
       })
   };
 
+
+
   const keep = () => {
     console.log("Chosen to keep the captured AMOS", amosToCapture);
     saveAmosImage();
@@ -84,9 +92,12 @@ const DisplayResultScreen = ({ navigation, route }) => {
     let FormData = require('form-data');
     let requestInfo = new FormData();
     // replace test url by image in base64
-    requestInfo.append('image', testUrls["cat"]);
+    // requestInfo.append('image', testUrls["cat"]);
+    // // replace type of img by base64
+    // requestInfo.append('type', 'url');
+    requestInfo.append('image', picture.base64);
     // replace type of img by base64
-    requestInfo.append('type', 'url');
+    requestInfo.append('type', 'base64');
 
     IMGUR.post('', requestInfo)
       .then(response => {
@@ -115,12 +126,11 @@ const DisplayResultScreen = ({ navigation, route }) => {
   }
 
   const saveLocation = (idAmos) => {
-    let coords = localisation.coords;
     let coordInfo = JSON.stringify({
-      "long": coords.longitude,
-      "lat": coords.latitude,
-      "altitude": coords.altitude,
-      "accuracy": coords.accuracy,
+      "long": localisation.long,
+      "lat": localisation.lat,
+      "altitude": localisation.altitude,
+      "accuracy": localisation.accuracy,
       "amos_id": idAmos
     });
 
