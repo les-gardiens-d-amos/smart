@@ -32,10 +32,7 @@ const LoginScreen = (props) => {
       setUserIsRegister(true);
       login();
     })
-    .catch(error => {
-      console.log("Register post error", error);
-      setCapturing(false);
-    })
+    .catch(error => { console.log("Register post error", error); })
   };
 
   const loginUser = () => {
@@ -45,10 +42,7 @@ const LoginScreen = (props) => {
     .then(response => {
       manageLoginResponse(response.data);
     })
-    .catch(error => {
-      console.log("Register post error", error);
-      setCapturing(false);
-    })
+    .catch(error => { console.log("login post error", error); })
   };
 
   const manageLoginResponse = (data) => {
