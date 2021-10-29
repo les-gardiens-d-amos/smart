@@ -11,7 +11,7 @@ const HomeScreen = ({ navigation, route }) => {
       <View style={styles.buttonsWrapper}>
         <Button
           style={styles.buttons}
-          onPress={() => navigation.navigate("CaptureScreen")}
+          onPress={() => navigation.navigate("CameraScreen")}
           title="Capture page"
           color={primary_c}
           accessibilityLabel="Capture"

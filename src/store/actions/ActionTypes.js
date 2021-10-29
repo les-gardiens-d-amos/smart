@@ -1,0 +1,4 @@
+export const TAKE_PICTURE = "TAKE_PICTURE";
+export const SAVE_PICTURE = "SAVE_PICTURE"
+export const SET_CAPTURED_IMAGE = "SET_CAPTURED_IMAGE"
+

@@ -14,38 +14,41 @@
     "@react-navigation/material-bottom-tabs": "^6.0.9",
     "@react-navigation/native": "^6.0.6",
     "@react-navigation/native-stack": "^6.2.5",
-    "axios": "^0.23.0",
-    "expo": "~42.0.1",
-    "expo-camera": "~11.2.2",
-    "expo-constants": "~11.0.1",
-    "expo-location": "~12.1.2",
-    "expo-secure-store": "~10.2.0",
-    "expo-status-bar": "~1.0.4",
-    "react": "16.13.1",
-    "react-dom": "16.13.1",
-    "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
+    "@reduxjs/toolkit": "^1.6.2",
+    "@sideway/address": "^4.1.2",
+    "axios": "^0.24.0",
+    "expo": "~43.0.1",
+    "expo-camera": "~12.0.3",
+    "expo-constants": "~12.1.3",
+    "expo-image-picker": "~11.0.3",
+    "expo-location": "~13.0.4",
+    "expo-secure-store": "~11.0.3",
+    "expo-status-bar": "~1.1.0",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "react-native": "^0.66.1",
     "react-native-dotenv": "^3.2.0",
     "react-native-elements": "^3.4.2",
     "react-native-paper": "^4.9.2",
-    "react-native-safe-area-context": "3.2.0",
-    "react-native-screens": "~3.4.0",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-screens": "~3.8.0",
     "react-native-svg": "^12.1.1",
-    "react-native-web": "~0.13.12",
+    "react-native-web": "^0.17.5",
     "react-redux": "^7.2.5",
     "react-test-renderer": "^17.0.2",
     "redux": "^4.1.1",
-    "redux-thunk": "^2.3.0",
+    "redux-thunk": "^2.4.0",
     "victory-native": "^35.5.5"
   },
   "devDependencies": {
     "@babel/core": "^7.9.0",
     "jest-expo": "^43.0.1",
-    "typescript": "~4.0.0"
+    "typescript": "~4.4.0"
   },
   "jest": {
     "preset": "jest-expo",
     "transformIgnorePatterns": [
-      "node_modules/(?!(jest-)?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@react-native-material/core)"
+      "node_modules/(?!(jest-)?@?react-native|react-clone-referenced-element|@react-native-community|expo(nent)?|@expo(nent)?/.*|@react-navigation|@react-navigation/.*|@unimodules/.*|unimodules|sentry-expo|native-base|@react-native-material/core)"
     ]
   },
   "private": true

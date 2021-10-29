@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
 } from "react-native";
 
+import { useSelector } from 'react-redux';
+
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
@@ -15,14 +17,14 @@ import { CLARIFAI_API_KEY } from "@env";
 import { colors } from "../style/theme";
 const { primary, error } = colors;
 
-import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
 import testUrls from "../tempData/TestUrls";
 
-const DisplayResultScreen = ({ navigation, route }) => {
-  console.log("DisplayResultScreen load");
+const DisplayResultScreen = ({ navigation }) => {
 
-  const { shotUrl } = route.params;
+  const cameraState = useSelector(state => state.camera);
+  const picture = cameraState.capturedImage.data;
+  const shortUrl = cameraState.capturedImage.path;
   const { localisation } = route.params;
 
   const [capturing, setCapturing] = useState(true);
@@ -51,14 +53,13 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
   const capture = async () => {
     const apiKey = `${CLARIFAI_API_KEY}`;
-
     let raw = JSON.stringify({
       inputs: [
         {
           data: {
             image: {
-              // base64: picture.base64,
-              url: TestUrls["cat"],
+              base64: picture.base64
+              // url: TestUrls["cat"],
             },
           },
         },
@@ -105,10 +106,10 @@ const DisplayResultScreen = ({ navigation, route }) => {
     let config = {
       method: 'post',
       url: 'https://api.imgur.com/3/upload',
-      headers: { 
+      headers: {
         'Authorization': 'Bearer Client-ID b81cd4b478ce34377f2bc06d1a6ce66b225760a4'
       },
-      data : requestInfo
+      data: requestInfo
     };
 
     axios(config).then(response => {
@@ -133,18 +134,18 @@ const DisplayResultScreen = ({ navigation, route }) => {
     let config = {
       method: 'post',
       url: 'https://happy-amos.herokuapp.com/amos',
-      headers: { 
+      headers: {
         'Authorization': 'Bearer ' + userToken,
         'Content-Type': 'application/json'
       },
-      data : amos
+      data: amos
     };
-    
+
     axios(config).then(response => {
       saveLocation(response.data.id);
     }).catch(error => {
       console.log(error);
-    });  
+    });
   }
 
   const saveLocation = (idAmos) => {
@@ -160,11 +161,11 @@ const DisplayResultScreen = ({ navigation, route }) => {
     let config = {
       method: 'post',
       url: 'https://happy-amos.herokuapp.com/catches',
-      headers: { 
+      headers: {
         'Authorization': 'Bearer ' + userToken,
         'Content-Type': 'application/json'
       },
-      data : coordInfo
+      data: coordInfo
     };
 
     axios(config).then(response => {
@@ -215,7 +216,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
         <TouchableOpacity
           style={(styles.buttons, styles.buttonRelease)}
           onPress={() => {
-            navigation.navigate("CaptureScreen");
+            navigation.navigate("CameraScreen");
           }}
         >
           <Text style={styles.text}> Retourner </Text>
@@ -237,7 +238,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
       <Image
         style={styles.image}
         source={{
-          uri: shotUrl,
+          uri: shortUrl,
         }}
       />
 
