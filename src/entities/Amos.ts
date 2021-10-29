@@ -4,13 +4,27 @@ import { content } from "../../locales/fr"
 
 class Amos {
   private static readonly AVAILABLE_PROPS = [
-    'idAmos', 'idOwner', 'id', 
-    'name', 'imagePath', 'level', 
-    'type', 'name', 'species', 'date'
+    'id', 'user_id', 'animal_id', 
+    'name', 'image_path', 'level', 
+    'amos_type', 'name', 'species', 'created_at', 'updated_at'
   ];
-  private static readonly EXPECTED_PROPS = ['name', 'species', 'type'];
+  private static readonly EXPECTED_PROPS = ['name', 'species', 'amos_type'];
 
   private static validate(data: Object): void {
+
+	// Object {
+	// 	"amos_type": "invertebrate",
+	// 	"animal_id": 10,
+	// 	"created_at": "2021-10-29T15:59:17.721Z",
+	// 	"id": "95f1ee39-3d70-4673-95ac-aad2e417cc55",
+	// 	"image_path": "https://i.imgur.com/ufJaTfH.jpeg",
+	// 	"level": 1,
+	// 	"name": "snail",
+	// 	"species": "snail",
+	// 	"updated_at": "2021-10-29T15:59:17.721Z",
+	// 	"user_id": "10888037-76d5-4329-aec9-9d1dccc6dd2b",
+	//   },
+
     let keys = Object.keys(data);
     let speciesKeys = Object.keys(content.species);
     let typesKeys = Object.keys(content.types);
@@ -25,15 +39,15 @@ class Amos {
 
     if(!speciesKeys.includes(data.species)) throw new Error(`Unexpected species ${data.species}`)
 
-    if(!typesKeys.includes(data.type)) throw new Error(`Unexpected types ${data.type}`)
+    if(!typesKeys.includes(data.amos_type)) throw new Error(`Unexpected types ${data.amos_type}`)
   }
 
-  public idAmos: number;
-  public idOwner: number;
-  public id: number;
-  public imagePath: string;
+  public id: string;
+  public user_id: number;
+  public animal_id: number;
+  public image_path: string;
   public level: number;
-  public type: string;
+  public amos_type: string;
   public name: string;
   public species: string;
   public date: Date;
@@ -50,17 +64,23 @@ class Amos {
     Object.assign(this, {...data});
     this.name = data['name'];
     this.level = data['level'] > 1 ? data['level'] : 1;
-    this.date = (!!data['date'] ? new Date(data['date']) : new Date());
+    this.date = (!!data['created_at'] ? new Date(data['created_at']) : new Date());
   }
 
   public serialize(): Object {
+
+	console.log("Serialize date",this.date)
+
     let val = {...this};
+
     val['icon'] = amosIcons[val.species];
-    val['typeColor'] = colorForType[val.type];
-    val.species = this.capitalize(content.species[val.species]);
-    val.type = this.capitalize(content.types[val.type]);
+    val['typeColor'] = colorForType[val.amos_type];
+    val.species = content.species[val.species];
+    val['amos_type'] = content.types[val.amos_type];
     val['capturedAt'] = this.capturedAt();
     delete val.date;
+
+	console.log("Serialize VALS RETURNED",val)
 
     return { ...val }
   }
