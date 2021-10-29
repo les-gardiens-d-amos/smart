@@ -7,17 +7,14 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import axios from "axios";
+import { API, CLARIFAI, IMGUR } from "../states/axios";
 import * as SecureStore from "expo-secure-store";
 
-import { CLARIFAI_API_KEY } from "@env";
-
 import { colors } from "../style/theme";
-const { primary, error } = colors;
+const { primary_c, error_c } = colors;
 
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
-import testUrls from "../tempData/TestUrls";
 
 const DisplayResultScreen = ({ navigation, route }) => {
   console.log("DisplayResultScreen load");
@@ -50,7 +47,6 @@ const DisplayResultScreen = ({ navigation, route }) => {
   }
 
   const capture = async () => {
-    const apiKey = `${CLARIFAI_API_KEY}`;
 
     let raw = JSON.stringify({
       inputs: [
@@ -65,28 +61,17 @@ const DisplayResultScreen = ({ navigation, route }) => {
       ],
     });
 
-    let requestOptions = {
-      method: "POST",
-      headers: { Authorization: apiKey, "Content-Type": "application/json" },
-      body: raw,
-      redirect: "follow",
-    };
-
-    fetch(
-      "https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs",
-      requestOptions
-    )
-      .then((response) => response.text())
-      .then((result) => {
-        const pictureData = JSON.parse(result).outputs[0].data.concepts;
-        setConceptList(pictureData);
-        checkForExistingAmos(pictureData);
-        setCapturing(false);
-      })
-      .catch((error) => {
-        console.log("error", error);
-        setCapturing(false);
-      });
+    CLARIFAI.post('', raw)
+    .then(response => {
+      const pictureData = response.data.outputs[0].data.concepts;
+      setConceptList(pictureData);
+      checkForExistingAmos(pictureData);
+      setCapturing(false);
+     })
+    .catch(error => {
+      console.log("CLARIFAI.post error", error);
+      setCapturing(false);
+    })
   };
 
   const keep = () => {
@@ -102,22 +87,13 @@ const DisplayResultScreen = ({ navigation, route }) => {
     // replace type of img by base64
     requestInfo.append('type', 'url');
 
-    let config = {
-      method: 'post',
-      url: 'https://api.imgur.com/3/upload',
-      headers: { 
-        'Authorization': 'Bearer Client-ID b81cd4b478ce34377f2bc06d1a6ce66b225760a4'
-      },
-      data : requestInfo
-    };
-
-    axios(config).then(response => {
+    IMGUR.post('', requestInfo)
+    .then(response => {
       if (response.data.success && response.data.status === 200) {
         saveAmos(response.data.data.link);
       }
-    }).catch(error => {
-      console.log(error);
-    });
+    })
+    .catch(error => console.log("IMGUR.post", error))
   }
 
   const saveAmos = (imgPath) => {
@@ -130,21 +106,11 @@ const DisplayResultScreen = ({ navigation, route }) => {
       "image_path": imgPath
     });
 
-    let config = {
-      method: 'post',
-      url: 'https://happy-amos.herokuapp.com/amos',
-      headers: { 
-        'Authorization': 'Bearer ' + userToken,
-        'Content-Type': 'application/json'
-      },
-      data : amos
-    };
-    
-    axios(config).then(response => {
-      saveLocation(response.data.id);
-    }).catch(error => {
-      console.log(error);
-    });  
+    API.post('amos', amos, {
+      headers: { 'Authorization': 'Bearer ' + userToken, }
+    })
+    .then(response => { saveLocation(response.data.id); })
+    .catch(error => console.log("API.post amos", error))
   }
 
   const saveLocation = (idAmos) => {
@@ -157,21 +123,11 @@ const DisplayResultScreen = ({ navigation, route }) => {
       "amos_id": idAmos
     });
 
-    let config = {
-      method: 'post',
-      url: 'https://happy-amos.herokuapp.com/catches',
-      headers: { 
-        'Authorization': 'Bearer ' + userToken,
-        'Content-Type': 'application/json'
-      },
-      data : coordInfo
-    };
-
-    axios(config).then(response => {
-      console.log(response.data);
-    }).catch(error => {
-      console.log(error);
-    });
+    API.post('catches', coordInfo, {
+      headers: { 'Authorization': 'Bearer ' + userToken, }
+    })
+    .then(response => { console.log(response.data); })
+    .catch(error => console.log(error))
   }
 
   const release = () => {
@@ -226,14 +182,6 @@ const DisplayResultScreen = ({ navigation, route }) => {
 
   return (
     <View style={styles.container}>
-      {/* <Header
-        backgroundColor={primary}
-        placement="center"
-        centerComponent={{
-          text: "Capture",
-          style: { color: "#fff", fontSize: 20 },
-        }}
-      /> */}
       <Image
         style={styles.image}
         source={{
@@ -298,10 +246,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   buttonKeep: {
-    backgroundColor: primary,
+    backgroundColor: primary_c,
   },
   buttonRelease: {
-    backgroundColor: error,
+    backgroundColor: error_c,
   },
   text: { fontSize: 20, color: "white", textAlign: "center" },
   description: {

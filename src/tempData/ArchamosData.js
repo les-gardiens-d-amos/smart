@@ -3,7 +3,6 @@
 
 import amosTmpImgs from "../../assets/amosTmpImgs";
 
-console.log("amosTmpImgs.cat", amosTmpImgs["cat"]);
 const amosList = [
   {
     idAmos: 5,

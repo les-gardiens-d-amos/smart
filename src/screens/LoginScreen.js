@@ -3,10 +3,8 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import { Button } from "@react-native-material/core";
 import { Header } from "react-native-elements";
 
-import axios from "axios";
+import { API } from "../states/axios";
 import * as SecureStore from "expo-secure-store";
-
-import { API_URL } from "@env";
 
 import { colors } from "../style/theme";
 const { success_c, primary_c, tertiary_c } = colors;
@@ -29,46 +27,22 @@ const LoginScreen = (props) => {
       password: password,
     });
 
-    let config = {
-      method: "post",
-      url: API_URL + "users?controller=users&action=create",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: userInfo,
-    };
-
-    axios(config)
-      .then((response) => {
-        if (response.status === 201) {
-          setUserIsRegister(true);
-          login();
-        }
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    API.post("users?controller=users&action=create", userInfo)
+    .then(response => {
+      setUserIsRegister(true);
+      login();
+    })
+    .catch(error => { console.log("Register post error", error); })
   };
 
   const loginUser = () => {
     let userInfo = JSON.stringify({ email: email, password: password });
 
-    let config = {
-      method: "post",
-      url: API_URL + "login",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      data: userInfo,
-    };
-
-    axios(config)
-      .then((response) => {
-        manageLoginResponse(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    API.post("login", userInfo)
+    .then(response => {
+      manageLoginResponse(response.data);
+    })
+    .catch(error => { console.log("login post error", error); })
   };
 
   const manageLoginResponse = (data) => {
