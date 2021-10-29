@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import { Button } from "@react-native-material/core";
 import { Header } from "react-native-elements";
 
-import { API } from "../../locales/axios";
+import { API } from "../states/axios";
 import * as SecureStore from "expo-secure-store";
 
 import { colors } from "../style/theme";

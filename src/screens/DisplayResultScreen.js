@@ -7,8 +7,11 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { API, CLARIFAI, IMGUR } from "../../locales/axios";
+import { API, CLARIFAI, IMGUR } from "../states/axios";
 import * as SecureStore from "expo-secure-store";
+
+import { colors } from "../style/theme";
+const { primary_c, error_c } = colors;
 
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
@@ -243,10 +246,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   buttonKeep: {
-    backgroundColor: primary,
+    backgroundColor: primary_c,
   },
   buttonRelease: {
-    backgroundColor: error,
+    backgroundColor: error_c,
   },
   text: { fontSize: 20, color: "white", textAlign: "center" },
   description: {
