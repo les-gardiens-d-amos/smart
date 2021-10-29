@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { API, CLARIFAI, IMGUR } from "../states/axios";
+import { API, CLARIFAI, IMGUR } from "../store/axios";
 import * as SecureStore from "expo-secure-store";
+import { useSelector } from 'react-redux';
+
 
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
@@ -16,17 +18,21 @@ const { primary_c, error_c } = colors;
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
 
-const DisplayResultScreen = ({ navigation, route }) => {
-  console.log("DisplayResultScreen load");
+const DisplayResultScreen = ({ navigation }) => {
+  const cameraState = useSelector(state => state.camera);
 
-  const { shotUrl } = route.params;
-  const { localisation } = route.params;
+  const picture = cameraState.capturedImage.data;
+  const shortUrl = cameraState.capturedImage.path;
+  const localisation = cameraState.cameraLocation;
 
   const [capturing, setCapturing] = useState(true);
   const [_conceptList, setConceptList] = useState(null);
   const [amosToCapture, setAmosToCapture] = useState(undefined);
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
+
+  console.log('localisation', localisation)
+
 
   useEffect(() => {
     getUserId();
@@ -53,8 +59,8 @@ const DisplayResultScreen = ({ navigation, route }) => {
         {
           data: {
             image: {
-              // base64: picture.base64,
-              url: TestUrls["cat"],
+              base64: picture.base64,
+              //url: TestUrls["cat"],
             },
           },
         },
@@ -62,17 +68,19 @@ const DisplayResultScreen = ({ navigation, route }) => {
     });
 
     CLARIFAI.post('', raw)
-    .then(response => {
-      const pictureData = response.data.outputs[0].data.concepts;
-      setConceptList(pictureData);
-      checkForExistingAmos(pictureData);
-      setCapturing(false);
-     })
-    .catch(error => {
-      console.log("CLARIFAI.post error", error);
-      setCapturing(false);
-    })
+      .then(response => {
+        const pictureData = response.data.outputs[0].data.concepts;
+        setConceptList(pictureData);
+        checkForExistingAmos(pictureData);
+        setCapturing(false);
+      })
+      .catch(error => {
+        console.log("CLARIFAI.post error", error);
+        setCapturing(false);
+      })
   };
+
+
 
   const keep = () => {
     console.log("Chosen to keep the captured AMOS", amosToCapture);
@@ -83,17 +91,20 @@ const DisplayResultScreen = ({ navigation, route }) => {
     let FormData = require('form-data');
     let requestInfo = new FormData();
     // replace test url by image in base64
-    requestInfo.append('image', testUrls["cat"]);
+    // requestInfo.append('image', testUrls["cat"]);
+    // // replace type of img by base64
+    // requestInfo.append('type', 'url');
+    requestInfo.append('image', picture.base64);
     // replace type of img by base64
-    requestInfo.append('type', 'url');
+    requestInfo.append('type', 'base64');
 
     IMGUR.post('', requestInfo)
-    .then(response => {
-      if (response.data.success && response.data.status === 200) {
-        saveAmos(response.data.data.link);
-      }
-    })
-    .catch(error => console.log("IMGUR.post", error))
+      .then(response => {
+        if (response.data.success && response.data.status === 200) {
+          saveAmos(response.data.data.link);
+        }
+      })
+      .catch(error => console.log("IMGUR.post", error))
   }
 
   const saveAmos = (imgPath) => {
@@ -109,25 +120,24 @@ const DisplayResultScreen = ({ navigation, route }) => {
     API.post('amos', amos, {
       headers: { 'Authorization': 'Bearer ' + userToken, }
     })
-    .then(response => { saveLocation(response.data.id); })
-    .catch(error => console.log("API.post amos", error))
+      .then(response => { saveLocation(response.data.id); })
+      .catch(error => console.log("API.post amos", error))
   }
 
   const saveLocation = (idAmos) => {
-    let coords = localisation.coords;
     let coordInfo = JSON.stringify({
-      "long": coords.longitude,
-      "lat": coords.latitude,
-      "altitude": coords.altitude,
-      "accuracy": coords.accuracy,
+      "long": localisation.long,
+      "lat": localisation.lat,
+      "altitude": localisation.altitude,
+      "accuracy": localisation.accuracy,
       "amos_id": idAmos
     });
 
     API.post('catches', coordInfo, {
       headers: { 'Authorization': 'Bearer ' + userToken, }
     })
-    .then(response => { console.log(response.data); })
-    .catch(error => console.log(error))
+      .then(response => { console.log(response.data); })
+      .catch(error => console.log(error))
   }
 
   const release = () => {
@@ -185,7 +195,7 @@ const DisplayResultScreen = ({ navigation, route }) => {
       <Image
         style={styles.image}
         source={{
-          uri: shotUrl,
+          uri: shortUrl,
         }}
       />
 
