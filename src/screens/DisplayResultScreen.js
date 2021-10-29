@@ -70,7 +70,6 @@ const DisplayResultScreen = ({ navigation }) => {
     CLARIFAI.post('', raw)
       .then(response => {
         const pictureData = response.data.outputs[0].data.concepts;
-        console.log(pictureData)
         setConceptList(pictureData);
         checkForExistingAmos(pictureData);
         setCapturing(false);

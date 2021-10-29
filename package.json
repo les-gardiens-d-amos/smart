@@ -32,7 +32,6 @@
     "react-native-svg": "^12.1.1",
     "react-native-web": "~0.13.12",
     "react-redux": "^7.2.5",
-    "react-test-renderer": "^17.0.2",
     "redux": "^4.1.1",
     "redux-thunk": "^2.3.0",
     "victory-native": "^35.5.5",
