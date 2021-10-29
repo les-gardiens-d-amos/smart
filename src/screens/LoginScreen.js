@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import { Button } from "@react-native-material/core";
 import { Header } from "react-native-elements";
 
-import { API } from "../states/axios";
+import { API } from "../store/axios";
 import * as SecureStore from "expo-secure-store";
 
 import { colors } from "../style/theme";
@@ -28,21 +28,21 @@ const LoginScreen = (props) => {
     });
 
     API.post("users?controller=users&action=create", userInfo)
-    .then(response => {
-      setUserIsRegister(true);
-      login();
-    })
-    .catch(error => { console.log("Register post error", error); })
+      .then(response => {
+        setUserIsRegister(true);
+        login();
+      })
+      .catch(error => { console.log("Register post error", error); })
   };
 
   const loginUser = () => {
     let userInfo = JSON.stringify({ email: email, password: password });
 
     API.post("login", userInfo)
-    .then(response => {
-      manageLoginResponse(response.data);
-    })
-    .catch(error => { console.log("login post error", error); })
+      .then(response => {
+        manageLoginResponse(response.data);
+      })
+      .catch(error => { console.log("login post error", error); })
   };
 
   const manageLoginResponse = (data) => {
@@ -80,10 +80,10 @@ const LoginScreen = (props) => {
           value={password}
           secureTextEntry={true}
         />
-        <Button 
+        <Button
           color={primary_c}
-          style={styles.btn} 
-          title="Se connecter" 
+          style={styles.btn}
+          title="Se connecter"
           onPress={loginUser}
         />
         <Button
@@ -130,11 +130,11 @@ const LoginScreen = (props) => {
           value={password}
           secureTextEntry={true}
         />
-        <Button 
-          color={primary_c} 
-          style={styles.btn} 
-          title="S'inscrire" 
-          onPress={registerUser} 
+        <Button
+          color={primary_c}
+          style={styles.btn}
+          title="S'inscrire"
+          onPress={registerUser}
         />
         <Button
           color={primary_c}

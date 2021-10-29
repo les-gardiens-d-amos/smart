@@ -1,119 +1,104 @@
-import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import { Camera } from "expo-camera";
+import React, { useEffect } from 'react'
+import { View, Button, Platform, StyleSheet } from 'react-native'
+import PreviewScreen from './PreviewScreen';
+import { useDispatch, useSelector } from 'react-redux';
+import * as Location from 'expo-location';
 
-import * as Location from "expo-location";
 
-const CaptureScreen = ({ navigation }) => {
-  console.log("CaptureScreen load");
 
-  const [cameraPermission, setCameraPermission] = useState(null);
-  const [locationPermission, setLocationPermission] = useState(null);
-  const [type, setType] = useState(Camera.Constants.Type.back);
-  const [location, setLocation] = useState(null);
+import * as ImagePicker from 'expo-image-picker';
+import { setCapturedImageAction } from '../store/actions/CameraActions';
 
-  const cam = useRef();
+const CameraScreen = () => {
+
+  const dispatch = useDispatch();
+  const cameraState = useSelector(state => state.camera);
+
+  const options = {
+    base64: true,
+    allowsEditing: true,
+    aspect: [4, 4],
+    quality: 1,
+  }
 
   useEffect(() => {
     (async () => {
-      const { status } = await Camera.requestPermissionsAsync();
-      setCameraPermission(status === "granted");
-      manageLocationPermission();
+      if (Platform.OS !== 'web') {
+        galleryPermission();
+        cameraPermission();
+        locationPermission();
+      }
     })();
   }, []);
 
-  const manageLocationPermission = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    setLocationPermission(status === "granted");
-    if (status === "granted") {
-      let loc = await Location.getCurrentPositionAsync({});
-      setLocation(loc);
+
+  const galleryPermission = async () => {
+    const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need gallery permissions to make this work!');
+    }
+  }
+
+  const cameraPermission = async () => {
+    const { status } = await ImagePicker.requestCameraPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need camera permissions to make this work!');
+    }
+  }
+
+  const locationPermission = async () => {
+    const { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+      alert('Sorry, we need location permissions to make this work!');
+    }
+  }
+
+  const getLocation = async () => await Location.getCurrentPositionAsync({})
+
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      aspect: [4, 4],
+      quality: 1,
+      base64: true
+    });
+
+    if (!result.cancelled) {
+      const location = await getLocation();
+      dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude } }));
     }
   };
 
-  const takeShot = async () => {
-    const option = { quality: 0.5, base64: true, skipProcessing: false };
-    const picture = await cam.current.takePictureAsync(option);
-    navigation.navigate("DisplayResultScreen", {
-      picture,
-      shotUrl: picture.uri,
-      localisation: location,
-    });
-  };
-
-  if (cameraPermission === null) {
-    return <View />;
-  }
-
-  if (cameraPermission === false) {
-    return <Text>No access to camera !</Text>;
-  }
-
-  if (locationPermission === false) {
-    return <Text>No access to location !</Text>;
+  const takePicture = async () => {
+    const result = await ImagePicker.launchCameraAsync(options)
+    const location = await getLocation();
+    dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude } }));
   }
 
   return (
     <View style={styles.container}>
-
-      <Camera ref={cam} style={styles.camera} type={type}>
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              setType(
-                type === Camera.Constants.Type.back
-                  ? Camera.Constants.Type.front
-                  : Camera.Constants.Type.back
-              );
-            }}
-          >
-            <Text style={styles.text}> Flip </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              takeShot();
-            }}
-          >
-            <Text style={styles.text}> Capture </Text>
-          </TouchableOpacity>
+      {cameraState.capturedImage ? (
+        <PreviewScreen image={cameraState.capturedImage} />
+      ) : (
+        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row' }}>
+          < Button title="Gallery" onPress={pickImage} />
+          <Button title="Take a photo" onPress={takePicture} />
         </View>
-      </Camera>
+      )}
+
     </View>
   );
-};
+}
+
+export default CameraScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  camera: {
-    flex: 1,
-    width: "100%",
-  },
-  buttonContainer: {
-    flex: 1,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "flex-end",
-  },
-  button: {
-    width: "50%",
-    height: 40,
-    padding: 12,
-    margin: 5,
-    borderRadius: 8,
-    backgroundColor: "grey",
-  },
-  text: {
-    textAlign: "center",
-    fontSize: 18,
-    color: "white",
-  },
-});
-
-export default CaptureScreen;
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row'
+  }
+})
