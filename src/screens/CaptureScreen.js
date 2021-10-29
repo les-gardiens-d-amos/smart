@@ -54,9 +54,9 @@ const CameraScreen = () => {
   }
 
   const getLocation = async () => await Location.getCurrentPositionAsync({})
-  const dispatchData = async (data) => {
+  const dispatchData = async (image) => {
     const location = await getLocation()
-    dispatch(setCapturedImageAction({ image: { data: result, path: result.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude, altitude: location.coords.altitude, accuracy: location.coords.accuracy } }));
+    dispatch(setCapturedImageAction({ image: { data: image, path: image.uri }, cameraLocation: { lat: location.coords.latitude, long: location.coords.longitude, altitude: location.coords.altitude, accuracy: location.coords.accuracy } }));
   }
 
 
