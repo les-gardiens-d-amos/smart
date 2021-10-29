@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { View, Button, Platform } from 'react-native'
+import { View, Button, Platform, StyleSheet } from 'react-native'
 import PreviewScreen from './PreviewScreen';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Location from 'expo-location';
