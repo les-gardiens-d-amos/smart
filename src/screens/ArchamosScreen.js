@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, ScrollView, FlatList, Text } from "react-native";
+import {
+  StyleSheet,
+  View,
+  ScrollView,
+  FlatList,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import { SearchBar } from "react-native-elements";
 
 import { API } from "../store/axios";
+
+import { colors } from "../style/theme";
+const { primary_c } = colors;
 
 import dataAmosList from "../tempData/ArchamosData"; // To replace with supabase data
 import Amos from "../entities/Amos";
@@ -12,6 +22,9 @@ import * as SecureStore from "expo-secure-store";
 const ArchamosScreen = ({ navigation }) => {
   const [searchInput, _setSearchInput] = useState("");
   const [amosList, setAmosList] = useState([]);
+
+  const [statusMess, setStatusMess] = useState("Affichage des Amos...");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     setUserInfos();
@@ -25,6 +38,7 @@ const ArchamosScreen = ({ navigation }) => {
     })
       .then((response) => {
         setUserAmos(response.data);
+        setLoading(false);
       })
       .catch((error) => {
         console.log("Get user Amos ERROR", error);
@@ -42,11 +56,18 @@ const ArchamosScreen = ({ navigation }) => {
     setAmosList(newList);
   };
 
-  // <ActivityIndicator size="large" color={primary} />
-
   const goToSinglePage = (amosData) => {
     navigation.navigate("AmosSingleScreen", { amosData });
   };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { marginTop: 20 }]}>
+        <ActivityIndicator size="large" color={primary_c} />
+        <Text style={{ textAlign: "center" }}>{statusMess}</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -69,7 +90,9 @@ const ArchamosScreen = ({ navigation }) => {
             )}
           />
         ) : (
-          <Text>Vous n'avez pas encore d'amos</Text>
+          <Text style={{ textAlign: "center" }}>
+            Vous n'avez pas encore d'amos
+          </Text>
         )}
       </ScrollView>
     </View>
@@ -81,8 +104,6 @@ export default ArchamosScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    width: "100%",
-    height: "100%",
   },
   searchBar: {},
   listWrapper: {
@@ -90,6 +111,5 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
-    width: "100%",
   },
 });

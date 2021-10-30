@@ -39,7 +39,7 @@ const PreviewScreen = ({ image }) => {
                   style={styles.buttons}
                 >
                   <Text style={styles.buttonsText}>
-                    CANCEL
+                    Annuler
                   </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -47,7 +47,7 @@ const PreviewScreen = ({ image }) => {
                   style={styles.buttons}
                 >
                   <Text style={styles.buttonsText}>
-                    SAVE
+                    Confirmer
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   },
   buttons: {
     width: 130,
-    height: 40,
+    padding: 15,
     alignItems: 'center',
     borderRadius: 4,
     backgroundColor: colors.primary_c

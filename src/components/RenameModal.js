@@ -1,5 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput, Button } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { Input } from "react-native-elements";
 
 import { colors } from "../style/theme";
@@ -21,24 +27,30 @@ const RenameModal = ({ amosName, callbackChangeName, callbackCloseModal }) => {
         value={inputValue}
       ></Input>
       <View style={styles.buttonsWrapper}></View>
-      <Button
-        title="Valider"
+      <TouchableOpacity
+        style={styles.buttons}
         onPress={() => {
           // For if not empty, check if not too small
           if (inputValue.length > 2) {
             callbackChangeName(inputValue);
             callbackCloseModal(false);
           } else {
-            setWarningMess("Le nom est trop court, au moins 3 caractères");
+            setWarningMess(
+              "Le nom est trop court, au moins 3 caractères sont requis"
+            );
           }
         }}
-      />
-      <Button
-        title="Annuler"
+      >
+        <Text style={styles.text}>Valider</Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={styles.buttons}
         onPress={() => {
           callbackCloseModal(false);
         }}
-      />
+      >
+        <Text style={styles.text}>Annuler</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -48,25 +60,32 @@ export default RenameModal;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: primary_c,
-    width: "80%",
+    width: 300,
     height: 300,
-    justifyContent: "center",
-    alignItems: "center",
-    margin: "auto",
-    padding: 15,
   },
   input: {
     width: "90%",
-    height: 40,
-    padding: 15,
+    height: 60,
     backgroundColor: secondary_c,
     borderWidth: 2,
   },
   buttonsWrapper: {
     flex: 1,
-    justifyContent: "center",
+    width: "90%",
+    alignItems: "center",
+    justifyContent: "space-around",
     flexDirection: "row",
+  },
+  buttons: {
+    backgroundColor: secondary_c,
+    width: "40%",
+    padding: 10,
+  },
+  text: {
+    color: "white",
+    fontSize: 15,
+    textAlign: "center",
+    fontWeight: "bold",
   },
   warningMess: {
     color: warning_c,

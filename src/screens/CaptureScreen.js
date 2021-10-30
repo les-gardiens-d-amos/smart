@@ -1,10 +1,11 @@
 import React, { useEffect } from 'react'
-import { View, Button, Platform, StyleSheet } from 'react-native'
+import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native'
 import PreviewScreen from './PreviewScreen';
 import { useDispatch, useSelector } from 'react-redux';
 import * as Location from 'expo-location';
 
-
+import { colors } from "../style/theme";
+const { primary_c } = colors;
 
 import * as ImagePicker from 'expo-image-picker';
 import { setCapturedImageAction } from '../store/actions/CameraActions';
@@ -80,9 +81,9 @@ const CameraScreen = () => {
       {cameraState.capturedImage ? (
         <PreviewScreen image={cameraState.capturedImage} />
       ) : (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'space-around', flexDirection: 'row' }}>
-          < Button title="Gallery" onPress={pickImage} />
-          <Button title="Take a photo" onPress={takePicture} />
+        <View style={styles.buttonsWrapper}>
+          <TouchableOpacity style={styles.buttons} onPress={pickImage}><Text style={styles.text}>Galerie</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.buttons} onPress={takePicture}><Text style={styles.text}>Prendre une photo</Text></TouchableOpacity>
         </View>
       )}
 
@@ -98,5 +99,22 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row'
-  }
+  },
+	buttonsWrapper: { 
+		flex: 1, 
+		alignItems: 'center', 
+		justifyContent: 'space-around', 
+		flexDirection: 'row',
+	},
+	buttons: {
+    backgroundColor: primary_c,
+		width: "40%",
+		padding: 10,
+  },
+	text: {
+		color: 'white',
+		fontSize: 15,
+		textAlign: 'center',
+    fontWeight: "bold",
+	}
 })

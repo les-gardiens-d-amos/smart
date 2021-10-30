@@ -13,8 +13,9 @@ import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
 
 import { colors } from "../style/theme";
-const { primary_c, error_c } = colors;
+const { primary_c, warning_c } = colors;
 
+import { content } from "../../locales/fr"
 import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
 
@@ -29,12 +30,13 @@ const DisplayResultScreen = ({ navigation }) => {
 
   const [capturing, setCapturing] = useState(true);
   const [savingAmos, setSavingAmos] = useState(false);
+  const [captureSuccess, setCaptureSuccess] = useState(false);
 
   const [amosToCapture, setAmosToCapture] = useState(undefined);
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
 
-  console.log("localisation", localisation);
+  // console.log("localisation", localisation);
 
   useEffect(() => {
     getUserId();
@@ -83,7 +85,7 @@ const DisplayResultScreen = ({ navigation }) => {
   };
 
   const keep = () => {
-    console.log("Chosen to keep the captured AMOS", amosToCapture);
+    // console.log("Chosen to keep the captured AMOS", amosToCapture);
     saveAmosImage();
   };
 
@@ -139,7 +141,8 @@ const DisplayResultScreen = ({ navigation }) => {
       headers: { Authorization: "Bearer " + userToken },
     })
       .then((response) => {
-        navigation.navigate("ArchamosScreen");
+				setCaptureSuccess(true);
+        // navigation.navigate("ArchamosScreen"); Not working
       })
       .catch((error) => console.log(error));
   };
@@ -154,20 +157,31 @@ const DisplayResultScreen = ({ navigation }) => {
     // Search for an existing Amos in the list of registered Amos, for now it's just a dictionary
     for (const item of pictureData) {
       if (item.value > 0.9) {
-        console.log("item.name with ratio > 0.9", item.name);
         foundAmos = AmosData[item.name]; // Check if the Amos exists and return the data if so
         if (foundAmos) break; // Yes, ugly, but temporary
       }
     }
 
     if (foundAmos) {
-      console.log("AMOS found!", foundAmos);
       setAmosToCapture(foundAmos);
       // Move to another screen to fight the AMOS and try to capture it ?
-    } else {
-      console.log("No valid Amos was found...");
     }
   };
+	
+	if (captureSuccess) {
+		return (
+      <View style={styles.container}>
+        <Text style={styles.successInfo}>Bravo, vous avez capturé un Amos de l'espèce {content.species[amosToCapture.species]}! Numéro d'Archamos: {amosToCapture.id}  </Text>
+				<Image
+					style={styles.image}
+					source={{
+						uri: shortUrl,
+					}}
+				/>
+				{/* Button return to main screen */}
+      </View>
+    );
+	}
 
   if (savingAmos || capturing) {
     return (
@@ -185,7 +199,7 @@ const DisplayResultScreen = ({ navigation }) => {
         <TouchableOpacity
           style={(styles.buttons, styles.buttonRelease)}
           onPress={() => {
-            navigation.navigate("CaptureScreen");
+            // navigation.navigate("CaptureScreen"); Not working
           }}
         >
           <Text style={styles.text}> Retourner </Text>
@@ -205,9 +219,9 @@ const DisplayResultScreen = ({ navigation }) => {
 
       <View style={styles.description}>
         <Text style={styles.descText}> Numéro: {amosToCapture.id} </Text>
-        <Text style={styles.descText}> Type: {amosToCapture.type} </Text>
-        <Text style={styles.descText}> Espèce: {amosToCapture.species} </Text>
-        <Text style={styles.descText}> Level: {amosToCapture.level} </Text>
+        <Text style={styles.descText}> Type: {content.types[amosToCapture.type]} </Text>
+        <Text style={styles.descText}> Espèce: {content.species[amosToCapture.species]} </Text>
+        <Text style={styles.descText}> Niveau: {amosToCapture.level} </Text>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -256,7 +270,6 @@ const styles = StyleSheet.create({
   },
   buttons: {
     width: "50%",
-    height: 40,
     padding: 12,
     margin: 5,
     borderRadius: 8,
@@ -265,9 +278,10 @@ const styles = StyleSheet.create({
     backgroundColor: primary_c,
   },
   buttonRelease: {
-    backgroundColor: error_c,
+    backgroundColor: warning_c,
   },
   text: { fontSize: 20, color: "white", textAlign: "center" },
+	successInfo: { fontSize: 30,},
   description: {
     flex: 1,
     textAlign: "left",

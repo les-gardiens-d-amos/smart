@@ -2,7 +2,7 @@ import React from "react";
 import { Pressable, Image, StyleSheet, Text, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "../style/theme";
-const { primary_c, secondary_c } = colors;
+const { primary_c, secondary_c, quaternary_c } = colors;
 import { Tooltip } from "react-native-elements";
 
 const ArchamosSingle = ({ amos, goToSinglePage }) => {
@@ -75,7 +75,7 @@ const styles = StyleSheet.create({
   amosContainer: {
     flex: 1,
     minHeight: 150,
-    backgroundColor: secondary_c,
+    backgroundColor: quaternary_c,
     width: "90%",
     marginTop: 30,
     paddingVertical: 8,
@@ -92,8 +92,7 @@ const styles = StyleSheet.create({
     height: 110,
   },
   photo: {
-    borderWidth: 2,
-    borderRadius: 10,
+    borderRadius: 8,
     width: "100%",
     height: "100%",
   },
