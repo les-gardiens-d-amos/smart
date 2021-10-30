@@ -10,45 +10,26 @@ import ArchamosSingle from "../components/ArchamosSingle";
 import * as SecureStore from "expo-secure-store";
 
 const ArchamosScreen = ({ navigation }) => {
-  console.log("ArchamosScreen load");
-
   const [searchInput, _setSearchInput] = useState("");
   const [amosList, setAmosList] = useState([]);
-
-  const [userId, setUserId] = useState(null);
-  const [userToken, setUserToken] = useState(null);
 
   useEffect(() => {
     setUserInfos();
   }, []);
 
   const setUserInfos = async () => {
-    console.log("setUserInfos");
     const uid = await SecureStore.getItemAsync("user_id");
-    setUserId(uid);
     const jwt = await SecureStore.getItemAsync("jwt");
-    setUserToken(jwt);
     API.get(`amos/find/user/?user_id=${uid}`, {
       headers: { Authorization: "Bearer " + jwt },
     })
       .then((response) => {
-        console.log("RESPONSE DATA", response.data);
         setUserAmos(response.data);
       })
       .catch((error) => {
-        console.log("amos/find/user/?user_id= ERROR", error);
+        console.log("Get user Amos ERROR", error);
       });
   };
-
-  useEffect(() => {
-    // Populate list with the player's amos with request database
-    // Uses temp data for now
-    // let newList = [];
-    // for (const amos of dataAmosList) {
-    //   let amm = new Amos(amos).serialize();
-    //   newList.push(amm);
-    // }
-  }, []);
 
   const setUserAmos = (data) => {
     let newList = [];
@@ -58,7 +39,6 @@ const ArchamosScreen = ({ navigation }) => {
       newList.push(amm);
     }
 
-    console.log("Set up newList", newList);
     setAmosList(newList);
   };
 

@@ -58,7 +58,7 @@ const amosData = {
   },
   frog: {
     id: 9,
-    type: "amphobian",
+    type: "amphibian",
     species: "frog",
     name: "frog",
     level: 1,

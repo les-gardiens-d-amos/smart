@@ -5,12 +5,12 @@ import {
   View,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 
 import { API, CLARIFAI, IMGUR } from "../store/axios";
 import * as SecureStore from "expo-secure-store";
-import { useSelector } from 'react-redux';
-
+import { useSelector } from "react-redux";
 
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
@@ -19,20 +19,22 @@ import TestUrls from "../tempData/TestUrls";
 import AmosData from "../tempData/AmosData";
 
 const DisplayResultScreen = ({ navigation }) => {
-  const cameraState = useSelector(state => state.camera);
+  const cameraState = useSelector((state) => state.camera);
 
   const picture = cameraState.capturedImage.data;
   const shortUrl = cameraState.capturedImage.path;
   const localisation = cameraState.cameraLocation;
 
+  const [statusMess, setStatusMess] = useState("Analyse de la capture...");
+
   const [capturing, setCapturing] = useState(true);
-  const [_conceptList, setConceptList] = useState(null);
+  const [savingAmos, setSavingAmos] = useState(false);
+
   const [amosToCapture, setAmosToCapture] = useState(undefined);
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
 
-  console.log('localisation', localisation)
-
+  console.log("localisation", localisation);
 
   useEffect(() => {
     getUserId();
@@ -40,20 +42,19 @@ const DisplayResultScreen = ({ navigation }) => {
   }, []);
 
   const getUserId = () => {
-    SecureStore.getItemAsync("user_id").then(response => {
+    SecureStore.getItemAsync("user_id").then((response) => {
       setUserId(response);
     });
-  }
+  };
 
   const getUserToken = () => {
-    SecureStore.getItemAsync("jwt").then(response => {
-      setUserToken(response)
+    SecureStore.getItemAsync("jwt").then((response) => {
+      setUserToken(response);
       capture();
     });
-  }
+  };
 
   const capture = async () => {
-
     let raw = JSON.stringify({
       inputs: [
         {
@@ -67,20 +68,19 @@ const DisplayResultScreen = ({ navigation }) => {
       ],
     });
 
-    CLARIFAI.post('', raw)
-      .then(response => {
+    CLARIFAI.post("", raw)
+      .then((response) => {
         const pictureData = response.data.outputs[0].data.concepts;
-        setConceptList(pictureData);
         checkForExistingAmos(pictureData);
         setCapturing(false);
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("CLARIFAI.post error", error);
-        setCapturing(false);
       })
+      .finally(() => {
+        setCapturing(false);
+      });
   };
-
-
 
   const keep = () => {
     console.log("Chosen to keep the captured AMOS", amosToCapture);
@@ -88,57 +88,61 @@ const DisplayResultScreen = ({ navigation }) => {
   };
 
   const saveAmosImage = () => {
-    let FormData = require('form-data');
+    let FormData = require("form-data");
     let requestInfo = new FormData();
     // replace test url by image in base64
     // requestInfo.append('image', testUrls["cat"]);
     // // replace type of img by base64
     // requestInfo.append('type', 'url');
-    requestInfo.append('image', picture.base64);
+    requestInfo.append("image", picture.base64);
     // replace type of img by base64
-    requestInfo.append('type', 'base64');
+    requestInfo.append("type", "base64");
 
-    IMGUR.post('', requestInfo)
-      .then(response => {
+    IMGUR.post("", requestInfo)
+      .then((response) => {
         if (response.data.success && response.data.status === 200) {
           saveAmos(response.data.data.link);
         }
       })
-      .catch(error => console.log("IMGUR.post", error))
-  }
+      .catch((error) => console.log("IMGUR.post", error));
+  };
 
   const saveAmos = (imgPath) => {
     let amos = JSON.stringify({
-      "user_id": userId,
-      "animal_id": amosToCapture.id,
-      "species": amosToCapture.species,
-      "amos_type": amosToCapture.type,
-      "name": amosToCapture.name,
-      "image_path": imgPath
+      user_id: userId,
+      animal_id: amosToCapture.id,
+      species: amosToCapture.species,
+      amos_type: amosToCapture.type,
+      name: amosToCapture.name,
+      image_path: imgPath,
     });
 
-    API.post('amos', amos, {
-      headers: { 'Authorization': 'Bearer ' + userToken, }
+    API.post("amos", amos, {
+      headers: { Authorization: "Bearer " + userToken },
     })
-      .then(response => { saveLocation(response.data.id); })
-      .catch(error => console.log("API.post amos", error))
-  }
+      .then((response) => {
+        saveLocation(response.data.id);
+      })
+      .catch((error) => console.log("API.post amos", error));
+  };
 
   const saveLocation = (idAmos) => {
     let coordInfo = JSON.stringify({
-      "long": localisation.long,
-      "lat": localisation.lat,
-      "altitude": localisation.altitude,
-      "accuracy": localisation.accuracy,
-      "amos_id": idAmos
+      long: localisation.long,
+      lat: localisation.lat,
+      altitude: localisation.altitude,
+      accuracy: localisation.accuracy,
+      amos_id: idAmos,
     });
 
-    API.post('catches', coordInfo, {
-      headers: { 'Authorization': 'Bearer ' + userToken, }
+    API.post("catches", coordInfo, {
+      headers: { Authorization: "Bearer " + userToken },
     })
-      .then(response => { console.log(response.data); })
-      .catch(error => console.log(error))
-  }
+      .then((response) => {
+        navigation.navigate("ArchamosScreen");
+      })
+      .catch((error) => console.log(error));
+  };
 
   const release = () => {
     console.log("Chosen to realease the AMOS");
@@ -165,11 +169,11 @@ const DisplayResultScreen = ({ navigation }) => {
     }
   };
 
-  if (capturing) {
-    // Loading icon to add
+  if (savingAmos || capturing) {
     return (
       <View style={styles.container}>
-        <Text>Capturing amos...</Text>
+        <ActivityIndicator size="large" color={primary_c} />
+        <Text>{statusMess} </Text>
       </View>
     );
   }
@@ -210,6 +214,8 @@ const DisplayResultScreen = ({ navigation }) => {
         <TouchableOpacity
           style={[styles.buttons, styles.buttonKeep]}
           onPress={() => {
+            setStatusMess("Capture de l'Amos...");
+            setSavingAmos(true);
             keep();
           }}
         >
