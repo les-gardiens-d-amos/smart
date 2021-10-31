@@ -29,3 +29,12 @@ export const colorForType = {
   reptile: colors.reptile_c,
   invertebrate: colors.invertebrate_c,
 };
+
+export const colorForTypeFR = {
+  Mammifère: colors.mammal_c,
+  Oiseau: colors.bird_c,
+  Poisson: colors.fish_c,
+  Amphibien: colors.amphibian_c,
+  Reptile: colors.reptile_c,
+  Invertébré: colors.invertebrate_c,
+};

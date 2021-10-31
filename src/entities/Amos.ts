@@ -68,9 +68,6 @@ class Amos {
   }
 
   public serialize(): Object {
-
-	console.log("Serialize date",this.date)
-
     let val = {...this};
 
     val['icon'] = amosIcons[val.species];
@@ -79,8 +76,6 @@ class Amos {
     val['amos_type'] = content.types[val.amos_type];
     val['capturedAt'] = this.capturedAt();
     delete val.date;
-
-	console.log("Serialize VALS RETURNED",val)
 
     return { ...val }
   }

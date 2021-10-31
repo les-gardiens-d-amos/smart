@@ -23,13 +23,13 @@ const HomeScreen = ({ navigation, route }) => {
           color={primary_c}
           accessibilityLabel="Archamos"
         />
-        <Button
+        {/* <Button
           style={styles.buttons}
           onPress={() => navigation.navigate("DashboardScreen")}
           title="Tableau de bord"
           color={primary_c}
           accessibilityLabel="Dashboard"
-        />
+        /> */}
       </View>
     </View>
   );
