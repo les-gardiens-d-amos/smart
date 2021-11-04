@@ -9,6 +9,7 @@ import ArchamosScreen from "../screens/ArchamosScreen";
 import AmosSingleScreen from "../screens/AmosSingleScreen";
 import DashboardScreen from "../screens/DashboardScreen";
 import DisplayResultScreen from "../screens/DisplayResultScreen";
+import PreviewScreen from "../screens/PreviewScreen";
 
 import LoginScreen from "../screens/LoginScreen";
 import { colors } from "../style/theme";
@@ -68,6 +69,11 @@ const RootStack = () => {
             name="DisplayResultScreen"
             component={DisplayResultScreen}
             options={{ title: "Capture" }}
+          />
+          <Stack.Screen
+            name="PreviewScreen"
+            component={PreviewScreen}
+            options={{ title: "Preview" }}
           />
         </Stack.Navigator>
       </NavigationContainer>
