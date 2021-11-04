@@ -1,12 +1,18 @@
 import axios from "axios";
 import { CLARIFAI_API_KEY, IMGUR_KEY } from "@env";
 
+const getKey = (key) => {
+  const keyArray = key.split(',')
+  const randomIndex = Math.floor(Math.random() * keyArray.length)
+  return keyArray[randomIndex];
+}
+
 export const CLARIFAI = axios.create({
   baseURL:
     "https://api.clarifai.com/v2/models/aaa03c23b3724a16a56b629203edc62c/outputs",
   headers: {
     "Content-Type": "application/json",
-    Authorization: CLARIFAI_API_KEY,
+    Authorization: getKey(CLARIFAI_API_KEY),
   },
 });
 
@@ -24,6 +30,6 @@ export const IMGUR = axios.create({
     Accept: "application/json",
     "Content-Type": "application/json",
     redirect: "follow",
-    Authorization: IMGUR_KEY,
+    Authorization: getKey(IMGUR_KEY),
   },
 });

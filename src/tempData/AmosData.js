@@ -69,7 +69,7 @@ const amosData = {
     species: "snail",
     name: "snail",
     level: 1,
-  },
+  }
 };
 
 export default amosData;

@@ -36,8 +36,6 @@ const DisplayResultScreen = ({ navigation }) => {
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
 
-  // console.log("localisation", localisation);
-
   useEffect(() => {
     getUserId();
     getUserToken();
@@ -141,7 +139,7 @@ const DisplayResultScreen = ({ navigation }) => {
       headers: { Authorization: "Bearer " + userToken },
     })
       .then((response) => {
-				setCaptureSuccess(true);
+        setCaptureSuccess(true);
         // navigation.navigate("ArchamosScreen"); Not working
       })
       .catch((error) => console.log(error));
@@ -167,21 +165,21 @@ const DisplayResultScreen = ({ navigation }) => {
       // Move to another screen to fight the AMOS and try to capture it ?
     }
   };
-	
-	if (captureSuccess) {
-		return (
+
+  if (captureSuccess) {
+    return (
       <View style={styles.container}>
         <Text style={styles.successInfo}>Bravo, vous avez capturé un Amos de l'espèce {content.species[amosToCapture.species]}! Numéro d'Archamos: {amosToCapture.id}  </Text>
-				<Image
-					style={styles.image}
-					source={{
-						uri: shortUrl,
-					}}
-				/>
-				{/* Button return to main screen */}
+        <Image
+          style={styles.image}
+          source={{
+            uri: shortUrl,
+          }}
+        />
+        {/* Button return to main screen */}
       </View>
     );
-	}
+  }
 
   if (savingAmos || capturing) {
     return (
@@ -281,7 +279,7 @@ const styles = StyleSheet.create({
     backgroundColor: warning_c,
   },
   text: { fontSize: 20, color: "white", textAlign: "center" },
-	successInfo: { fontSize: 30,},
+  successInfo: { fontSize: 30, },
   description: {
     flex: 1,
     textAlign: "left",
