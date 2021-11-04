@@ -1,0 +1,104 @@
+{
+	"amos": {
+		"cat": {
+			"id": 1,
+			"species": "cat",
+			"type": "mammal"
+		},
+		"dog": {
+			"id": 2,
+			"species": "dog",
+			"type": "mammal"
+		},
+		"squirrel": {
+			"id": 3,
+			"species": "squirrel",
+			"type": "mammal"
+		},
+		"pigeon": {
+			"id": 4,
+			"species": "pigeon",
+			"type": "bird"
+		},
+		"seagull": {
+			"id": 5,
+			"species": "seagull",
+			"type": "bird"
+		},
+		"goeland": {
+			"id": 6,
+			"species": "goeland",
+			"type": "bird"
+		},
+		"cormoran": {
+			"id": 7,
+			"species": "cormoran",
+			"type": "bird"
+		},
+		"turtle": {
+			"id": 8,
+			"species": "turtle",
+			"type": "reptile"
+		},
+		"frog": {
+			"id": 9,
+			"species": "frog",
+			"type": "amphibian"
+		},
+		"snail": {
+			"id": 10,
+			"species": "snail",
+			"type": "invertebrate"
+		},
+		"hen": {
+			"id": 11,
+			"species": "hen",
+			"type": "bird"
+		},
+		"rooster": {
+			"id": 12,
+			"species": "rooster",
+			"type": "bird"
+		},
+		"duck": {
+			"id": 13,
+			"species": "duck",
+			"type": "bird"
+		},
+		"goose": {
+			"id": 14,
+			"species": "goose",
+			"type": "bird"
+		},
+		"cow": {
+			"id": 15,
+			"species": "cow",
+			"type": "mammal"
+		},
+		"bull": {
+			"id": 16,
+			"species": "bull",
+			"type": "mammal"
+		},
+		"sheep": {
+			"id": 17,
+			"species": "sheep",
+			"type": "mammal"
+		},
+		"goat": {
+			"id": 18,
+			"species": "goat",
+			"type": "mammal"
+		},
+		"pig": {
+			"id": 19,
+			"species": "pig",
+			"type": "mammal"
+		},
+		"boar": {
+			"id": 20,
+			"species": "boar",
+			"type": "mammal"
+		}
+	}
+}

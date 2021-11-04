@@ -81,14 +81,7 @@ const ArchamosScreen = ({ navigation }) => {
 
       <ScrollView style={styles.listWrapper}>
         {amosList.length > 0 ? (
-          <FlatList
-            style={styles.list}
-            keyExtractor={(item, index) => item + index.toString()}
-            data={amosList}
-            renderItem={(item) => (
-              <ArchamosSingle amos={item} goToSinglePage={goToSinglePage} />
-            )}
-          />
+					amosList.map(item => ( <ArchamosSingle key={item.id} amos={item} goToSinglePage={goToSinglePage} />))
         ) : (
           <Text style={{ textAlign: "center" }}>
             Vous n'avez pas encore d'amos

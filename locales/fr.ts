@@ -17,7 +17,15 @@ export const content: Object = {
     cormoran: "Cormoran",
     turtle: "Tortue",
     frog: "Grenouille",
-    snail: "Escargot"    
+    snail: "Escargot",
+    hen: "Poule",
+    rooster: "Coq",
+    duck: "Canard",
+    goose: "Oie",
+    cow: "Vache",
+    bull: "Taureau",
+    sheep: "Mouton",
+    goat: "Chèvre",
   },
   families: [
     "Félin",

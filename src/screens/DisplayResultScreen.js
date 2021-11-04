@@ -15,9 +15,9 @@ import { useSelector } from "react-redux";
 import { colors } from "../style/theme";
 const { primary_c, warning_c } = colors;
 
+import Amos from "../entities/Amos";
 import { content } from "../../locales/fr"
-import TestUrls from "../tempData/TestUrls";
-import AmosData from "../tempData/AmosData";
+import AmosDataFr from '../entities/AmosDataFr.json'
 
 const DisplayResultScreen = ({ navigation }) => {
   const cameraState = useSelector((state) => state.camera);
@@ -32,7 +32,7 @@ const DisplayResultScreen = ({ navigation }) => {
   const [savingAmos, setSavingAmos] = useState(false);
   const [captureSuccess, setCaptureSuccess] = useState(false);
 
-  const [amosToCapture, setAmosToCapture] = useState(undefined);
+  const [amosToCapture, setAmosToCapture] = useState(null);
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
 
@@ -119,6 +119,8 @@ const DisplayResultScreen = ({ navigation }) => {
       image_path: imgPath,
     });
 
+		console.log("amos to save in db -",amos)
+
     API.post("amos", amos, {
       headers: { Authorization: "Bearer " + userToken },
     })
@@ -153,16 +155,8 @@ const DisplayResultScreen = ({ navigation }) => {
   };
 
   const checkForExistingAmos = (pictureData) => {
-    let foundAmos = undefined;
-    // Search for an existing Amos in the list of registered Amos, for now it's just a dictionary
-    for (const item of pictureData) {
-      if (item.value > 0.9) {
-        foundAmos = AmosData[item.name]; // Check if the Amos exists and return the data if so
-        if (foundAmos) break; // Yes, ugly, but temporary
-      }
-    }
-
-    if (foundAmos) {
+		const foundAmos = Amos.isRegistered(pictureData)
+    if (foundAmos !== null) {
       setAmosToCapture(foundAmos);
       // Move to another screen to fight the AMOS and try to capture it ?
     }
@@ -199,6 +193,7 @@ const DisplayResultScreen = ({ navigation }) => {
         <TouchableOpacity
           style={(styles.buttons, styles.buttonRelease)}
           onPress={() => {
+						// Remove photo and return to previous screen or main screen
             // navigation.navigate("CaptureScreen"); Not working
           }}
         >
@@ -219,9 +214,9 @@ const DisplayResultScreen = ({ navigation }) => {
 
       <View style={styles.description}>
         <Text style={styles.descText}> Numéro: {amosToCapture.id} </Text>
-        <Text style={styles.descText}> Type: {content.types[amosToCapture.type]} </Text>
-        <Text style={styles.descText}> Espèce: {content.species[amosToCapture.species]} </Text>
-        <Text style={styles.descText}> Niveau: {amosToCapture.level} </Text>
+        <Text style={styles.descText}> Type: {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].type)} </Text>
+        <Text style={styles.descText}> Espèce: {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].species)} </Text>
+        <Text style={styles.descText}> Niveau: {amosToCapture.level > 1 ? amosToCapture.level : 1} </Text>
       </View>
 
       <View style={styles.buttonContainer}>

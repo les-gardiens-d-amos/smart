@@ -6,7 +6,6 @@ const { primary_c, secondary_c, quaternary_c } = colors;
 import { Tooltip } from "react-native-elements";
 
 const ArchamosSingle = ({ amos, goToSinglePage }) => {
-  const amosData = amos.item;
 
   const handleAddRemove = () => {
     // using amosData.idAmos and isTeammate useState variable
@@ -25,22 +24,22 @@ const ArchamosSingle = ({ amos, goToSinglePage }) => {
           <Image
             style={styles.photo}
             source={{
-              uri: amosData.image_path,
+              uri: amos.image_path,
             }}
           />
         </View>
 
-        <Text style={styles.name}>{amosData.name}</Text>
+        <Text style={styles.name}>{amos.name}</Text>
 
-        <Text style={styles.species}>{amosData.species}</Text>
+        <Text style={styles.species}>{amos.species}</Text>
 
-        <Text style={styles.level}>Niveau: {amosData.level}</Text>
+        <Text style={styles.level}>Niveau: {amos.level}</Text>
 
         <View
-          style={[styles.iconWrapper, { backgroundColor: amosData.typeColor }]}
+          style={[styles.iconWrapper, { backgroundColor: amos.typeColor }]}
         >
-          <Tooltip popover={<Text>{amosData.amos_type}</Text>}>
-            <Image style={styles.typeIcon} source={amosData.icon} />
+          <Tooltip popover={<Text>{amos.amos_type}</Text>}>
+            <Image style={styles.typeIcon} source={amos.icon} />
           </Tooltip>
         </View>
 
@@ -54,7 +53,7 @@ const ArchamosSingle = ({ amos, goToSinglePage }) => {
 
         <Pressable
           style={styles.btnDetails}
-          onPress={() => goToSinglePage(amosData)}
+          onPress={() => goToSinglePage(amos)}
         >
           <Text>Détails</Text>
         </Pressable>
