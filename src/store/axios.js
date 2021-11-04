@@ -4,7 +4,7 @@ import { CLARIFAI_API_KEY, IMGUR_KEY } from "@env";
 const getKey = (key) => {
   const keyArray = key.split(',')
   const randomIndex = Math.floor(Math.random() * keyArray.length)
-  return keyArray[randomIndex];
+  return keyArray[randomIndex].trim();
 }
 
 export const CLARIFAI = axios.create({
