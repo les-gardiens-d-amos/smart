@@ -87,7 +87,7 @@ class Amos {
 		const speciesLocal = Amos.capitalize(AmosDataFr.amos[val.species].species);
 		const typeLocal = Amos.capitalize(AmosDataFr.amos[val.species].type);
 		
-    val['icon'] = amosIcons[val.species];
+    val['icon'] = amosIcons[val.species] == undefined ? amosIcons.default : amosIcons[val.species];
     val['typeColor'] = AmosIconColors[val.amos_type];
     val.species =  speciesLocal;
     val['amos_type'] = typeLocal;

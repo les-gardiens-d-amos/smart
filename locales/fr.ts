@@ -14,7 +14,7 @@ export const content: Object = {
     pigeon: "Pigeon",
     seagull: "Mouette",
     goeland: "Goéland",
-    cormoran: "Cormoran",
+    cormorant: "Cormoran",
     turtle: "Tortue",
     frog: "Grenouille",
     snail: "Escargot",
