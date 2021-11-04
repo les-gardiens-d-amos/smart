@@ -14,7 +14,6 @@ import { API } from "../store/axios";
 import { colors } from "../style/theme";
 const { primary_c } = colors;
 
-import dataAmosList from "../tempData/ArchamosData"; // To replace with supabase data
 import Amos from "../entities/Amos";
 import ArchamosSingle from "../components/ArchamosSingle";
 import * as SecureStore from "expo-secure-store";

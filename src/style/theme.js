@@ -20,21 +20,3 @@ export const colors = {
   reptile_c: "#2D8159",
   invertebrate_c: "#783BB6",
 };
-
-export const colorForType = {
-  mammal: colors.mammal_c,
-  bird: colors.bird_c,
-  fish: colors.fish_c,
-  amphibian: colors.amphibian_c,
-  reptile: colors.reptile_c,
-  invertebrate: colors.invertebrate_c,
-};
-
-export const colorForTypeFR = {
-  Mammifère: colors.mammal_c,
-  Oiseau: colors.bird_c,
-  Poisson: colors.fish_c,
-  Amphibien: colors.amphibian_c,
-  Reptile: colors.reptile_c,
-  Invertébré: colors.invertebrate_c,
-};

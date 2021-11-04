@@ -16,7 +16,6 @@ import { colors } from "../style/theme";
 const { primary_c, warning_c } = colors;
 
 import Amos from "../entities/Amos";
-import { content } from "../../locales/fr"
 import AmosDataFr from '../entities/AmosDataFr.json'
 
 const DisplayResultScreen = ({ navigation }) => {
@@ -74,7 +73,6 @@ const DisplayResultScreen = ({ navigation }) => {
       .then((response) => {
         const pictureData = response.data.outputs[0].data.concepts;
         checkForExistingAmos(pictureData);
-        setCapturing(false);
       })
       .catch((error) => {
         console.log("CLARIFAI.post error", error);
@@ -115,7 +113,7 @@ const DisplayResultScreen = ({ navigation }) => {
       animal_id: amosToCapture.id,
       species: amosToCapture.species,
       amos_type: amosToCapture.type,
-      name: amosToCapture.name,
+      name: amosToCapture.species,
       image_path: imgPath,
     });
 
@@ -165,7 +163,7 @@ const DisplayResultScreen = ({ navigation }) => {
 	if (captureSuccess) {
 		return (
       <View style={styles.container}>
-        <Text style={styles.successInfo}>Bravo, vous avez capturé un Amos de l'espèce {content.species[amosToCapture.species]}! Numéro d'Archamos: {amosToCapture.id}  </Text>
+        <Text style={styles.successInfo}>Bravo, vous avez capturé un Amos de l'espèce {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].species)}! Numéro d'Archamos: {amosToCapture.id}  </Text>
 				<Image
 					style={styles.image}
 					source={{
@@ -181,7 +179,7 @@ const DisplayResultScreen = ({ navigation }) => {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color={primary_c} />
-        <Text>{statusMess} </Text>
+        <Text>{statusMess}</Text>
       </View>
     );
   }

@@ -30,7 +30,7 @@
       "species": "goéland",
       "type": "oiseau"
     },
-    "cormoran": {
+    "cormorant": {
       "id": 7,
       "species": "cormoran",
       "type": "oiseau"
@@ -100,5 +100,13 @@
       "species": "sanglier",
       "type": "mammifère"
     }
+  },
+	"types": {
+    "mammal": "mammifère",
+    "bird": "oiseau",
+    "fish": "poisson",
+    "amphibian": "amphibien",
+    "reptile": "réptile",
+    "invertebrate": "invertébré"
   }
 }

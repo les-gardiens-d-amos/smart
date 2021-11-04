@@ -1,6 +1,4 @@
-import { colorForType } from "../style/theme";
 import amosIcons from "../../assets/amosIcons";
-import { content } from "../../locales/fr";
 import AmosData from "./AmosData.json";
 import AmosDataFr from "./AmosDataFr.json";
 import AmosIconColors from "./AmosIconColors.json";
@@ -28,8 +26,8 @@ class Amos {
 	//   },
 
     let keys = Object.keys(data);
-    let speciesKeys = Object.keys(content.species);
-    let typesKeys = Object.keys(content.types);
+    let speciesKeys = Object.keys(AmosData.amos);
+    let typesKeys = Object.keys(AmosData.types);
 
     Amos.EXPECTED_PROPS.forEach(el => {
       if (!keys.includes(el)) throw new Error(`Expected key ${el} is missing`);
