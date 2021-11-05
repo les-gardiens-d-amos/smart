@@ -17,8 +17,11 @@ const { primary_c, warning_c } = colors;
 
 import Amos from "../entities/Amos";
 import AmosDataFr from '../entities/AmosDataFr.json'
+import { useNavigation } from '@react-navigation/native';
 
-const DisplayResultScreen = ({ navigation }) => {
+const DisplayResultScreen = () => {
+
+  // 
   const cameraState = useSelector((state) => state.camera);
 
   const picture = cameraState.capturedImage.data;
@@ -35,7 +38,7 @@ const DisplayResultScreen = ({ navigation }) => {
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
 
-  // console.log("localisation", localisation);
+  const navigation = useNavigation();
 
   useEffect(() => {
     getUserId();
@@ -76,9 +79,12 @@ const DisplayResultScreen = ({ navigation }) => {
       })
       .catch((error) => {
         console.log("CLARIFAI.post error", error);
+        setErrorMessage();
       })
       .finally(() => {
+        setStatusMess("Aucun Amos existant n'a été reconnu.");
         setCapturing(false);
+
       });
   };
 
@@ -104,8 +110,25 @@ const DisplayResultScreen = ({ navigation }) => {
           saveAmos(response.data.data.link);
         }
       })
-      .catch((error) => console.log("IMGUR.post", error));
+      .catch((error) => {
+        console.log("IMGUR.post", error);
+        goBackOnError();
+      });
   };
+
+  const setErrorMessage = () => {
+    setStatusMess('Désolé, une erreur est survenue.');
+  }
+
+  // temp somlution in case of an error
+  const goBackOnError = () => {
+    setAmosToCapture(true)
+    setErrorMessage();
+    setTimeout(() => {
+      setCaptureSuccess(false);
+      setSavingAmos(false);
+    }, 1000);
+  }
 
   const saveAmos = (imgPath) => {
     let amos = JSON.stringify({
@@ -141,7 +164,7 @@ const DisplayResultScreen = ({ navigation }) => {
       headers: { Authorization: "Bearer " + userToken },
     })
       .then((response) => {
-				setCaptureSuccess(true);
+        setCaptureSuccess(true);
         // navigation.navigate("ArchamosScreen"); Not working
       })
       .catch((error) => console.log(error));
@@ -159,9 +182,9 @@ const DisplayResultScreen = ({ navigation }) => {
       // Move to another screen to fight the AMOS and try to capture it ?
     }
   };
-	
-	if (captureSuccess) {
-		return (
+
+  if (captureSuccess) {
+    return (
       <View style={styles.container}>
         <Text style={styles.successInfo}>Bravo, vous avez capturé un Amos de l'espèce {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].species)}! Numéro d'Archamos: {amosToCapture.id}  </Text>
 				<Image
@@ -173,7 +196,7 @@ const DisplayResultScreen = ({ navigation }) => {
 				{/* Button return to main screen */}
       </View>
     );
-	}
+  }
 
   if (savingAmos || capturing) {
     return (
@@ -187,13 +210,10 @@ const DisplayResultScreen = ({ navigation }) => {
   if (!amosToCapture) {
     return (
       <View style={styles.container}>
-        <Text>Aucun Amos existant n'a été reconnu.</Text>
+        <Text>{statusMess}</Text>
         <TouchableOpacity
           style={(styles.buttons, styles.buttonRelease)}
-          onPress={() => {
-						// Remove photo and return to previous screen or main screen
-            // navigation.navigate("CaptureScreen"); Not working
-          }}
+          onPress={() => navigation.goBack(null)}
         >
           <Text style={styles.text}> Retourner </Text>
         </TouchableOpacity>
@@ -274,7 +294,7 @@ const styles = StyleSheet.create({
     backgroundColor: warning_c,
   },
   text: { fontSize: 20, color: "white", textAlign: "center" },
-	successInfo: { fontSize: 30,},
+  successInfo: { fontSize: 30, },
   description: {
     flex: 1,
     textAlign: "left",
