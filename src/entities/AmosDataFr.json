@@ -1,0 +1,112 @@
+{
+  "amos": {
+    "cat": {
+      "id": 1,
+      "species": "chat",
+      "type": "mammifère"
+    },
+    "dog": {
+      "id": 2,
+      "species": "chien",
+      "type": "mammifère"
+    },
+    "squirrel": {
+      "id": 3,
+      "species": "écureuil",
+      "type": "mammifère"
+    },
+    "pigeon": {
+      "id": 4,
+      "species": "pigeon",
+      "type": "oiseau"
+    },
+    "seagull": {
+      "id": 5,
+      "species": "mouette",
+      "type": "oiseau"
+    },
+    "goeland": {
+      "id": 6,
+      "species": "goéland",
+      "type": "oiseau"
+    },
+    "cormorant": {
+      "id": 7,
+      "species": "cormoran",
+      "type": "oiseau"
+    },
+    "turtle": {
+      "id": 8,
+      "species": "tortue",
+      "type": "reptile"
+    },
+    "frog": {
+      "id": 9,
+      "species": "grenouille",
+      "type": "amphibien"
+    },
+    "snail": {
+      "id": 10,
+      "species": "escargot",
+      "type": "invertébré"
+    },
+    "hen": {
+      "id": 11,
+      "species": "poule",
+      "type": "oiseau"
+    },
+    "rooster": {
+      "id": 12,
+      "species": "coq",
+      "type": "oiseau"
+    },
+    "duck": {
+      "id": 13,
+      "species": "canard",
+      "type": "oiseau"
+    },
+    "goose": {
+      "id": 14,
+      "species": "oie",
+      "type": "oiseau"
+    },
+    "cow": {
+      "id": 15,
+      "species": "vache",
+      "type": "mammifère"
+    },
+    "bull": {
+      "id": 16,
+      "species": "taureau",
+      "type": "mammifère"
+    },
+    "sheep": {
+      "id": 17,
+      "species": "mouton",
+      "type": "mammifère"
+    },
+    "goat": {
+      "id": 18,
+      "species": "chèvre",
+      "type": "mammifère"
+    },
+    "pig": {
+      "id": 19,
+      "species": "cochon",
+      "type": "mammifère"
+    },
+    "boar": {
+      "id": 20,
+      "species": "sanglier",
+      "type": "mammifère"
+    }
+  },
+	"types": {
+    "mammal": "mammifère",
+    "bird": "oiseau",
+    "fish": "poisson",
+    "amphibian": "amphibien",
+    "reptile": "réptile",
+    "invertebrate": "invertébré"
+  }
+}

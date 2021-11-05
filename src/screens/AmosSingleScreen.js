@@ -13,7 +13,7 @@ import Icon from "react-native-vector-icons/FontAwesome";
 
 import * as SecureStore from "expo-secure-store";
 
-import { colors, colorForTypeFR } from "../style/theme";
+import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
 
 import { API } from "../store/axios";
@@ -21,7 +21,6 @@ import { API } from "../store/axios";
 import RenameModal from "../components/RenameModal";
 
 import Amos from "../entities/Amos";
-import archamosData from "../tempData/ArchamosData";
 
 const AmosSingleScreen = ({ route }) => {
   const { amosData } = route.params;
@@ -121,12 +120,7 @@ const AmosSingleScreen = ({ route }) => {
         <Text style={styles.name}>{amosName}</Text>
       </View>
 
-      <Text
-        style={[
-          styles.type,
-          { backgroundColor: colorForTypeFR[amos.amos_type] },
-        ]}
-      >
+      <Text style={[styles.type, { backgroundColor: amos.typeColor }]}>
         {amos.amos_type}
       </Text>
       <View style={styles.speciesLvlWrapper}>

@@ -1,4 +1,5 @@
-const images = {
+const icons = {
+  default: require("./default.png"),
   cat: require("./catIcon.png"),
   dog: require("./dogIcon.png"),
   frog: require("./frogIcon.png"),
@@ -7,19 +8,16 @@ const images = {
   snail: require("./snailIcon.png"),
   squirrel: require("./squirrelIcon.png"),
   turtle: require("./turtleIcon.png"),
-};
-
-const icons = {
-  cat: images.cat,
-  dog: images.dog,
-  frog: images.frog,
-  monkey: images.monkey,
-  bird: images.bird,
-  seagull: images.bird,
-  cormoran: images.bird,
-  snail: images.snail,
-  squirrel: images.squirrel,
-  turtle: images.turtle,
+  duck: require("./duckIcon.png"),
+  goose: require("./gooseIcon.png"),
+  pig: require("./pigIcon.png"),
+  boar: require("./boarIcon.png"),
+  cow: require("./cowIcon.png"),
+  bull: require("./bullIcon.png"),
+  sheep: require("./sheepIcon.png"),
+  goat: require("./goatIcon.png"),
+  hen: require("./henIcon.png"),
+  rooster: require("./roosterIcon.png"),
 };
 
 export default icons;

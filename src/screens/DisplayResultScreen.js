@@ -15,9 +15,8 @@ import { useSelector } from "react-redux";
 import { colors } from "../style/theme";
 const { primary_c, warning_c } = colors;
 
-import { content } from "../../locales/fr"
-import TestUrls from "../tempData/TestUrls";
-import AmosData from "../tempData/AmosData"; import { Button } from 'react-native';
+import Amos from "../entities/Amos";
+import AmosDataFr from '../entities/AmosDataFr.json'
 import { useNavigation } from '@react-navigation/native';
 
 const DisplayResultScreen = () => {
@@ -35,7 +34,7 @@ const DisplayResultScreen = () => {
   const [savingAmos, setSavingAmos] = useState(false);
   const [captureSuccess, setCaptureSuccess] = useState(false);
 
-  const [amosToCapture, setAmosToCapture] = useState(undefined);
+  const [amosToCapture, setAmosToCapture] = useState(null);
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
 
@@ -77,7 +76,6 @@ const DisplayResultScreen = () => {
       .then((response) => {
         const pictureData = response.data.outputs[0].data.concepts;
         checkForExistingAmos(pictureData);
-        setCapturing(false);
       })
       .catch((error) => {
         console.log("CLARIFAI.post error", error);
@@ -138,9 +136,11 @@ const DisplayResultScreen = () => {
       animal_id: amosToCapture.id,
       species: amosToCapture.species,
       amos_type: amosToCapture.type,
-      name: amosToCapture.name,
+      name: amosToCapture.species,
       image_path: imgPath,
     });
+
+		console.log("amos to save in db -",amos)
 
     API.post("amos", amos, {
       headers: { Authorization: "Bearer " + userToken },
@@ -176,18 +176,8 @@ const DisplayResultScreen = () => {
   };
 
   const checkForExistingAmos = (pictureData) => {
-    let foundAmos = undefined;
-    // Search for an existing Amos in the list of registered Amos, for now it's just a dictionary
-    for (const item of pictureData) {
-      if (item.value > 0.9) {
-        foundAmos = AmosData[item.name]; // Check if the Amos exists and return the data if so
-        if (foundAmos)
-          break;
-        // Yes, ugly, but temporary
-      }
-    }
-
-    if (foundAmos) {
+		const foundAmos = Amos.isRegistered(pictureData)
+    if (foundAmos !== null) {
       setAmosToCapture(foundAmos);
       // Move to another screen to fight the AMOS and try to capture it ?
     }
@@ -196,14 +186,14 @@ const DisplayResultScreen = () => {
   if (captureSuccess) {
     return (
       <View style={styles.container}>
-        <Text style={styles.successInfo}>Bravo, vous avez capturé un Amos de l'espèce {content.species[amosToCapture.species]}! Numéro d'Archamos: {amosToCapture.id}  </Text>
-        <Image
-          style={styles.image}
-          source={{
-            uri: shortUrl,
-          }}
-        />
-        {/* Button return to main screen */}
+        <Text style={styles.successInfo}>Bravo, vous avez capturé un Amos de l'espèce {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].species)}! Numéro d'Archamos: {amosToCapture.id}  </Text>
+				<Image
+					style={styles.image}
+					source={{
+						uri: shortUrl,
+					}}
+				/>
+				{/* Button return to main screen */}
       </View>
     );
   }
@@ -212,7 +202,7 @@ const DisplayResultScreen = () => {
     return (
       <View style={styles.container}>
         <ActivityIndicator size="large" color={primary_c} />
-        <Text>{statusMess} </Text>
+        <Text>{statusMess}</Text>
       </View>
     );
   }
@@ -242,9 +232,9 @@ const DisplayResultScreen = () => {
 
       <View style={styles.description}>
         <Text style={styles.descText}> Numéro: {amosToCapture.id} </Text>
-        <Text style={styles.descText}> Type: {content.types[amosToCapture.type]} </Text>
-        <Text style={styles.descText}> Espèce: {content.species[amosToCapture.species]} </Text>
-        <Text style={styles.descText}> Niveau: {amosToCapture.level} </Text>
+        <Text style={styles.descText}> Type: {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].type)} </Text>
+        <Text style={styles.descText}> Espèce: {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].species)} </Text>
+        <Text style={styles.descText}> Niveau: {amosToCapture.level > 1 ? amosToCapture.level : 1} </Text>
       </View>
 
       <View style={styles.buttonContainer}>
