@@ -3,21 +3,25 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
   ActivityIndicator,
-  ScrollView,
+  FlatList,
+  Tooltip,
 } from "react-native";
 
 import { API } from "../store/axios";
 import * as SecureStore from "expo-secure-store";
 
 import AmosData from "../entities/AmosData.json";
-import amosIcons from "../../assets/amosIcons";
 
 import { colors } from "../style/theme";
-const { primary_c } = colors;
+const { primary_c, secondary_c } = colors;
+
+import AmodexSingle from "../components/AmodexSingle";
 
 const AmodexScreen = () => {
-  const [listCaptures, setListCaptures] = useState([1, 2, 5, 12, 15]);
+  const registeredAmos = Object.keys(AmosData.amos);
+  const [listCaptures, setListCaptures] = useState([]);
   const [statusMess, setStatusMess] = useState("Affichage de l'Amodex...");
   const [loading, setLoading] = useState(true);
 
@@ -51,19 +55,25 @@ const AmodexScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Lenght listCaptures - {listCaptures.length}</Text>
-      <Text>
-        Lenght Object.keys(AmosData.amos) - {Object.keys(AmosData.amos).length}
+      <Text style={styles.completion}>
+        {listCaptures.length} / {registeredAmos.length}
       </Text>
-      <ScrollView style={styles.listWrapper}>
-        {Object.keys(AmosData.amos).map((lKey) => {
+      <FlatList
+        contentContainerStyle={styles.listWrapper}
+        numColumns={4}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        data={registeredAmos}
+        keyExtractor={(item) => AmosData.amos[item].id}
+        renderItem={({ item }) => {
           return (
-            <View key={AmosData.amos[lKey].id}>
-              <Text>{AmosData.amos[lKey].species} {listCaptures.includes(AmosData.amos[lKey].id) ? " O" : " X"}</Text>
-            </View>
+            <AmodexSingle
+              listCaptures={listCaptures}
+              amosData={AmosData.amos[item]}
+            />
           );
-        })}
-      </ScrollView>
+        }}
+      />
     </View>
   );
 };
@@ -71,10 +81,19 @@ const AmodexScreen = () => {
 export default AmodexScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container: {},
+  completion: {
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 25,
+    padding: 15,
+    margin: 6,
   },
   listWrapper: {
-		textAlign: "center"
-	},
+    width: "100%",
+    alignSelf: "flex-start",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+  },
 });

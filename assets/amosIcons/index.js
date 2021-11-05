@@ -1,4 +1,4 @@
-const icons = {
+export const icons = {
   default: require("./default.png"),
   soulDefault: require("./soulDefault.png"),
   soulMammal: require("./soulMammal.png"),
@@ -25,6 +25,16 @@ const icons = {
   goat: require("./goatIcon.png"),
   hen: require("./henIcon.png"),
   rooster: require("./roosterIcon.png"),
+};
+
+export const soulIcons = {
+  default: require("./soulDefault.png"),
+  mammal: require("./soulMammal.png"),
+  bird: require("./soulBird.png"),
+  fish: require("./soulFish.png"),
+  amphibian: require("./soulAmphibian.png"),
+  reptile: require("./soulReptile.png"),
+  invertebrate: require("./soulInvertebrate.png"),
 };
 
 export default icons;
