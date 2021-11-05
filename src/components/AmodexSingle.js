@@ -5,21 +5,24 @@ import { icons as amosIcons, soulIcons } from "../../assets/amosIcons";
 const AmodexSingle = ({ listCaptures, amosData }) => {
   return (
     <View style={styles.amosBox}>
-      {/* <Text>{amosData.species}</Text>
-      <Text>{listCaptures.includes(amosData.id) ? " O" : " X"}</Text> */}
       {listCaptures.includes(amosData.id) ? (
-        // <Tooltip popover={<Text>{amosData.type}</Text>}>
         <>
           <Image style={styles.typeIcon} source={soulIcons[amosData.type]} />
           <Image
             style={styles.speciesIcon}
-            source={amosIcons[amosData.species]}
+            source={
+              amosIcons[amosData.species] !== undefined
+                ? amosIcons[amosData.species]
+                : amosIcons.default
+            }
           />
         </>
       ) : (
-        // </Tooltip>
-        <Image style={styles.typeIcon} source={soulIcons.default} />
+        <>
+          <Image style={styles.typeIcon} source={soulIcons.default} />
+        </>
       )}
+      <Text style={styles.idAmodex}>{amosData.id}</Text>
     </View>
   );
 };
@@ -31,11 +34,20 @@ const styles = StyleSheet.create({
     position: "relative",
     width: 70,
     height: 70,
-    margin: 2,
     padding: 2,
+    margin: 2,
+    marginBottom: 18,
     alignItems: "center",
     justifyContent: "center",
     textAlign: "center",
+  },
+  idAmodex: {
+    position: "absolute",
+    fontWeight: "bold",
+    fontSize: 18,
+    bottom: -17,
+    right: 2,
+    zIndex: 20,
   },
   typeIcon: {
     position: "absolute",
@@ -46,7 +58,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     width: 50,
     height: 50,
-		bottom: 2,
+    bottom: 2,
     zIndex: 10,
   },
 });

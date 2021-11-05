@@ -35,12 +35,8 @@ const AmodexScreen = () => {
     API.get(`amos/find/animal_id/?user_id=${uid}`, {
       headers: { Authorization: "Bearer " + jwt },
     })
-      .then((response) => {
-        setListCaptures(response.data.animal_id);
-      })
-      .catch((error) => {
-        console.log("Get user captures ERROR", error);
-      })
+      .then((response) => setListCaptures(response.data.animal_id))
+      .catch((error) => console.log("ListCaptures ERROR", error))
       .finally(() => setLoading(false));
   };
 
@@ -81,13 +77,20 @@ const AmodexScreen = () => {
 export default AmodexScreen;
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    flex: 1,
+  },
   completion: {
+    width: "30%",
+    alignSelf: "center",
+    backgroundColor: secondary_c,
     textAlign: "center",
     fontWeight: "bold",
     fontSize: 25,
     padding: 15,
-    margin: 6,
+    margin: 10,
+    borderWidth: 2,
+    borderRadius: 5,
   },
   listWrapper: {
     width: "100%",
@@ -95,5 +98,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 15,
+    marginBottom: 10,
   },
 });

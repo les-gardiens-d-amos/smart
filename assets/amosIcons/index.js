@@ -1,5 +1,5 @@
 export const icons = {
-  default: require("./default.png"),
+  default: require("./pawIcon.png"),
   soulDefault: require("./soulDefault.png"),
   soulMammal: require("./soulMammal.png"),
   soulBird: require("./soulBird.png"),
@@ -12,6 +12,7 @@ export const icons = {
   frog: require("./frogIcon.png"),
   monkey: require("./monkeyIcon.png"),
   bird: require("./seagullIcon.png"),
+  cormorant: require("./cormorantIcon.png"),
   snail: require("./snailIcon.png"),
   squirrel: require("./squirrelIcon.png"),
   turtle: require("./turtleIcon.png"),
