@@ -1,5 +1,12 @@
 const icons = {
   default: require("./default.png"),
+  soulDefault: require("./soulDefault.png"),
+  soulMammal: require("./soulMammal.png"),
+  soulBird: require("./soulBird.png"),
+  soulFish: require("./soulFish.png"),
+  soulAmphibian: require("./soulAmphibian.png"),
+  soulReptile: require("./soulReptile.png"),
+  soulInvertebrate: require("./soulInvertebrate.png"),
   cat: require("./catIcon.png"),
   dog: require("./dogIcon.png"),
   frog: require("./frogIcon.png"),

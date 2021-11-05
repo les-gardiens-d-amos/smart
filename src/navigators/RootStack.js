@@ -6,6 +6,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import HomeScreen from "../screens/HomeScreen";
 import CaptureScreen from "../screens/CaptureScreen";
 import ArchamosScreen from "../screens/ArchamosScreen";
+import AmodexScreen from "../screens/AmodexScreen";
 import AmosSingleScreen from "../screens/AmosSingleScreen";
 import DashboardScreen from "../screens/DashboardScreen";
 import DisplayResultScreen from "../screens/DisplayResultScreen";
@@ -52,6 +53,11 @@ const RootStack = () => {
             name="ArchamosScreen"
             component={ArchamosScreen}
             options={{ title: "Archamos" }}
+          />
+					<Stack.Screen
+            name="AmodexScreen"
+            component={AmodexScreen}
+            options={{ title: "Amodex" }}
           />
           <Stack.Screen
             name="AmosSingleScreen"
