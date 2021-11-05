@@ -38,8 +38,8 @@ const DisplayResultScreen = () => {
   const [amosToCapture, setAmosToCapture] = useState(undefined);
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
+
   const navigation = useNavigation();
-  // console.log("localisation", localisation);
 
   useEffect(() => {
     getUserId();
