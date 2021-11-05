@@ -17,9 +17,12 @@ const { primary_c, warning_c } = colors;
 
 import { content } from "../../locales/fr"
 import TestUrls from "../tempData/TestUrls";
-import AmosData from "../tempData/AmosData";
+import AmosData from "../tempData/AmosData"; import { Button } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
-const DisplayResultScreen = ({ navigation }) => {
+const DisplayResultScreen = () => {
+
+  // 
   const cameraState = useSelector((state) => state.camera);
 
   const picture = cameraState.capturedImage.data;
@@ -35,6 +38,8 @@ const DisplayResultScreen = ({ navigation }) => {
   const [amosToCapture, setAmosToCapture] = useState(undefined);
   const [userId, setUserId] = useState(null);
   const [userToken, setUserToken] = useState(null);
+
+  const navigation = useNavigation();
 
   useEffect(() => {
     getUserId();
@@ -76,9 +81,12 @@ const DisplayResultScreen = ({ navigation }) => {
       })
       .catch((error) => {
         console.log("CLARIFAI.post error", error);
+        setErrorMessage();
       })
       .finally(() => {
+        setStatusMess("Aucun Amos existant n'a été reconnu.");
         setCapturing(false);
+
       });
   };
 
@@ -104,8 +112,25 @@ const DisplayResultScreen = ({ navigation }) => {
           saveAmos(response.data.data.link);
         }
       })
-      .catch((error) => console.log("IMGUR.post", error));
+      .catch((error) => {
+        console.log("IMGUR.post", error);
+        goBackOnError();
+      });
   };
+
+  const setErrorMessage = () => {
+    setStatusMess('Désolé, une erreur est survenue.');
+  }
+
+  // temp somlution in case of an error
+  const goBackOnError = () => {
+    setAmosToCapture(true)
+    setErrorMessage();
+    setTimeout(() => {
+      setCaptureSuccess(false);
+      setSavingAmos(false);
+    }, 1000);
+  }
 
   const saveAmos = (imgPath) => {
     let amos = JSON.stringify({
@@ -156,7 +181,9 @@ const DisplayResultScreen = ({ navigation }) => {
     for (const item of pictureData) {
       if (item.value > 0.9) {
         foundAmos = AmosData[item.name]; // Check if the Amos exists and return the data if so
-        if (foundAmos) break; // Yes, ugly, but temporary
+        if (foundAmos)
+          break;
+        // Yes, ugly, but temporary
       }
     }
 
@@ -193,12 +220,10 @@ const DisplayResultScreen = ({ navigation }) => {
   if (!amosToCapture) {
     return (
       <View style={styles.container}>
-        <Text>Aucun Amos existant n'a été reconnu.</Text>
+        <Text>{statusMess}</Text>
         <TouchableOpacity
           style={(styles.buttons, styles.buttonRelease)}
-          onPress={() => {
-            // navigation.navigate("CaptureScreen"); Not working
-          }}
+          onPress={() => navigation.goBack(null)}
         >
           <Text style={styles.text}> Retourner </Text>
         </TouchableOpacity>
