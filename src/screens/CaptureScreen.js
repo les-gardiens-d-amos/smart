@@ -19,7 +19,7 @@ const CameraScreen = () => {
     base64: true,
     allowsEditing: true,
     aspect: [4, 4],
-    quality: 1,
+    quality: 0.5,
   }
 
   useEffect(() => {
