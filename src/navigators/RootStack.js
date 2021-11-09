@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { Text, View, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-import { useSelector } from "react-redux";
+// Redux
+import { useSelector, useDispatch } from "react-redux";
+import { getCurrentUser } from "../services/user";
 
 // Screens
 import HomeScreen from "../screens/HomeScreen";
@@ -22,6 +25,29 @@ const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
   const currentUser = useSelector((state) => state.userSlice.currentUser);
+  const [appReady, setAppReady] = useState(false);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    existingUser();
+  }, []);
+
+  const existingUser = async () => {
+    await getCurrentUser(dispatch);
+    setAppReady(true);
+  };
+
+  if (!appReady) {
+    return (
+      <View style={{ marginTop: 20 }}>
+        <ActivityIndicator size="large" color={primary_c} />
+        <Text style={{ textAlign: "center" }}>
+          Chargement de l'application...
+        </Text>
+      </View>
+    );
+  }
 
   if (currentUser === null) return <LoginScreen />;
 

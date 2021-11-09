@@ -5,22 +5,9 @@ import * as SecureStore from "expo-secure-store";
 export const serviceLoginUser = async (dispatch, userInput) => {
   try {
     const response = await API.post("login", userInput);
-    console.log("serviceLoginUser -", response);
-
     if (response.status === 200) {
       const resData = response.data;
       console.log("Login -", resData);
-
-      // Object {
-      //   "token": "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiMTA4ODgwMzctNzZkNS00MzI5LWFlYzktOWQxZGNjYzZkZDJiIn0.F6qU7JVP0dXDHflHLKJxK971rR8Zx4wfts8NOCf0kio",
-      //   "user_info": Object {
-      //     "email": "clamp@gmail.com",
-      //     "id": "10888037-76d5-4329-aec9-9d1dccc6dd2b",
-      //     "name": "Gg",
-      //     "password": "$2a$12$FYhnHQVO1XbxbZqHwU2sqO6sj0YrKYYtO/w00gq3/64nqLPfS0lqa",
-      //     "updated_at": "2021-10-29T15:52:00.195Z",
-      //   },
-      // }
 
       await SecureStore.setItemAsync("jwt", resData.token);
       await SecureStore.setItemAsync("user_id", resData.user_info.id);
@@ -49,6 +36,9 @@ export const serviceRegisterUser = async (dispatch, userInput) => {
       userInput
     );
     if (response.status === 200) {
+      const resData = response.data;
+      await SecureStore.setItemAsync("jwt", resData.token);
+      await SecureStore.setItemAsync("user_id", resData.user_info.id);
       dispatch(registerUser());
     } else {
       throw new Error("Register error -", response.status, "/");
@@ -59,6 +49,32 @@ export const serviceRegisterUser = async (dispatch, userInput) => {
   }
 };
 
-export const serviceLogout = () => {
+export const getCurrentUser = async (dispatch) => {
+  try {
+    const jwt = await SecureStore.getItemAsync("jwt");
+    if (jwt !== null) {
+      const response = await API.get("users/find/current_users", {
+        headers: { Authorization: "Bearer " + jwt },
+      });
+      if (response.status === 200) {
+        const resData = response.data;
+        const currentUserdata = {
+          // Build an object to use as the state redux currentUser everywhere in the app
+          playerToken: jwt,
+          playerId: resData.user_info.id,
+          playerName: resData.user_info.name,
+          // playerGender: resData.user_info.gender,
+        };
+        dispatch(loginUser(currentUserdata));
+      }
+    } else {
+      throw new Error("Get current user error -", response.status, "/");
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const serviceLogout = (dispatch) => {
   dispatch(logoutUser());
 };
