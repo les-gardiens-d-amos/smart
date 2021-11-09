@@ -1,22 +1,103 @@
-import React, { useState } from "react";
-import { StyleSheet, View, ScrollView } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ActivityIndicator,
+  FlatList,
+  Tooltip,
+} from "react-native";
 
-import amosIcons from "../../assets/amosIcons";
+import { API } from "../store/axios";
+import * as SecureStore from "expo-secure-store";
+
+import AmosData from "../entities/AmosData.json";
 
 import { colors } from "../style/theme";
-const { primary_c } = colors;
+const { primary_c, secondary_c } = colors;
+
+import AmodexSingle from "../components/AmodexSingle";
 
 const AmodexScreen = () => {
-  const [listCaptures, setListCaptures] = useState([1, 2, 5, 12, 15]);
-  // request
+  const registeredAmos = Object.keys(AmosData.amos);
+  const [listCaptures, setListCaptures] = useState([]);
+  const [statusMess, setStatusMess] = useState("Affichage de l'Amodex...");
+  const [loading, setLoading] = useState(true);
 
-  return <View style={styles.container}></View>;
+  useEffect(() => {
+    getUserCaptures();
+  }, []);
+
+  const getUserCaptures = async () => {
+    const uid = await SecureStore.getItemAsync("user_id");
+    const jwt = await SecureStore.getItemAsync("jwt");
+    API.get(`amos/find/animal_id/?user_id=${uid}`, {
+      headers: { Authorization: "Bearer " + jwt },
+    })
+      .then((response) => setListCaptures(response.data.animal_id))
+      .catch((error) => console.log("ListCaptures ERROR", error))
+      .finally(() => setLoading(false));
+  };
+
+  if (loading) {
+    return (
+      <View style={[styles.container, { marginTop: 20 }]}>
+        <ActivityIndicator size="large" color={primary_c} />
+        <Text style={{ textAlign: "center" }}>{statusMess}</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <Text style={styles.completion}>
+        {listCaptures.length} / {registeredAmos.length}
+      </Text>
+      <FlatList
+        contentContainerStyle={styles.listWrapper}
+        numColumns={4}
+        showsVerticalScrollIndicator={false}
+        showsHorizontalScrollIndicator={false}
+        data={registeredAmos}
+        keyExtractor={(item) => AmosData.amos[item].id}
+        renderItem={({ item }) => {
+          return (
+            <AmodexSingle
+              listCaptures={listCaptures}
+              amosData={AmosData.amos[item]}
+            />
+          );
+        }}
+      />
+    </View>
+  );
 };
 
 export default AmodexScreen;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+  },
+  completion: {
+    width: "30%",
+    alignSelf: "center",
+    backgroundColor: secondary_c,
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 25,
+    padding: 15,
+    margin: 10,
+    borderWidth: 2,
+    borderRadius: 5,
+  },
+  listWrapper: {
+    width: "100%",
+    alignSelf: "flex-start",
     alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+    marginBottom: 10,
   },
 });

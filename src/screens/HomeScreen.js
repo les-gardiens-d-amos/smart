@@ -12,7 +12,7 @@ const HomeScreen = ({ navigation, route }) => {
         <Button
           style={styles.buttons}
           onPress={() => navigation.navigate("CaptureScreen")}
-          title="Capture page"
+          title="Capture"
           color={primary_c}
           accessibilityLabel="Capture"
         />
@@ -22,6 +22,13 @@ const HomeScreen = ({ navigation, route }) => {
           title="Archamos"
           color={primary_c}
           accessibilityLabel="Archamos"
+        />
+				<Button
+          style={styles.buttons}
+          onPress={() => navigation.navigate("AmodexScreen")}
+          title="Amodex"
+          color={primary_c}
+          accessibilityLabel="Amodex"
         />
         {/* <Button
           style={styles.buttons}
