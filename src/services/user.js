@@ -22,11 +22,11 @@ export const serviceLoginUser = async (dispatch, userInput) => {
 
       dispatch(loginUser(currentUserdata));
     } else {
-      throw new Error("Login error -", response.status, "/");
+      throw new Error("Login error -", response.status);
     }
   } catch (error) {
     console.log("serviceLoginUser error -", error);
-    return false;
+    return {error: true, message: error};
   }
 };
 
@@ -42,11 +42,11 @@ export const serviceRegisterUser = async (dispatch, userInput) => {
       await SecureStore.setItemAsync("user_id", resData.user_info.id);
       dispatch(registerUser());
     } else {
-      throw new Error("Register error -", response.status, "/");
+      throw new Error("Register error -", response.status);
     }
   } catch (error) {
     console.log("serviceRegisterUser error -", error);
-    return false;
+    return {error: true, message: error};
     // Returns error to display on the form ?
   }
 };
@@ -68,16 +68,18 @@ export const getCurrentUser = async (dispatch) => {
           // playerGender: resData.user_info.gender,
         };
         dispatch(loginUser(currentUserdata));
+      } else {
+        throw new Error("Get current user error -", response.status);
       }
-    } else {
-      throw new Error("Get current user error -", response.status, "/");
     }
   } catch (error) {
     console.log("getCurrentUser error -", error);
-    return false;
+    return true;
   }
 };
 
-export const serviceLogout = (dispatch) => {
+export const serviceLogout = async (dispatch) => {
+  await SecureStore.deleteItemAsync("jwt");
+  await SecureStore.deleteItemAsync("user_id");
   dispatch(logoutUser());
 };

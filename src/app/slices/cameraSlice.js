@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const cameraSlice = createSlice({
-  name: "cameraReducer",
+  name: "camera",
   initialState: {
     capturedImage: null,
     cameraLocation: null,

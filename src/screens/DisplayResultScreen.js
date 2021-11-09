@@ -9,20 +9,18 @@ import {
 } from "react-native";
 
 import { API, CLARIFAI, IMGUR } from "../apis/axios";
-import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
 
 import { colors } from "../style/theme";
 const { primary_c, warning_c } = colors;
 
 import Amos from "../entities/Amos";
-import AmosDataFr from '../entities/AmosDataFr.json'
-import { useNavigation } from '@react-navigation/native';
+import AmosDataFr from "../entities/AmosDataFr.json";
+import { useNavigation } from "@react-navigation/native";
 
 const DisplayResultScreen = () => {
-
-  // 
   const cameraState = useSelector((state) => state.cameraSlice);
+  const currentUser = useSelector((state) => state.userSlice.currentUser);
 
   const picture = cameraState.capturedImage.data;
   const shortUrl = cameraState.capturedImage.path;
@@ -35,28 +33,12 @@ const DisplayResultScreen = () => {
   const [captureSuccess, setCaptureSuccess] = useState(false);
 
   const [amosToCapture, setAmosToCapture] = useState(null);
-  const [userId, setUserId] = useState(null);
-  const [userToken, setUserToken] = useState(null);
 
   const navigation = useNavigation();
 
   useEffect(() => {
-    getUserId();
-    getUserToken();
+    capture();
   }, []);
-
-  const getUserId = () => {
-    SecureStore.getItemAsync("user_id").then((response) => {
-      setUserId(response);
-    });
-  };
-
-  const getUserToken = () => {
-    SecureStore.getItemAsync("jwt").then((response) => {
-      setUserToken(response);
-      capture();
-    });
-  };
 
   const capture = async () => {
     let raw = JSON.stringify({
@@ -88,19 +70,14 @@ const DisplayResultScreen = () => {
   };
 
   const keep = () => {
-    // console.log("Chosen to keep the captured AMOS", amosToCapture);
     saveAmosImage();
   };
 
   const saveAmosImage = () => {
     let FormData = require("form-data");
     let requestInfo = new FormData();
-    // replace test url by image in base64
-    // requestInfo.append('image', testUrls["cat"]);
-    // // replace type of img by base64
-    // requestInfo.append('type', 'url');
+
     requestInfo.append("image", picture.base64);
-    // replace type of img by base64
     requestInfo.append("type", "base64");
 
     IMGUR.post("", requestInfo)
@@ -116,22 +93,22 @@ const DisplayResultScreen = () => {
   };
 
   const setErrorMessage = () => {
-    setStatusMess('Désolé, une erreur est survenue.');
-  }
+    setStatusMess("Désolé, une erreur est survenue.");
+  };
 
   // temp somlution in case of an error
   const goBackOnError = () => {
-    setAmosToCapture(true)
+    setAmosToCapture(true);
     setErrorMessage();
     setTimeout(() => {
       setCaptureSuccess(false);
       setSavingAmos(false);
     }, 1000);
-  }
+  };
 
   const saveAmos = (imgPath) => {
     let amos = JSON.stringify({
-      user_id: userId,
+      user_id: currentUser.id,
       animal_id: amosToCapture.id,
       species: amosToCapture.species,
       amos_type: amosToCapture.type,
@@ -139,10 +116,10 @@ const DisplayResultScreen = () => {
       image_path: imgPath,
     });
 
-		console.log("amos to save in db -",amos)
+    console.log("amos to save in db -", amos);
 
     API.post("amos", amos, {
-      headers: { Authorization: "Bearer " + userToken },
+      headers: { Authorization: "Bearer " + currentUser.playerToken },
     })
       .then((response) => {
         saveLocation(response.data.id);
@@ -160,7 +137,7 @@ const DisplayResultScreen = () => {
     });
 
     API.post("catches", coordInfo, {
-      headers: { Authorization: "Bearer " + userToken },
+      headers: { Authorization: "Bearer " + currentUser.playerToken },
     })
       .then((response) => {
         setCaptureSuccess(true);
@@ -175,7 +152,7 @@ const DisplayResultScreen = () => {
   };
 
   const checkForExistingAmos = (pictureData) => {
-		const foundAmos = Amos.isRegistered(pictureData)
+    const foundAmos = Amos.isRegistered(pictureData);
     if (foundAmos !== null) {
       setAmosToCapture(foundAmos);
       // Move to another screen to fight the AMOS and try to capture it ?
@@ -185,14 +162,18 @@ const DisplayResultScreen = () => {
   if (captureSuccess) {
     return (
       <View style={styles.container}>
-        <Text style={styles.successInfo}>Bravo, vous avez capturé un Amos de l'espèce {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].species)}! Numéro d'Archamos: {amosToCapture.id}  </Text>
-				<Image
-					style={styles.image}
-					source={{
-						uri: shortUrl,
-					}}
-				/>
-				{/* Button return to main screen */}
+        <Text style={styles.successInfo}>
+          Bravo, vous avez capturé un Amos de l'espèce{" "}
+          {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].species)}!
+          Numéro d'Archamos: {amosToCapture.id}{" "}
+        </Text>
+        <Image
+          style={styles.image}
+          source={{
+            uri: shortUrl,
+          }}
+        />
+        {/* Button return to main screen */}
       </View>
     );
   }
@@ -231,9 +212,21 @@ const DisplayResultScreen = () => {
 
       <View style={styles.description}>
         <Text style={styles.descText}> Numéro: {amosToCapture.id} </Text>
-        <Text style={styles.descText}> Type: {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].type)} </Text>
-        <Text style={styles.descText}> Espèce: {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].species)} </Text>
-        <Text style={styles.descText}> Niveau: {amosToCapture.level > 1 ? amosToCapture.level : 1} </Text>
+        <Text style={styles.descText}>
+          {" "}
+          Type: {Amos.capitalize(
+            AmosDataFr.amos[amosToCapture.species].type
+          )}{" "}
+        </Text>
+        <Text style={styles.descText}>
+          {" "}
+          Espèce:{" "}
+          {Amos.capitalize(AmosDataFr.amos[amosToCapture.species].species)}{" "}
+        </Text>
+        <Text style={styles.descText}>
+          {" "}
+          Niveau: {amosToCapture.level > 1 ? amosToCapture.level : 1}{" "}
+        </Text>
       </View>
 
       <View style={styles.buttonContainer}>
@@ -293,7 +286,7 @@ const styles = StyleSheet.create({
     backgroundColor: warning_c,
   },
   text: { fontSize: 20, color: "white", textAlign: "center" },
-  successInfo: { fontSize: 30, },
+  successInfo: { fontSize: 30 },
   description: {
     flex: 1,
     textAlign: "left",

@@ -40,7 +40,14 @@ const RootStack = () => {
 
   if (!appReady) {
     return (
-      <View style={{ marginTop: 20 }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          marginTop: 20,
+        }}
+      >
         <ActivityIndicator size="large" color={primary_c} />
         <Text style={{ textAlign: "center" }}>
           Chargement de l'application...

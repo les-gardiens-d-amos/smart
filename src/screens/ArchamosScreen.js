@@ -10,17 +10,21 @@ import {
 import { SearchBar } from "react-native-elements";
 
 import { API } from "../apis/axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setAmosList } from "../app/slices/archamosSlice";
 
 import { colors } from "../style/theme";
 const { primary_c } = colors;
 
 import Amos from "../entities/Amos";
 import ArchamosSingle from "../components/ArchamosSingle";
-import * as SecureStore from "expo-secure-store";
 
 const ArchamosScreen = ({ navigation }) => {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.userSlice.currentUser);
+  const amosList = useSelector((state) => state.archamosSlice.amosList);
+
   const [searchInput, _setSearchInput] = useState("");
-  const [amosList, setAmosList] = useState([]);
 
   const [statusMess, setStatusMess] = useState("Affichage des Amos...");
   const [loading, setLoading] = useState(true);
@@ -30,17 +34,17 @@ const ArchamosScreen = ({ navigation }) => {
   }, []);
 
   const setUserInfos = async () => {
-    const uid = await SecureStore.getItemAsync("user_id");
-    const jwt = await SecureStore.getItemAsync("jwt");
-    API.get(`amos/find/user/?user_id=${uid}`, {
-      headers: { Authorization: "Bearer " + jwt },
+    API.get(`amos/find/user/?user_id=${currentUser.playerId}`, {
+      headers: { Authorization: "Bearer " + currentUser.playerToken },
     })
       .then((response) => {
         setUserAmos(response.data);
-        setLoading(false);
       })
       .catch((error) => {
         console.log("Get user Amos ERROR", error);
+      })
+      .finally(() => {
+        setLoading(false);
       });
   };
 
@@ -52,7 +56,7 @@ const ArchamosScreen = ({ navigation }) => {
       newList.push(amm);
     }
 
-    setAmosList(newList);
+    dispatch(setAmosList(newList));
   };
 
   const goToSinglePage = (amosData) => {
@@ -80,9 +84,22 @@ const ArchamosScreen = ({ navigation }) => {
 
       <ScrollView style={styles.listWrapper}>
         {amosList.length > 0 ? (
-					amosList.map(item => ( <ArchamosSingle key={item.id} amos={item} goToSinglePage={goToSinglePage} />))
+          amosList.map((item) => (
+            <ArchamosSingle
+              key={item.id}
+              amos={item}
+              goToSinglePage={goToSinglePage}
+            />
+          ))
         ) : (
-          <Text style={{ textAlign: "center" }}>
+          <Text
+            style={{
+              marginTop: 25,
+              textAlign: "center",
+              fontSize: 20,
+              fontWeight: "bold",
+            }}
+          >
             Vous n'avez pas encore d'amos
           </Text>
         )}

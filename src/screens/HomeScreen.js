@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation, route }) => {
         </View>
 
         <View style={styles.navBtnWrapper}>
-          <Image style={styles.btnIcon} source={menuIcons.amosTitle} />
+          <Image style={styles.btnIcon} source={menuIcons.soulStack} />
           <TouchableOpacity
             style={styles.btn}
             onPress={() => navigation.navigate("ArchamosScreen")}
@@ -48,7 +48,7 @@ const HomeScreen = ({ navigation, route }) => {
         </View>
 
         <View style={styles.navBtnWrapper}>
-          <Image style={styles.btnIcon} source={menuIcons.amosTitle} />
+          <Image style={styles.btnIcon} source={menuIcons.options} />
           <TouchableOpacity
             style={styles.btn}
             onPress={() => navigation.navigate("DashboardScreen")}

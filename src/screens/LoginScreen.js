@@ -35,8 +35,9 @@ const LoginScreen = () => {
       email: email,
       password: password,
     });
-    const loginError = await serviceLoginUser(dispatch, userInfo);
-    if (loginError) {
+    const err = await serviceLoginUser(dispatch, userInfo);
+    console.log("loginUser loginError -", err);
+    if (err) {
       setErrorMess("Une erreur s'est produite lors de l'authentification");
       setLoading(false);
     }
@@ -49,8 +50,8 @@ const LoginScreen = () => {
       email: email,
       password: password,
     });
-    const registerError = await serviceRegisterUser(dispatch, userInfo);
-    if (registerError) {
+    const err = await serviceRegisterUser(dispatch, userInfo);
+    if (err) {
       setErrorMess("Une erreur s'est produite lors de l'inscription");
       setLoading(false);
     }

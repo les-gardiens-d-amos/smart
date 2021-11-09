@@ -11,18 +11,21 @@ import {
 import { Button as ButtonEle } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-import * as SecureStore from "expo-secure-store";
-
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
 
 import { API } from "../apis/axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setAmosNewName } from "../app/slices/archamosSlice";
 
 import RenameModal from "../components/RenameModal";
 
 import Amos from "../entities/Amos";
 
 const AmosSingleScreen = ({ route }) => {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.userSlice.currentUser);
+
   const { amosData } = route.params;
 
   const [amos, setAmos] = useState(amosData);
@@ -36,15 +39,17 @@ const AmosSingleScreen = ({ route }) => {
   }, []);
 
   const changeName = async (inputValue) => {
-    const userToken = await SecureStore.getItemAsync("jwt");
     let data = { name: inputValue };
-    API.put(`amos/update/name?id=${amos.id}`, data, {
-      headers: { Authorization: "Bearer " + userToken },
-    })
-      .then((response) => {
-        setAmosName(inputValue);
-      }) // Refreseh the page single with the new name
-      .catch((error) => console.log("changeName put error", error));
+    const response = await API.put(`amos/update/name?id=${amos.id}`, data, {
+      headers: { Authorization: "Bearer " + currentUser.playerToken },
+    });
+
+    if (response.status == 200) {
+      setAmosName(inputValue);
+      dispatch(setAmosNewName({ id: amos.id, name: inputValue }));
+    } else {
+      console.log("changeName put error response -", response);
+    }
   };
 
   const release = () => {
@@ -60,9 +65,8 @@ const AmosSingleScreen = ({ route }) => {
         {
           text: "Relâcher",
           onPress: async () => {
-            const userToken = await SecureStore.getItemAsync("jwt");
             API.delete(`amos/${amos.id}`, {
-              headers: { Authorization: "Bearer " + userToken },
+              headers: { Authorization: "Bearer " + currentUser.playerToken },
             })
               .then((response) => {
                 setAmos(null);
