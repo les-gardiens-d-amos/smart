@@ -20,7 +20,6 @@ import LoginScreen from "../screens/LoginScreen";
 import { colors } from "../style/theme";
 const { primary_c } = colors;
 
-// const Stack = createMaterialBottomTabNavigator();
 const Stack = createNativeStackNavigator();
 
 const RootStack = () => {
@@ -34,6 +33,7 @@ const RootStack = () => {
   }, []);
 
   const existingUser = async () => {
+    // Automatic connection if jwt is found
     await getCurrentUser(dispatch);
     setAppReady(true);
   };
@@ -92,7 +92,7 @@ const RootStack = () => {
           name="DashboardScreen"
           component={DashboardScreen}
           options={{
-            title: "Tableau de bord",
+            title: "Menu",
           }}
         />
         <Stack.Screen

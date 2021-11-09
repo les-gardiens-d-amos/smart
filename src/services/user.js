@@ -25,7 +25,8 @@ export const serviceLoginUser = async (dispatch, userInput) => {
       throw new Error("Login error -", response.status, "/");
     }
   } catch (error) {
-    console.log(error);
+    console.log("serviceLoginUser error -", error);
+    return false;
   }
 };
 
@@ -44,7 +45,8 @@ export const serviceRegisterUser = async (dispatch, userInput) => {
       throw new Error("Register error -", response.status, "/");
     }
   } catch (error) {
-    console.log(error);
+    console.log("serviceRegisterUser error -", error);
+    return false;
     // Returns error to display on the form ?
   }
 };
@@ -71,7 +73,8 @@ export const getCurrentUser = async (dispatch) => {
       throw new Error("Get current user error -", response.status, "/");
     }
   } catch (error) {
-    console.log(error);
+    console.log("getCurrentUser error -", error);
+    return false;
   }
 };
 
