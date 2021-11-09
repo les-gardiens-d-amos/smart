@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { SearchBar } from "react-native-elements";
 
-import { API } from "../store/axios";
+import { API } from "../apis/axios";
 
 import { colors } from "../style/theme";
 const { primary_c } = colors;

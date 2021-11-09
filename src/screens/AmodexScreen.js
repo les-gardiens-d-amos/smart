@@ -9,7 +9,7 @@ import {
   Tooltip,
 } from "react-native";
 
-import { API } from "../store/axios";
+import { API } from "../apis/axios";
 import * as SecureStore from "expo-secure-store";
 
 import AmosData from "../entities/AmosData.json";

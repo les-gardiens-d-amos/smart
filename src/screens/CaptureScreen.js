@@ -1,19 +1,20 @@
 import React, { useEffect } from 'react'
 import { View, Text, TouchableOpacity, Platform, StyleSheet } from 'react-native'
 import PreviewScreen from './PreviewScreen';
-import { useDispatch, useSelector } from 'react-redux';
+import * as ImagePicker from 'expo-image-picker';
 import * as Location from 'expo-location';
+
+import { useDispatch, useSelector } from 'react-redux';
+// import { setCapturedImageAction } from '../store/actions/CameraActions';
+import { setCapturedImageAction } from '../app/slices/cameraSlice';
 
 import { colors } from "../style/theme";
 const { primary_c } = colors;
 
-import * as ImagePicker from 'expo-image-picker';
-import { setCapturedImageAction } from '../store/actions/CameraActions';
-
 const CameraScreen = () => {
 
   const dispatch = useDispatch();
-  const cameraState = useSelector(state => state.camera);
+  const cameraState = useSelector(state => state.cameraSlice);
 
   const options = {
     base64: true,

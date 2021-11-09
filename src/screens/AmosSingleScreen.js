@@ -16,7 +16,7 @@ import * as SecureStore from "expo-secure-store";
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
 
-import { API } from "../store/axios";
+import { API } from "../apis/axios";
 
 import RenameModal from "../components/RenameModal";
 

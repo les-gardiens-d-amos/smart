@@ -8,7 +8,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 
-import { API, CLARIFAI, IMGUR } from "../store/axios";
+import { API, CLARIFAI, IMGUR } from "../apis/axios";
 import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
 
@@ -22,7 +22,7 @@ import { useNavigation } from '@react-navigation/native';
 const DisplayResultScreen = () => {
 
   // 
-  const cameraState = useSelector((state) => state.camera);
+  const cameraState = useSelector((state) => state.cameraSlice);
 
   const picture = cameraState.capturedImage.data;
   const shortUrl = cameraState.capturedImage.path;
@@ -84,7 +84,6 @@ const DisplayResultScreen = () => {
       .finally(() => {
         setStatusMess("Aucun Amos existant n'a été reconnu.");
         setCapturing(false);
-
       });
   };
 
