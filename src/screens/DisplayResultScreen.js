@@ -102,7 +102,7 @@ const DisplayResultScreen = () => {
 
   const saveAmos = (imgPath) => {
     let amos = JSON.stringify({
-      user_id: currentUser.id,
+      user_id: currentUser.playerId,
       animal_id: amosToCapture.id,
       species: amosToCapture.species,
       amos_type: amosToCapture.type,
