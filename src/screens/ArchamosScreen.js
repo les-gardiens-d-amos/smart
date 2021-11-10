@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  View,
-  ScrollView,
-  FlatList,
-  Text,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, View, ScrollView, Text } from "react-native";
 import { SearchBar } from "react-native-elements";
 
 import { API } from "../apis/axios";
@@ -15,6 +8,7 @@ import { setAmosList } from "../app/slices/archamosSlice";
 
 import { colors } from "../style/theme";
 const { primary_c } = colors;
+import Loader from "../components/CustomActivityLoader";
 
 import Amos from "../entities/Amos";
 import ArchamosSingle from "../components/ArchamosSingle";
@@ -63,14 +57,7 @@ const ArchamosScreen = ({ navigation }) => {
     navigation.navigate("AmosSingleScreen", { amosData });
   };
 
-  if (loading) {
-    return (
-      <View style={[styles.container, { marginTop: 20 }]}>
-        <ActivityIndicator size="large" color={primary_c} />
-        <Text style={{ textAlign: "center" }}>{statusMess}</Text>
-      </View>
-    );
-  }
+  if (loading) return <Loader message={statusMess} />;
 
   return (
     <View style={styles.container}>

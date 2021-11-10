@@ -3,10 +3,7 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  ActivityIndicator,
   FlatList,
-  Tooltip,
 } from "react-native";
 
 import { API } from "../apis/axios";
@@ -16,6 +13,7 @@ import AmosData from "../entities/AmosData.json";
 
 import { colors } from "../style/theme";
 const { primary_c, secondary_c } = colors;
+import Loader from "../components/CustomActivityLoader";
 
 import AmodexSingle from "../components/AmodexSingle";
 
@@ -40,14 +38,7 @@ const AmodexScreen = () => {
       .finally(() => setLoading(false));
   };
 
-  if (loading) {
-    return (
-      <View style={[styles.container, { marginTop: 20 }]}>
-        <ActivityIndicator size="large" color={primary_c} />
-        <Text style={{ textAlign: "center" }}>{statusMess}</Text>
-      </View>
-    );
-  }
+  if (loading) return (<Loader message={statusMess} />);
 
   return (
     <View style={styles.container}>

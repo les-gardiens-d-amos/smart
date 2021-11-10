@@ -6,13 +6,13 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  ActivityIndicator,
 } from "react-native";
 
 import { menuIcons } from "../../assets/menuIcons";
 
 import { colors } from "../style/theme";
 const { primary_c, tertiary_c, error_c } = colors;
+import Loader from "../components/CustomActivityLoader";
 
 import { useDispatch } from "react-redux";
 import { serviceLoginUser, serviceRegisterUser } from "../services/user";
@@ -21,8 +21,7 @@ const LoginScreen = () => {
   const dispatch = useDispatch();
 
   const [loading, setLoading] = useState(false);
-  const [statusMess, setStatusMess] = useState("Chargement...");
-  const [errorMess, setErrorMess] = useState(null);
+  const [notification, setNotification] = useState(null);
   const [registerPage, setRegisterPage] = useState(false);
 
   const [email, setEmail] = useState("");
@@ -36,9 +35,10 @@ const LoginScreen = () => {
       password: password,
     });
     const err = await serviceLoginUser(dispatch, userInfo);
-    console.log("loginUser loginError -", err);
     if (err) {
-      setErrorMess("Une erreur s'est produite lors de l'authentification");
+      displayNotification(
+        "Une erreur s'est produite lors de l'authentification"
+      );
       setLoading(false);
     }
   };
@@ -52,14 +52,20 @@ const LoginScreen = () => {
     });
     const err = await serviceRegisterUser(dispatch, userInfo);
     if (err) {
-      setErrorMess("Une erreur s'est produite lors de l'inscription");
+      displayNotification("Une erreur s'est produite lors de l'inscription");
       setLoading(false);
     }
   };
 
+  const displayNotification = (mess) => {
+    setNotification(mess);
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
+  };
+
   const Header = () => (
     <>
-      {errorMess !== null && <Text style={styles.errorMess}>{errorMess}</Text>}
       <View style={styles.titleWrapper}>
         <Image style={styles.gameIcon} source={menuIcons.amosTitle} />
         <Text style={styles.titleText}>Les Gardiens d'Amos</Text>
@@ -67,21 +73,14 @@ const LoginScreen = () => {
     </>
   );
 
-  if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={primary_c} />
-        <Text style={{ textAlign: "center" }}>{statusMess}</Text>
-      </View>
-    );
-  }
+  if (loading) return <Loader message={"Chargement..."} />;
 
   if (!registerPage) {
     // Displays login page
     return (
       <View style={styles.container}>
         <Header />
-        <View style={styles.formWrapper}>
+        <View behavior="padding" style={styles.formWrapper}>
           <TextInput
             style={styles.formInput}
             placeholder="E-mail"
@@ -98,6 +97,9 @@ const LoginScreen = () => {
           <TouchableOpacity style={styles.formBtn} onPress={loginUser}>
             <Text style={styles.btnsInsideTxt}>Se connecter</Text>
           </TouchableOpacity>
+          {notification !== null && (
+            <Text style={styles.errorMess}>{notification}</Text>
+          )}
         </View>
         <View style={styles.switchBtnWrapper}>
           <Text style={styles.switchBtnTopTxt}>
@@ -118,7 +120,7 @@ const LoginScreen = () => {
     // Displays register page
     <View style={styles.container}>
       <Header />
-      <View style={styles.formWrapper}>
+      <View behavior="padding" style={styles.formWrapper}>
         <TextInput
           style={styles.formInput}
           placeholder="E-mail"
@@ -142,6 +144,9 @@ const LoginScreen = () => {
         <TouchableOpacity style={styles.formBtn} onPress={registerUser}>
           <Text style={styles.btnsInsideTxt}>S'incrire</Text>
         </TouchableOpacity>
+        {notification !== null && (
+          <Text style={styles.errorMess}>{notification}</Text>
+        )}
       </View>
       <View style={styles.switchBtnWrapper}>
         <Text style={styles.switchBtnTopTxt}>Déjà Gardien d'Amos ?</Text>
@@ -159,12 +164,6 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  loadingContainer: {
-    flex: 1,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
   container: {
     flex: 1,
     width: "100%",
@@ -205,14 +204,11 @@ const styles = StyleSheet.create({
     height: 100,
     padding: 5,
   },
-  title: {
-    fontSize: 25,
-  },
   formInput: {
     width: "80%",
     borderBottomWidth: 1,
     borderBottomColor: "#000",
-    fontSize: 25,
+    fontSize: 18,
     padding: 5,
     margin: 5,
   },
@@ -224,7 +220,7 @@ const styles = StyleSheet.create({
     backgroundColor: primary_c,
   },
   switchBtnTopTxt: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: "bold",
     textAlign: "center",
   },
@@ -242,6 +238,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   errorMess: {
+    color: "#fff",
     width: "100%",
     backgroundColor: error_c,
     fontSize: 25,

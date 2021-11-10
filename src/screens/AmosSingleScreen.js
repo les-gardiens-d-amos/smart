@@ -46,7 +46,8 @@ const AmosSingleScreen = ({ route }) => {
 
     if (response.status == 200) {
       setAmosName(inputValue);
-      dispatch(setAmosNewName({ id: amos.id, name: inputValue }));
+      // TODO To fix "TypeError: undefined is not an object (evaluating 'item.id')"
+      // dispatch(setAmosNewName({ id: amos.id, name: inputValue }));
     } else {
       console.log("changeName put error response -", response);
     }
@@ -96,13 +97,11 @@ const AmosSingleScreen = ({ route }) => {
         animationType="slide"
         onRequestClose={() => setRenameVisible(false)}
       >
-        <View style={styles.modalView}>
-          <RenameModal
-            name={amosName}
-            callbackChangeName={changeName}
-            callbackCloseModal={setRenameVisible}
-          />
-        </View>
+        <RenameModal
+          amosName={amosName}
+          callbackChangeName={changeName}
+          callbackCloseModal={setRenameVisible}
+        />
       </Modal>
 
       <View style={styles.photoWrapper}>
@@ -175,17 +174,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: primary_c,
-    borderRadius: 20,
-    padding: 25,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   photoWrapper: {
     margin: 10,

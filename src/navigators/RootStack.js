@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Text, View, ActivityIndicator } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+import { colors } from "../style/theme";
+const { primary_c } = colors;
+import Loader from "../components/CustomActivityLoader";
 
 // Redux
 import { useSelector, useDispatch } from "react-redux";
@@ -17,8 +20,6 @@ import DashboardScreen from "../screens/DashboardScreen";
 import DisplayResultScreen from "../screens/DisplayResultScreen";
 import PreviewScreen from "../screens/PreviewScreen";
 import LoginScreen from "../screens/LoginScreen";
-import { colors } from "../style/theme";
-const { primary_c } = colors;
 
 const Stack = createNativeStackNavigator();
 
@@ -38,23 +39,7 @@ const RootStack = () => {
     setAppReady(true);
   };
 
-  if (!appReady) {
-    return (
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 20,
-        }}
-      >
-        <ActivityIndicator size="large" color={primary_c} />
-        <Text style={{ textAlign: "center" }}>
-          Chargement de l'application...
-        </Text>
-      </View>
-    );
-  }
+  if (!appReady) return <Loader message={"Chargement de l'application..."} />;
 
   if (currentUser === null) return <LoginScreen />;
 

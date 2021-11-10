@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  TouchableOpacity,
-  ActivityIndicator,
-} from "react-native";
+import { StyleSheet, Text, View, Image, TouchableOpacity } from "react-native";
 
 import { API, CLARIFAI, IMGUR } from "../apis/axios";
 import { useSelector } from "react-redux";
@@ -17,6 +10,7 @@ const { primary_c, warning_c } = colors;
 import Amos from "../entities/Amos";
 import AmosDataFr from "../entities/AmosDataFr.json";
 import { useNavigation } from "@react-navigation/native";
+import Loader from "../components/CustomActivityLoader";
 
 const DisplayResultScreen = () => {
   const cameraState = useSelector((state) => state.cameraSlice);
@@ -178,14 +172,7 @@ const DisplayResultScreen = () => {
     );
   }
 
-  if (savingAmos || capturing) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color={primary_c} />
-        <Text>{statusMess}</Text>
-      </View>
-    );
-  }
+  if (savingAmos || capturing) return <Loader message={statusMess} />;
 
   if (!amosToCapture) {
     return (
