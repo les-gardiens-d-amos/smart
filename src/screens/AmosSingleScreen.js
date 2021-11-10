@@ -11,18 +11,21 @@ import {
 import { Button as ButtonEle } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-import * as SecureStore from "expo-secure-store";
-
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
 
-import { API } from "../store/axios";
+import { API } from "../apis/axios";
+import { useSelector, useDispatch } from "react-redux";
+import { setAmosNewName } from "../app/slices/archamosSlice";
 
 import RenameModal from "../components/RenameModal";
 
 import Amos from "../entities/Amos";
 
 const AmosSingleScreen = ({ route }) => {
+  const dispatch = useDispatch();
+  const currentUser = useSelector((state) => state.userSlice.currentUser);
+
   const { amosData } = route.params;
 
   const [amos, setAmos] = useState(amosData);
@@ -36,15 +39,18 @@ const AmosSingleScreen = ({ route }) => {
   }, []);
 
   const changeName = async (inputValue) => {
-    const userToken = await SecureStore.getItemAsync("jwt");
     let data = { name: inputValue };
-    API.put(`amos/update/name?id=${amos.id}`, data, {
-      headers: { Authorization: "Bearer " + userToken },
-    })
-      .then((response) => {
-        setAmosName(inputValue);
-      }) // Refreseh the page single with the new name
-      .catch((error) => console.log("changeName put error", error));
+    const response = await API.put(`amos/update/name?id=${amos.id}`, data, {
+      headers: { Authorization: "Bearer " + currentUser.playerToken },
+    });
+
+    if (response.status == 200) {
+      setAmosName(inputValue);
+      // TODO To fix "TypeError: undefined is not an object (evaluating 'item.id')"
+      // dispatch(setAmosNewName({ id: amos.id, name: inputValue }));
+    } else {
+      console.log("changeName put error response -", response);
+    }
   };
 
   const release = () => {
@@ -60,9 +66,8 @@ const AmosSingleScreen = ({ route }) => {
         {
           text: "Relâcher",
           onPress: async () => {
-            const userToken = await SecureStore.getItemAsync("jwt");
             API.delete(`amos/${amos.id}`, {
-              headers: { Authorization: "Bearer " + userToken },
+              headers: { Authorization: "Bearer " + currentUser.playerToken },
             })
               .then((response) => {
                 setAmos(null);
@@ -92,13 +97,11 @@ const AmosSingleScreen = ({ route }) => {
         animationType="slide"
         onRequestClose={() => setRenameVisible(false)}
       >
-        <View style={styles.modalView}>
-          <RenameModal
-            name={amosName}
-            callbackChangeName={changeName}
-            callbackCloseModal={setRenameVisible}
-          />
-        </View>
+        <RenameModal
+          amosName={amosName}
+          callbackChangeName={changeName}
+          callbackCloseModal={setRenameVisible}
+        />
       </Modal>
 
       <View style={styles.photoWrapper}>
@@ -171,17 +174,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: primary_c,
-    borderRadius: 20,
-    padding: 25,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 4,
-    elevation: 5,
   },
   photoWrapper: {
     margin: 10,

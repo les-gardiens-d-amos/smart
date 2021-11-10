@@ -1,180 +1,248 @@
 import React, { useState } from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
-import { Button } from "@react-native-material/core";
-import { Header } from "react-native-elements";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  Image,
+  TouchableOpacity,
+} from "react-native";
 
-import { API } from "../store/axios";
-import * as SecureStore from "expo-secure-store";
+import { menuIcons } from "../../assets/menuIcons";
 
 import { colors } from "../style/theme";
-const { success_c, primary_c, tertiary_c } = colors;
+const { primary_c, tertiary_c, error_c } = colors;
+import Loader from "../components/CustomActivityLoader";
 
-const LoginScreen = (props) => {
-  const [isNewUser, setIsNewUser] = useState(false);
-  const [userIsRegister, setUserIsRegister] = useState(false);
+import { useDispatch } from "react-redux";
+import { serviceLoginUser, serviceRegisterUser } from "../services/user";
+
+const LoginScreen = () => {
+  const dispatch = useDispatch();
+
+  const [loading, setLoading] = useState(false);
+  const [notification, setNotification] = useState(null);
+  const [registerPage, setRegisterPage] = useState(false);
+
   const [email, setEmail] = useState("");
-  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
 
-  const switchLoginRegister = () => {
-    setIsNewUser(!isNewUser);
+  const loginUser = async () => {
+    setLoading(true);
+    let userInfo = JSON.stringify({
+      email: email,
+      password: password,
+    });
+    const err = await serviceLoginUser(dispatch, userInfo);
+    if (err) {
+      displayNotification(
+        "Une erreur s'est produite lors de l'authentification"
+      );
+      setLoading(false);
+    }
   };
 
-  const registerUser = () => {
+  const registerUser = async () => {
+    setLoading(true);
     let userInfo = JSON.stringify({
       name: name,
       email: email,
       password: password,
     });
-
-    API.post("users?controller=users&action=create", userInfo)
-      .then(response => {
-        setUserIsRegister(true);
-        login();
-      })
-      .catch(error => { console.log("Register post error", error); })
+    const err = await serviceRegisterUser(dispatch, userInfo);
+    if (err) {
+      displayNotification("Une erreur s'est produite lors de l'inscription");
+      setLoading(false);
+    }
   };
 
-  const loginUser = () => {
-    let userInfo = JSON.stringify({ email: email, password: password });
-
-    API.post("login", userInfo)
-      .then(response => {
-        manageLoginResponse(response.data);
-      })
-      .catch(error => { console.log("login post error", error); })
+  const displayNotification = (mess) => {
+    setNotification(mess);
+    setTimeout(() => {
+      setNotification(null);
+    }, 5000);
   };
 
-  const manageLoginResponse = (data) => {
-    console.log(data);
-    SecureStore.setItemAsync("jwt", data.token);
-    SecureStore.setItemAsync("user_id", data.user_info.id);
-    login();
-  };
+  const Header = () => (
+    <>
+      <View style={styles.titleWrapper}>
+        <Image style={styles.gameIcon} source={menuIcons.amosTitle} />
+        <Text style={styles.titleText}>Les Gardiens d'Amos</Text>
+      </View>
+    </>
+  );
 
-  const login = () => {
-    props.onLogin();
-  };
+  if (loading) return <Loader message={"Chargement..."} />;
 
-  if (!isNewUser) {
+  if (!registerPage) {
+    // Displays login page
     return (
       <View style={styles.container}>
-        <Header
-          backgroundColor={primary_c}
-          placement="center"
-          centerComponent={{
-            text: "Connexion",
-            style: { color: "#fff", fontSize: 20 },
-          }}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="e-mail"
-          onChangeText={setEmail}
-          value={email}
-        />
-        <TextInput
-          style={styles.input}
-          placeholder="mot de passe"
-          onChangeText={setPassword}
-          value={password}
-          secureTextEntry={true}
-        />
-        <Button
-          color={primary_c}
-          style={styles.btn}
-          title="Se connecter"
-          onPress={loginUser}
-        />
-        <Button
-          color={primary_c}
-          style={styles.btn}
-          title="Nouveau par ici ? créez cotre compte"
-          onPress={switchLoginRegister}
-        />
+        <Header />
+        <View behavior="padding" style={styles.formWrapper}>
+          <TextInput
+            style={styles.formInput}
+            placeholder="E-mail"
+            onChangeText={setEmail}
+            value={email}
+          />
+          <TextInput
+            style={styles.formInput}
+            placeholder="Mot de passe"
+            onChangeText={setPassword}
+            value={password}
+            secureTextEntry={true}
+          />
+          <TouchableOpacity style={styles.formBtn} onPress={loginUser}>
+            <Text style={styles.btnsInsideTxt}>Se connecter</Text>
+          </TouchableOpacity>
+          {notification !== null && (
+            <Text style={styles.errorMess}>{notification}</Text>
+          )}
+        </View>
+        <View style={styles.switchBtnWrapper}>
+          <Text style={styles.switchBtnTopTxt}>
+            Vous n'êtes pas encore Gardien d'Amos ?
+          </Text>
+          <TouchableOpacity
+            style={styles.switchBtn}
+            onPress={() => setRegisterPage(!registerPage)}
+          >
+            <Text style={styles.btnsInsideTxt}>S'incrire</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
-  } else {
-    return (
-      <View style={styles.container}>
-        <Header
-          backgroundColor={primary_c}
-          placement="center"
-          centerComponent={{
-            text: "Inscription",
-            style: { color: "#fff", fontSize: 20 },
-          }}
-        />
-        {userIsRegister ? (
-          <View style={styles.flashMessage}>
-            <Text style={{ color: "white" }}>Bienvenue dans l'aventure</Text>
-          </View>
-        ) : null}
+  }
+
+  return (
+    // Displays register page
+    <View style={styles.container}>
+      <Header />
+      <View behavior="padding" style={styles.formWrapper}>
         <TextInput
-          style={styles.input}
-          placeholder="e-mail"
+          style={styles.formInput}
+          placeholder="E-mail"
           onChangeText={setEmail}
           value={email}
           secureTextEntry={false}
         />
         <TextInput
-          style={styles.input}
-          placeholder="nom ou pseudo"
+          style={styles.formInput}
+          placeholder="Nom ou pseudo"
           onChangeText={setName}
           value={name}
         />
         <TextInput
-          style={styles.input}
-          placeholder="mot de passe"
+          style={styles.formInput}
+          placeholder="Mot de passe"
           onChangeText={setPassword}
           value={password}
           secureTextEntry={true}
         />
-        <Button
-          color={primary_c}
-          style={styles.btn}
-          title="S'inscrire"
-          onPress={registerUser}
-        />
-        <Button
-          color={primary_c}
-          style={styles.btn}
-          title="Vous avez déjà un compte ? connectez vous"
-          onPress={switchLoginRegister}
-        />
+        <TouchableOpacity style={styles.formBtn} onPress={registerUser}>
+          <Text style={styles.btnsInsideTxt}>S'incrire</Text>
+        </TouchableOpacity>
+        {notification !== null && (
+          <Text style={styles.errorMess}>{notification}</Text>
+        )}
       </View>
-    );
-  }
+      <View style={styles.switchBtnWrapper}>
+        <Text style={styles.switchBtnTopTxt}>Déjà Gardien d'Amos ?</Text>
+        <TouchableOpacity
+          style={styles.switchBtn}
+          onPress={() => setRegisterPage(!registerPage)}
+        >
+          <Text style={styles.btnsInsideTxt}>Se connecter</Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
 };
 
 export default LoginScreen;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    width: "100%",
     alignItems: "center",
+    justifyContent: "space-around",
   },
-  title: {
-    fontSize: 35,
+  titleWrapper: {
+    flex: 1,
+    width: "100%",
+    marginBottom: 15,
+    alignItems: "center",
+    justifyContent: "center",
   },
-  input: {
-    width: "70%",
+  formWrapper: {
+    flex: 1,
+    width: "100%",
+    marginBottom: 25,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  switchBtnWrapper: {
+    flex: 1,
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+    fontSize: 25,
+  },
+  titleText: {
+    width: "100%",
+    fontSize: 32,
+    padding: 5,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
+  gameIcon: {
+    width: 100,
+    height: 100,
+    padding: 5,
+  },
+  formInput: {
+    width: "80%",
     borderBottomWidth: 1,
     borderBottomColor: "#000",
-    fontSize: 25,
-    margin: 15,
+    fontSize: 18,
+    padding: 5,
+    margin: 5,
   },
-  btn: {
+  formBtn: {
+    width: "50%",
+    padding: 12,
+    margin: 10,
+    borderRadius: 8,
     backgroundColor: primary_c,
-    color: tertiary_c,
-    margin: 15,
+  },
+  switchBtnTopTxt: {
+    fontSize: 20,
+    fontWeight: "bold",
     textAlign: "center",
   },
-  flashMessage: {
-    backgroundColor: success_c,
+  switchBtn: {
     width: "70%",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 40,
-    margin: 15,
+    padding: 12,
+    margin: 10,
+    borderRadius: 8,
+    backgroundColor: primary_c,
+  },
+  btnsInsideTxt: {
+    color: "#fff",
+    fontSize: 25,
+    fontWeight: "bold",
+    textAlign: "center",
+  },
+  errorMess: {
+    color: "#fff",
+    width: "100%",
+    backgroundColor: error_c,
+    padding: 10,
+    fontSize: 25,
+    fontWeight: "bold",
   },
 });

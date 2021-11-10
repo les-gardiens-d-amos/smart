@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Image } from 'react-native'
 import { useDispatch } from 'react-redux';
-import { setCapturedImageAction } from '../store/actions/CameraActions';
+import { setCapturedImageAction } from '../app/slices/cameraSlice';
+// import { setCapturedImageAction } from '../store/actions/CameraActions';
 import { colors } from "../style/theme";
 import DisplayResultScreen from './DisplayResultScreen';
 

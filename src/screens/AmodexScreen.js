@@ -3,23 +3,23 @@ import {
   StyleSheet,
   Text,
   View,
-  Image,
-  ActivityIndicator,
   FlatList,
-  Tooltip,
 } from "react-native";
 
-import { API } from "../store/axios";
-import * as SecureStore from "expo-secure-store";
+import { API } from "../apis/axios";
+import { useSelector } from "react-redux";
 
 import AmosData from "../entities/AmosData.json";
 
 import { colors } from "../style/theme";
 const { primary_c, secondary_c } = colors;
+import Loader from "../components/CustomActivityLoader";
 
 import AmodexSingle from "../components/AmodexSingle";
 
 const AmodexScreen = () => {
+  const currentUser = useSelector((state) => state.userSlice.currentUser);
+
   const registeredAmos = Object.keys(AmosData.amos);
   const [listCaptures, setListCaptures] = useState([]);
   const [statusMess, setStatusMess] = useState("Affichage de l'Amodex...");
@@ -30,24 +30,15 @@ const AmodexScreen = () => {
   }, []);
 
   const getUserCaptures = async () => {
-    const uid = await SecureStore.getItemAsync("user_id");
-    const jwt = await SecureStore.getItemAsync("jwt");
-    API.get(`amos/find/animal_id/?user_id=${uid}`, {
-      headers: { Authorization: "Bearer " + jwt },
+    API.get(`amos/find/animal_id/?user_id=${currentUser.playerId}`, {
+      headers: { Authorization: "Bearer " + currentUser.playerToken },
     })
       .then((response) => setListCaptures(response.data.animal_id))
       .catch((error) => console.log("ListCaptures ERROR", error))
       .finally(() => setLoading(false));
   };
 
-  if (loading) {
-    return (
-      <View style={[styles.container, { marginTop: 20 }]}>
-        <ActivityIndicator size="large" color={primary_c} />
-        <Text style={{ textAlign: "center" }}>{statusMess}</Text>
-      </View>
-    );
-  }
+  if (loading) return (<Loader message={statusMess} />);
 
   return (
     <View style={styles.container}>

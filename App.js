@@ -1,16 +1,14 @@
 import React from "react";
-import { Provider } from 'react-redux';
-
 import RootStack from "./src/navigators/RootStack";
-import store from './src/store/Store';
-
+import { Provider } from "react-redux";
+import { store } from "./src/app/store";
 
 const App = () => {
   return (
     <Provider store={store}>
       <RootStack />
     </Provider>
-  )
-}
+  );
+};
 
 export default App;
