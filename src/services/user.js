@@ -26,7 +26,7 @@ export const serviceLoginUser = async (dispatch, userInput) => {
     }
   } catch (error) {
     console.log("serviceLoginUser error -", error);
-    return {error: true, message: error};
+    return { error: true, message: error };
   }
 };
 
@@ -36,7 +36,7 @@ export const serviceRegisterUser = async (dispatch, userInput) => {
       "users?controller=users&action=create",
       userInput
     );
-    if (response.status === 200) {
+    if (response.status === 201) {
       const resData = response.data;
       await SecureStore.setItemAsync("jwt", resData.token);
       await SecureStore.setItemAsync("user_id", resData.user_info.id);
@@ -46,8 +46,7 @@ export const serviceRegisterUser = async (dispatch, userInput) => {
     }
   } catch (error) {
     console.log("serviceRegisterUser error -", error);
-    return {error: true, message: error};
-    // Returns error to display on the form ?
+    return { error: true, message: error };
   }
 };
 

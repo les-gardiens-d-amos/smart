@@ -241,6 +241,7 @@ const styles = StyleSheet.create({
     color: "#fff",
     width: "100%",
     backgroundColor: error_c,
+    padding: 10,
     fontSize: 25,
     fontWeight: "bold",
   },
