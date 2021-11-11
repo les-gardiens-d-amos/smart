@@ -7,18 +7,11 @@ export const serviceLoginUser = async (dispatch, userInput) => {
     const response = await API.post("login", userInput);
     if (response.status === 200) {
       const resData = response.data;
-      console.log("Login -", resData);
 
       await SecureStore.setItemAsync("jwt", resData.token);
       await SecureStore.setItemAsync("user_id", resData.user_info.id);
 
-      const currentUserdata = {
-        // Build an object to use as the state redux currentUser everywhere in the app
-        playerToken: resData.token,
-        playerId: resData.user_info.id,
-        playerName: resData.user_info.name,
-        // playerGender: resData.user_info.gender,
-      };
+      const currentUserdata = setUpCurrentUser(resData.token, resData);
 
       dispatch(loginUser(currentUserdata));
     } else {
@@ -36,11 +29,15 @@ export const serviceRegisterUser = async (dispatch, userInput) => {
       "users?controller=users&action=create",
       userInput
     );
-    if (response.status === 201) {
+    console.log("serviceRegisterUser response", response);
+    if (response.status === 200) {
       const resData = response.data;
       await SecureStore.setItemAsync("jwt", resData.token);
       await SecureStore.setItemAsync("user_id", resData.user_info.id);
-      dispatch(registerUser());
+
+      const currentUserdata = setUpCurrentUser(resData.token, resData);
+
+      dispatch(registerUser(currentUserdata));
     } else {
       throw new Error("Register error -", response.status);
     }
@@ -59,13 +56,9 @@ export const getCurrentUser = async (dispatch) => {
       });
       if (response.status === 200) {
         const resData = response.data;
-        const currentUserdata = {
-          // Build an object to use as the state redux currentUser everywhere in the app
-          playerToken: jwt,
-          playerId: resData.user_info.id,
-          playerName: resData.user_info.name,
-          // playerGender: resData.user_info.gender,
-        };
+
+      	const currentUserdata = setUpCurrentUser(jwt, resData);
+
         dispatch(loginUser(currentUserdata));
       } else {
         throw new Error("Get current user error -", response.status);
@@ -81,4 +74,14 @@ export const serviceLogout = async (dispatch) => {
   await SecureStore.deleteItemAsync("jwt");
   await SecureStore.deleteItemAsync("user_id");
   dispatch(logoutUser());
+};
+
+const setUpCurrentUser = (token, resData) => {
+  // Build an object to use as the state redux currentUser everywhere in the app
+  return {
+    playerToken: token,
+    playerId: resData.user_info.id,
+    playerName: resData.user_info.name,
+    // playerGender: resData.user_info.gender,
+  };
 };
