@@ -4,53 +4,63 @@ import {
   Text,
   View,
   TextInput,
+  Modal,
   TouchableOpacity,
 } from "react-native";
 import { Input } from "react-native-elements";
 
-import { colors } from "../style/theme";
+import { colors, deviceSize } from "../style/theme";
 const { primary_c, secondary_c, warning_c } = colors;
 
-const RenameModal = ({ amosName, callbackChangeName, callbackCloseModal }) => {
+const RenameModal = ({ placeholder, cbAction, cbClose }) => {
   const [inputValue, setInputValue] = useState("");
-  const [warningMess, setWarningMess] = useState("");
+  const [notification, setNotification] = useState("");
+
+  const displayNotification = (mess) => {
+    setNotification(mess);
+    setTimeout(() => {
+      setNotification(null);
+    }, 3000);
+  };
 
   return (
     <View style={styles.container}>
-      {warningMess !== "" && (
-        <Text style={styles.warningMess}>{warningMess}</Text>
+      {notification !== "" && (
+        <Text style={styles.notification}>{notification}</Text>
       )}
       <Input
         style={styles.input}
-        placeholder={amosName}
+        placeholder={placeholder}
         onChangeText={setInputValue}
         value={inputValue}
       ></Input>
-      <View style={styles.buttonsWrapper}>
+      <View style={styles.btnsWrapper}>
         <TouchableOpacity
-          style={styles.buttons}
+          style={styles.btns}
           onPress={() => {
             if (inputValue.length > 10) {
-              setWarningMess(
+              displayNotification(
                 "Le nom est trop long (pas plus de 10 caractères)"
               );
-            } else if (inputValue.length <= 3) {
-              setWarningMess("Le nom est trop court (au moins 3 caractères)");
+            } else if (inputValue.length < 3) {
+              displayNotification(
+                "Le nom est trop court (au moins 3 caractères)"
+              );
             } else {
-              callbackChangeName(inputValue);
-              callbackCloseModal(false);
+              cbAction(inputValue);
+              cbClose(false);
             }
           }}
         >
-          <Text style={styles.text}>Valider</Text>
+          <Text style={styles.btnsText}>Valider</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={styles.buttons}
+          style={styles.btns}
           onPress={() => {
-            callbackCloseModal(false);
+            cbClose(false);
           }}
         >
-          <Text style={styles.text}>Annuler</Text>
+          <Text style={styles.btnsText}>Annuler</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -61,12 +71,13 @@ export default RenameModal;
 
 const styles = StyleSheet.create({
   container: {
+    position: "relative",
     backgroundColor: primary_c,
-    width: 300,
-    height: 300,
-    top: 50,
+    width: deviceSize.width * 0.8,
+    height: deviceSize.height * 0.4,
+    top: deviceSize.height * 0.1,
     borderRadius: 20,
-    padding: 25,
+    padding: 10,
     alignSelf: "center",
     justifyContent: "space-around",
     alignItems: "center",
@@ -81,34 +92,37 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   input: {
+    color: "#fff",
     width: "90%",
     padding: 15,
     backgroundColor: secondary_c,
     borderWidth: 2,
   },
-  buttonsWrapper: {
+  btnsWrapper: {
     flex: 1,
     width: "90%",
     alignItems: "center",
     justifyContent: "space-around",
     flexDirection: "row",
   },
-  buttons: {
+  btns: {
     backgroundColor: secondary_c,
     width: "40%",
     padding: 10,
     borderWidth: 1,
     borderRadius: 8,
   },
-  text: {
+  btnsText: {
     color: "white",
     fontSize: 15,
     textAlign: "center",
     fontWeight: "bold",
   },
-  warningMess: {
+  notification: {
+    position: "absolute",
     textAlign: "center",
-    margin: 5,
     color: warning_c,
+    bottom: 0,
+    zIndex: 10,
   },
 });

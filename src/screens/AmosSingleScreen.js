@@ -30,7 +30,7 @@ const AmosSingleScreen = ({ route }) => {
 
   const [amos, setAmos] = useState(amosData);
   const [amosName, setAmosName] = useState(amosData.name);
-  const [renameVisible, setRenameVisible] = useState(false);
+  const [modalRename, setModalRename] = useState(false);
 
   useEffect(() => {
     // Request to get information on this particular amos
@@ -92,15 +92,15 @@ const AmosSingleScreen = ({ route }) => {
   return (
     <View style={styles.container}>
       <Modal
-        visible={renameVisible}
+        visible={modalRename}
         transparent={true}
         animationType="slide"
-        onRequestClose={() => setRenameVisible(false)}
+        onRequestClose={() => setModalRename(false)}
       >
         <RenameModal
-          amosName={amosName}
-          callbackChangeName={changeName}
-          callbackCloseModal={setRenameVisible}
+          placeholder={amosName}
+          cbAction={changeName}
+          cbClose={setModalRename}
         />
       </Modal>
 
@@ -116,7 +116,7 @@ const AmosSingleScreen = ({ route }) => {
       <View style={styles.nameWrapper}>
         <ButtonEle
           type="clear"
-          onPress={() => setRenameVisible(true)}
+          onPress={() => setModalRename(true)}
           icon={<Icon name="edit" size={25} color={primary_c} />}
           buttonStyle={styles.renameBtn}
         />

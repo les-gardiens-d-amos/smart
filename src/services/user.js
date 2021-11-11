@@ -2,6 +2,17 @@ import { registerUser, loginUser, logoutUser } from "../app/slices/userSlice";
 import { API } from "../apis/axios";
 import * as SecureStore from "expo-secure-store";
 
+const setUpCurrentUser = (token, resData) => {
+  // Build an object to use as the state redux currentUser everywhere in the app
+  return {
+    playerToken: token,
+    playerId: resData.user_info.id,
+    playerMail: resData.user_info.email,
+    playerName: resData.user_info.name,
+    // playerGender: resData.user_info.gender,
+  };
+};
+
 export const serviceLoginUser = async (dispatch, userInput) => {
   try {
     const response = await API.post("login", userInput);
@@ -57,7 +68,7 @@ export const getCurrentUser = async (dispatch) => {
       if (response.status === 200) {
         const resData = response.data;
 
-      	const currentUserdata = setUpCurrentUser(jwt, resData);
+        const currentUserdata = setUpCurrentUser(jwt, resData);
 
         dispatch(loginUser(currentUserdata));
       } else {
@@ -74,14 +85,4 @@ export const serviceLogout = async (dispatch) => {
   await SecureStore.deleteItemAsync("jwt");
   await SecureStore.deleteItemAsync("user_id");
   dispatch(logoutUser());
-};
-
-const setUpCurrentUser = (token, resData) => {
-  // Build an object to use as the state redux currentUser everywhere in the app
-  return {
-    playerToken: token,
-    playerId: resData.user_info.id,
-    playerName: resData.user_info.name,
-    // playerGender: resData.user_info.gender,
-  };
 };
