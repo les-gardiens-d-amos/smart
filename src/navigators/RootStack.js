@@ -68,7 +68,7 @@ const RootStack = () => {
         <Stack.Screen
           name="ArchamosScreen"
           component={ArchamosScreen}
-          options={{ title: "Archamos" }}
+          options={{ title: "Mes Amos" }}
         />
         <Stack.Screen
           name="AmodexScreen"
