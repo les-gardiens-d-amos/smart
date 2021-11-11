@@ -2,6 +2,9 @@ import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { icons as amosIcons, soulIcons } from "../../assets/amosIcons";
 
+import Amos from "../entities/Amos";
+import amosDataFr from "../entities/AmosDataFr.json"
+
 const AmodexSingle = ({ listCaptures, amosData }) => {
   return (
     <View style={styles.amosBox}>
@@ -22,6 +25,7 @@ const AmodexSingle = ({ listCaptures, amosData }) => {
           <Image style={styles.typeIcon} source={soulIcons.default} />
         </>
       )}
+      <Text style={styles.speciesName}>{Amos.capitalize(amosDataFr.amos[amosData.species].species)}</Text>
       <Text style={styles.idAmodex}>{amosData.id}</Text>
     </View>
   );
@@ -41,11 +45,18 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     textAlign: "center",
   },
+	speciesName: {
+    position: "absolute",
+    fontWeight: "bold",
+		fontSize: 14,
+		bottom: -16,
+    zIndex: 20,
+	},
   idAmodex: {
     position: "absolute",
     fontWeight: "bold",
     fontSize: 18,
-    bottom: -17,
+    top: -5,
     right: 2,
     zIndex: 20,
   },

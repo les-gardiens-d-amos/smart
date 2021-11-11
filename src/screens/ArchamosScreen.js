@@ -61,13 +61,13 @@ const ArchamosScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <SearchBar
+      {/* <SearchBar
         lightTheme={true}
         style={styles.searchBar}
         placeholder="Chercher des Amos..."
         onChangeText={() => {}}
         value={searchInput}
-      />
+      /> */}
 
       <ScrollView style={styles.listWrapper}>
         {amosList.length > 0 ? (
