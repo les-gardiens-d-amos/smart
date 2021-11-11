@@ -30,14 +30,15 @@ const RenameModal = ({ amosName, callbackChangeName, callbackCloseModal }) => {
         <TouchableOpacity
           style={styles.buttons}
           onPress={() => {
-            // For if not empty, check if not too small
-            if (inputValue.length > 2) {
+            if (inputValue.length > 10) {
+              setWarningMess(
+                "Le nom est trop long (pas plus de 10 caractères)"
+              );
+            } else if (inputValue.length <= 3) {
+              setWarningMess("Le nom est trop court (au moins 3 caractères)");
+            } else {
               callbackChangeName(inputValue);
               callbackCloseModal(false);
-            } else {
-              setWarningMess(
-                "Le nom est trop court, au moins 3 caractères sont requis"
-              );
             }
           }}
         >
