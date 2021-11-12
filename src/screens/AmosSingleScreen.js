@@ -98,6 +98,9 @@ const AmosSingleScreen = ({ route }) => {
         onRequestClose={() => setModalRename(false)}
       >
         <RenameModal
+          title={"Changer le nom"}
+          cMin={3}
+          cMax={10}
           placeholder={amosName}
           cbAction={changeName}
           cbClose={setModalRename}

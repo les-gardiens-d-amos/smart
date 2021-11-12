@@ -10,15 +10,18 @@ import {
 import { Button as ButtonIcon } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-import { API } from "../apis/axios";
 import { useSelector, useDispatch } from "react-redux";
-import { serviceLogout } from "../services/user";
-import { changeName } from "../app/slices/userSlice";
-import { logoutUser } from "../app/slices/userSlice";
+import {
+  serviceChangeName,
+  serviceChangeMail,
+  serviceChangePassword,
+  serviceLogout,
+  serviceDelete,
+} from "../services/user";
 
 import RenameModal from "../components/RenameModal";
 
-import { colors } from "../style/theme";
+import { colors, deviceSize } from "../style/theme";
 const { primary_c, tertiary_c, error_c } = colors;
 
 // Update infos api
@@ -44,38 +47,16 @@ const DashboardScreen = ({ navigation }) => {
 
   const [modalRename, setModalRename] = useState(false);
   const [modalMail, setModalMail] = useState(false);
+  const [modalPassword, setModalPassword] = useState(false);
 
-  const changeName = async (inputValue) => {
-    try {
-      const data = { name: inputValue };
-
-      const response = await API.put(`users/${currentUser.playerId}`, data, {
-        headers: { Authorization: "Bearer " + currentUser.playerToken },
-      });
-
-      if (response.status === 200) {
-        dispatch(changeName(inputValue)); // Refreshes this component with the new name
-      }
-    } catch (error) {
-      console.error("User changeName error -", error);
-    }
+  const changeName = (userInput) => {
+    serviceChangeName(dispatch, currentUser, userInput);
   };
-
-  const changeMail = async (inputValue) => {
-    try {
-      // Check if mail form
-      const data = { email: inputValue };
-
-      const response = await API.put(`users/${currentUser.playerId}`, data, {
-        headers: { Authorization: "Bearer " + currentUser.playerToken },
-      });
-
-      if (response.status === 200) {
-        dispatch(changeMail(inputValue)); // Refreshes this component with the new name
-      }
-    } catch (error) {
-      console.error("User changeName error -", error);
-    }
+  const changeMail = (userInput) => {
+    serviceChangeMail(dispatch, currentUser, userInput);
+  };
+  const changePassword = (lastPassword, userInput) => {
+    serviceChangePassword(currentUser, lastPassword, userInput);
   };
 
   const closeAccount = () => {
@@ -90,15 +71,7 @@ const DashboardScreen = ({ navigation }) => {
         },
         {
           text: "SUPPRIMER",
-          onPress: async () => {
-            API.delete(`users/${currentUser.playerId}`, {
-              headers: { Authorization: "Bearer " + currentUser.playerToken },
-            })
-              .then((response) => {
-                dispatch(logoutUser());
-              })
-              .catch((error) => console.log("User delete error", error));
-          },
+          onPress: () => serviceDelete(dispatch, currentUser),
         },
       ]
     );
@@ -113,6 +86,9 @@ const DashboardScreen = ({ navigation }) => {
         onRequestClose={() => setModalRename(false)}
       >
         <RenameModal
+          title={"Changer le nom"}
+          cMin={3}
+          cMax={10}
           placeholder={currentUser.playerName}
           cbAction={changeName}
           cbClose={setModalRename}
@@ -125,18 +101,28 @@ const DashboardScreen = ({ navigation }) => {
         onRequestClose={() => setModalMail(false)}
       >
         <RenameModal
+          title={"Changer l'Email"}
+          cMin={3}
+          cMax={255}
           placeholder={currentUser.playerMail}
           cbAction={changeMail}
           cbClose={setModalMail}
         />
       </Modal>
-
-      <ButtonIcon
-        type="clear"
-        onPress={() => navigation.navigate("ChartScreen")}
-        icon={<Icon name="pie-chart" size={30} color={"maroon"} />}
-        buttonStyle={styles.chartBtn}
-      />
+      <Modal
+        visible={modalPassword}
+        transparent={true}
+        animationType="slide"
+        onRequestClose={() => setModalPassword(false)}
+      >
+        <RenameModal
+          title={"Changer le mot de passe"}
+          cMin={3}
+          placeholder={""}
+          cbAction={changePassword}
+          cbClose={setModalPassword}
+        />
+      </Modal>
 
       <View style={styles.nameWrapper}>
         <ButtonIcon
@@ -156,19 +142,42 @@ const DashboardScreen = ({ navigation }) => {
         />
         <Text style={styles.nameTxt}>{currentUser.playerMail}</Text>
       </View>
+      <View style={styles.nameWrapper}>
+        <ButtonIcon
+          type="clear"
+          onPress={() => setModalPassword(true)}
+          icon={<Icon name="lock" size={25} color={primary_c} />}
+          buttonStyle={styles.renameBtn}
+        />
+        <Text style={styles.nameTxt}>Mot de passe</Text>
+      </View>
+
+      <ButtonIcon
+        type="clear"
+        onPress={() => navigation.navigate("ChartScreen")}
+        icon={<Icon name="pie-chart" size={30} color={"maroon"} />}
+        buttonStyle={styles.chartBtn}
+      />
+
       <View style={styles.logoutBtnWrapper}>
         {/* <Image style={styles.btnIcon} source={menuIcons.options} /> */}
         <TouchableOpacity
           style={styles.logoutBtn}
           onPress={() => serviceLogout(dispatch)}
         >
-          <Text style={styles.logoutBtnTxt}>Se déconnecter</Text>
+          <View style={styles.btnsTxtWrapper}>
+            <Icon name="sign-out" size={60} color="white" />
+            <Text style={styles.logoutBtnTxt}>Se déconnecter</Text>
+          </View>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.deleteBtn}
           onPress={() => closeAccount(dispatch)}
         >
-          <Text style={styles.logoutBtnTxt}>Supprimer le compte</Text>
+          <View style={styles.btnsTxtWrapper}>
+            <Icon name="ban" size={50} color="white" />
+            <Text style={styles.logoutBtnTxt}>Supprimer le compte</Text>
+          </View>
         </TouchableOpacity>
       </View>
     </View>
@@ -182,7 +191,7 @@ const styles = StyleSheet.create({
     flex: 1,
     position: "relative",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
   },
   nameWrapper: {
     flexDirection: "row",
@@ -191,7 +200,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   nameTxt: {
-    textAlign: "center",
+    width: "50%",
     fontSize: 20,
     fontWeight: "bold",
   },
@@ -200,7 +209,9 @@ const styles = StyleSheet.create({
   },
   logoutBtnWrapper: {},
   logoutBtn: {
+		width: "95%",
     backgroundColor: primary_c,
+    margin: 10,
     padding: 10,
     borderRadius: 10,
     borderWidth: 2,
@@ -211,13 +222,22 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 22,
   },
+  btnsTxtWrapper: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-around",
+  },
   deleteBtn: {
+		width: "95%",
     backgroundColor: error_c,
     margin: 10,
-    padding: 5,
+    padding: 10,
     borderRadius: 10,
     borderWidth: 2,
   },
   deleteBtntxt: {},
-  chartBtn: {},
+  chartBtn: {
+    // position: "absolute",
+    // top: deviceSize.height * 0.2,
+  },
 });

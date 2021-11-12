@@ -12,39 +12,37 @@ import { Input } from "react-native-elements";
 import { colors, deviceSize } from "../style/theme";
 const { primary_c, secondary_c, warning_c } = colors;
 
-const RenameModal = ({ placeholder, cbAction, cbClose }) => {
+const RenameModal = ({ title, cMax, cMin, placeholder, cbAction, cbClose }) => {
   const [inputValue, setInputValue] = useState("");
   const [notification, setNotification] = useState("");
 
   const displayNotification = (mess) => {
     setNotification(mess);
-    setTimeout(() => {
-      setNotification(null);
-    }, 3000);
   };
 
   return (
     <View style={styles.container}>
-      {notification !== "" && (
-        <Text style={styles.notification}>{notification}</Text>
-      )}
+      <Text style={styles.title}>{title}</Text>
       <Input
         style={styles.input}
         placeholder={placeholder}
         onChangeText={setInputValue}
         value={inputValue}
       ></Input>
+      {notification !== "" && (
+        <Text style={styles.notification}>{notification}</Text>
+      )}
       <View style={styles.btnsWrapper}>
         <TouchableOpacity
           style={styles.btns}
           onPress={() => {
-            if (inputValue.length > 10) {
+            if (cMax && inputValue.length > cMax) {
               displayNotification(
-                "Le nom est trop long (pas plus de 10 caractères)"
+                `L'entrée est trop longue (pas plus de ${cMax} caractères)`
               );
-            } else if (inputValue.length < 3) {
+            } else if (cMin && inputValue.length < cMin) {
               displayNotification(
-                "Le nom est trop court (au moins 3 caractères)"
+                `L'entrée est trop courte (au moins ${cMin} caractères)`
               );
             } else {
               cbAction(inputValue);
@@ -79,7 +77,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 10,
     alignSelf: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     alignItems: "center",
     borderWidth: 3,
     shadowColor: "#000",
@@ -91,16 +89,22 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 5,
   },
+  title: {
+    color: "white",
+    fontSize: 15,
+    textAlign: "center",
+    fontWeight: "bold",
+  },
   input: {
     color: "#fff",
     width: "90%",
     padding: 15,
     backgroundColor: secondary_c,
-    borderWidth: 2,
   },
   btnsWrapper: {
     flex: 1,
     width: "90%",
+    maxHeight: "30%",
     alignItems: "center",
     justifyContent: "space-around",
     flexDirection: "row",
@@ -119,10 +123,8 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   notification: {
-    position: "absolute",
     textAlign: "center",
     color: warning_c,
-    bottom: 0,
     zIndex: 10,
   },
 });
