@@ -18,7 +18,7 @@ const HomeScreen = ({ navigation, route }) => {
 
       <View style={styles.navBtnsWrapper}>
         <View style={styles.navBtnWrapper}>
-          <Image style={styles.btnIcon} source={menuIcons.amosTitle} />
+          <Image style={styles.btnIcon} source={menuIcons.capture} />
           <TouchableOpacity
             style={styles.btn}
             onPress={() => navigation.navigate("CaptureScreen")}

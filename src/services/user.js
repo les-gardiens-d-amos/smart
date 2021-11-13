@@ -83,7 +83,7 @@ export const getCurrentUser = async (dispatch) => {
     }
   } catch (error) {
     console.log("getCurrentUser error -", error);
-    return true;
+    return { error: true, mess: error };
   }
 };
 
@@ -100,9 +100,12 @@ export const serviceDelete = async (dispatch, currentUser) => {
     });
     if (response.status === 200) {
       dispatch(logoutUser());
+    } else {
+      throw new Error("serviceDelete error -", response.status);
     }
   } catch (error) {
-    console.error("User changeName error -", error);
+    console.error("serviceDelete error", error);
+    return { error: true, mess: error };
   }
 };
 
@@ -118,9 +121,12 @@ export const serviceChangeName = async (dispatch, currentUser, userInput) => {
     );
     if (response.status === 200) {
       dispatch(changeName(userInput));
+    } else {
+      throw new Error("serviceChangeName error -", response.status);
     }
   } catch (error) {
-    console.error("User changeName error -", error);
+    console.error("serviceChangeName error", error);
+    return { error: true, mess: error };
   }
 };
 
@@ -137,21 +143,20 @@ export const serviceChangeMail = async (dispatch, currentUser, userInput) => {
     );
     if (response.status === 200) {
       dispatch(changeMail(userInput));
+    } else {
+      throw new Error("serviceChangeMail error -", response.status);
     }
   } catch (error) {
-    console.error("User ChangeMail error -", error);
+    console.error("serviceChangeMail error", error);
+    return { error: true, mess: error };
   }
 };
 
-export const serviceChangePassword = async (
-  currentUser,
-  lastPassword,
-  userInput
-) => {
+export const serviceChangePassword = async (currentUser, oldPass, newPass) => {
   try {
     const data = {
-      last_password: lastPassword,
-      password: userInput,
+      last_password: oldPass,
+      password: newPass,
     };
     const response = await API.put(
       `users/update/password?id=${currentUser.playerId}`,
@@ -160,10 +165,11 @@ export const serviceChangePassword = async (
         headers: { Authorization: "Bearer " + currentUser.playerToken },
       }
     );
-    if (response.status === 200) {
-      // Return message confirmation
+    if (response.status !== 200) {
+      throw new Error("serviceChangePassword error -", response.status);
     }
   } catch (error) {
-    console.error("User changeName error -", error);
+    console.error("User changeName error", error);
+    return { error: true, mess: error };
   }
 };
