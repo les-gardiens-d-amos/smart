@@ -43,7 +43,7 @@ const Permissions = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>
-        Pour capturer un Amos, l'application à besoin d'utiliser la camera du
+        Pour capturer un Amos, l'application a besoin d'utiliser la camera du
         téléphone ainsi que la géolocalisation.
       </Text>
       <View style={styles.buttonsWrapper}>

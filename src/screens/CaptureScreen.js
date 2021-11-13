@@ -4,21 +4,19 @@ import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 
 import { useDispatch, useSelector } from "react-redux";
-import { setCapturedImageAction } from "../app/slices/cameraSlice";
-import { serviceAnalyzeImage } from "../services/captureService";
+
+import { setCapturedImage } from "../app/slices/cameraSlice";
 
 import Permissions from "../components/Permissions";
 import CaptureDisplay from "../components/CaptureDisplay";
+import CaptureResults from "../components/CaptureResults";
 import Loader from "../components/CustomActivityLoader";
-
-import Amos from "../entities/Amos";
 
 import { colors } from "../style/theme";
 const { primary_c } = colors;
 
 const CaptureScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const cameraState = useSelector((state) => state.cameraSlice);
 
   const cameraPermission = useSelector(
     (state) => state.permissionsSlice.camera
@@ -26,45 +24,15 @@ const CaptureScreen = ({ navigation }) => {
   const locationPermission = useSelector(
     (state) => state.permissionsSlice.location
   );
-  const wildAmos = useSelector((state) => state.captureSlice.wildAmos);
+  const { capturedImage } = useSelector((state) => state.cameraSlice);
+  const { captureResult } = useSelector((state) => state.captureSlice);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState("");
 
-  useEffect(() => {
-    // navigation.addListener("beforeRemove", (e) => {
-    //   console.log("back pressed");
-    //   if (cameraState.capturedImage !== null) {
-    //     e.preventDefault();
-    //     Alert.alert("Annuler la capture ?", [
-    //       { text: "Rester sur la page", style: "cancel", onPress: () => {} },
-    //       {
-    //         text: "Quitter la capture",
-    //         style: "destructive",
-    //         onPress: () => {
-    //           cancelPicture();
-    //           navigation.dispatch(e.data.action);
-    //         },
-    //       },
-    //     ]);
-    //   }
-    // });
-  }, []);
-
-  if (loading) return <Loader message={"Chargement..."} />;
-
-  if (!cameraPermission || !locationPermission) return <Permissions />;
-
-  if (wildAmos !== null) {
-    console.log("WildAmos set -", wildAmos);
-    // Move to another screen to fight the AMOS and try to capture it ?
-  }
-
-  if (cameraState.capturedImage !== null) {
-    return <CaptureDisplay />;
-  }
+  // useEffect(() => {}, []);
 
   const takePicture = async () => {
-    setLoading(true);
+    setLoading("Chargement...");
     const options = {
       base64: true,
       allowsEditing: true,
@@ -75,7 +43,7 @@ const CaptureScreen = ({ navigation }) => {
     if (!image.cancelled) {
       const location = await Location.getCurrentPositionAsync({});
       dispatch(
-        setCapturedImageAction({
+        setCapturedImage({
           image: { data: image, path: image.uri },
           cameraLocation: {
             lat: location.coords.latitude,
@@ -86,28 +54,25 @@ const CaptureScreen = ({ navigation }) => {
         })
       );
     }
-    setLoading(false);
+    setLoading("");
   };
 
-  const analyzeImage = () => {
-    serviceAnalyzeImage();
-    // Move to another screen to fight the AMOS and try to capture it ?
-    // CLARIFAI
-  };
+  if (loading !== "") return <Loader message={loading} />;
 
-  const cancelPicture = () => {
-    dispatch(
-      setCapturedImageAction({
-        image: null,
-        cameraLocation: null,
-      })
-    );
-  };
+  if (!cameraPermission || !locationPermission) return <Permissions />;
+
+  if (captureResult !== null) {
+    return <CaptureResults cbLoading={setLoading} />;
+  }
+
+  if (capturedImage !== null) {
+    return <CaptureDisplay cbLoading={setLoading} />;
+  }
 
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={takePicture} style={styles.btn}>
-        <Text style={styles.btnText}>Capturer</Text>
+        <Text style={styles.btnText}>Tentative</Text>
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.goBack()} style={styles.btn}>
         <Text style={styles.btnText}>Retour</Text>

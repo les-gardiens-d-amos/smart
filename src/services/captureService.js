@@ -1,5 +1,5 @@
 import { API, CLARIFAI, IMGUR } from "../apis/axios";
-import { setWildAmos } from "../app/slices/captureSlice";
+import { setWildAmos, setCaptureResult } from "../app/slices/captureSlice";
 import Amos from "../entities/Amos";
 
 export const serviceAnalyzeImage = async (dispatch, picture) => {
@@ -25,45 +25,76 @@ export const serviceAnalyzeImage = async (dispatch, picture) => {
         dispatch(setWildAmos(foundAmos));
         return { found: true, amos: foundAmos };
       } else {
-        console.log("Amos not recognized");
-        return { found: false, mess: "Aucun Amos existant n'a été reconnu." };
+        const errorMess = "serviceSaveAmos Amos not registered";
+        dispatch(setCaptureResult({ failed: true, mess: errorMess }));
+        throw new Error(errorMess);
       }
     }
   } catch (error) {
+    console.log("serviceAnalyzeImage error -", error);
     return { error: true, mess: error };
   }
 };
 
-export const serviceSaveAmos = async (currentUser, capturedAmos, imgPath) => {
+export const serviceSaveAmos = async (
+  dispatch,
+  capturedImage,
+  currentUser,
+  wildAmos,
+  localisation
+) => {
   try {
-    const imgurData = {
-      image: picture.base64,
+    const imgurData = JSON.stringify({
+      image: capturedImage.data.base64,
       type: "base64",
-    };
+    });
     const imgurRes = await IMGUR.post("", imgurData);
-    if (imgurRes.data.success && imgurRes.data.status === 200) {
+    if (imgurRes.status === 200) {
       let amos = JSON.stringify({
         user_id: currentUser.playerId,
-        animal_id: capturedAmos.id,
-        species: capturedAmos.species,
-        amos_type: capturedAmos.type,
-        name: capturedAmos.species,
-        image_path: imgPath,
+        animal_id: wildAmos.id,
+        species: wildAmos.species,
+        amos_type: wildAmos.type,
+        name: wildAmos.species,
+        image_path: imgurRes.data.data.link,
       });
-      console.log("Captured Amos to save in db -", amos);
       const response = await API.post("amos", amos, {
         headers: { Authorization: "Bearer " + currentUser.playerToken },
       });
-      if (response.status === 200) {
-        saveLocation(response.data.id);
+      if (response.status === 201) {
+        await saveLocation(
+          response.data.id,
+          currentUser.playerToken,
+          localisation
+        );
+        dispatch(setCaptureResult(wildAmos));
+      } else {
+        // Delete imgur image ?
+        const errorMess = "serviceSaveAmos post amos error " + response.status;
+        dispatch(setCaptureResult({ failed: true, mess: errorMess }));
+        throw new Error("serviceSaveAmos post amos error", errorMess);
       }
+    } else {
+      const errorMess =
+        "serviceSaveAmos post amos imgurRes error " + response.status;
+      dispatch(setCaptureResult({ failed: true, mess: errorMess }));
+      throw new Error(errorMess);
     }
   } catch (error) {
+    console.log("serviceSaveAmos error", error);
     return { error: true, mess: error };
   }
 };
 
-const saveLocation = async (idAmos) => {
+const saveLocation = async (idAmos, playerToken, localisation) => {
+  console.log(
+    "idAmos",
+    idAmos,
+    "saveLocation playerToken",
+    playerToken,
+    "localisation",
+    localisation
+  );
   let coordInfo = JSON.stringify({
     long: localisation.long,
     lat: localisation.lat,
@@ -71,13 +102,13 @@ const saveLocation = async (idAmos) => {
     accuracy: localisation.accuracy,
     amos_id: idAmos,
   });
-
-  API.post("catches", coordInfo, {
-    headers: { Authorization: "Bearer " + currentUser.playerToken },
-  })
-    .then((response) => {
-      setCaptureSuccess(true);
-      // navigation.navigate("ArchamosScreen"); Not working
-    })
-    .catch((error) => console.log(error));
+  const response = await API.post("catches", coordInfo, {
+    headers: { Authorization: "Bearer " + playerToken },
+  });
+  if (response.status !== 200) {
+    throw new Error(
+      "Capture service saveLocation error, status",
+      response.status
+    );
+  }
 };
