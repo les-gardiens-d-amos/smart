@@ -23,16 +23,17 @@ export const serviceAnalyzeImage = async (dispatch, picture) => {
       if (foundAmos !== null) {
         // Calculations for the level of the wild amos
         dispatch(setWildAmos(foundAmos));
-        return { found: true, amos: foundAmos };
       } else {
-        const errorMess = "serviceSaveAmos Amos not registered";
-        dispatch(setCaptureResult({ failed: true, mess: errorMess }));
-        throw new Error(errorMess);
+        dispatch(setCaptureResult({}));
       }
+    } else {
+      throw new Error("CLARIFAI post status -> " + response.status);
     }
   } catch (error) {
-    console.log("serviceAnalyzeImage error -", error);
-    return { error: true, mess: error };
+    console.log("serviceAnalyzeImage error:", error);
+    dispatch(
+      setCaptureResult({ failed: true, error: true, mess: error.toString() })
+    );
   }
 };
 
@@ -70,31 +71,20 @@ export const serviceSaveAmos = async (
         dispatch(setCaptureResult(wildAmos));
       } else {
         // Delete imgur image ?
-        const errorMess = "serviceSaveAmos post amos error " + response.status;
-        dispatch(setCaptureResult({ failed: true, mess: errorMess }));
-        throw new Error("serviceSaveAmos post amos error", errorMess);
+        throw new Error("Save Amos API status -> " + response.status);
       }
     } else {
-      const errorMess =
-        "serviceSaveAmos post amos imgurRes error " + response.status;
-      dispatch(setCaptureResult({ failed: true, mess: errorMess }));
-      throw new Error(errorMess);
+      throw new Error("imgur status -> " + imgurRes.status);
     }
   } catch (error) {
-    console.log("serviceSaveAmos error", error);
-    return { error: true, mess: error };
+    console.log("serviceSaveAmos error:", error);
+    dispatch(
+      setCaptureResult({ failed: true, error: true, mess: error.toString() })
+    );
   }
 };
 
 const saveLocation = async (idAmos, playerToken, localisation) => {
-  console.log(
-    "idAmos",
-    idAmos,
-    "saveLocation playerToken",
-    playerToken,
-    "localisation",
-    localisation
-  );
   let coordInfo = JSON.stringify({
     long: localisation.long,
     lat: localisation.lat,
@@ -105,10 +95,8 @@ const saveLocation = async (idAmos, playerToken, localisation) => {
   const response = await API.post("catches", coordInfo, {
     headers: { Authorization: "Bearer " + playerToken },
   });
-  if (response.status !== 200) {
-    throw new Error(
-      "Capture service saveLocation error, status",
-      response.status
-    );
+  if (response.status !== 201) {
+    console.log("serviceSaveAmos error", error);
+    throw new Error("Save location API status ->", response.status);
   }
 };

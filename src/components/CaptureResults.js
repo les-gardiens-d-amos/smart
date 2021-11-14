@@ -4,12 +4,13 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 import { setCapturedImage } from "../app/slices/cameraSlice";
 import { setWildAmos, setCaptureResult } from "../app/slices/captureSlice";
+import { serviceSaveAmos } from "../services/captureService";
 
 import Amos from "../entities/Amos";
 import AmosDataFr from "../entities/AmosDataFr.json";
 
 import { colors } from "../style/theme";
-const { primary_c } = colors;
+const { primary_c, error_c } = colors;
 
 const CaptureResultScreen = ({ cbLoading }) => {
   const dispatch = useDispatch();
@@ -43,7 +44,19 @@ const CaptureResultScreen = ({ cbLoading }) => {
     // }
   };
 
-  const Buttons = () => {
+  const retrySave = async () => {
+    cbLoading("Sauvegarde de l'Amos...");
+    await serviceSaveAmos(
+      dispatch,
+      capturedImage,
+      currentUser,
+      wildAmos,
+      cameraLocation
+    );
+    cbLoading("");
+  };
+
+  const Buttons = ({ btnName }) => {
     return (
       <View style={styles.container}>
         <Image
@@ -53,21 +66,44 @@ const CaptureResultScreen = ({ cbLoading }) => {
           }}
         />
         <TouchableOpacity onPress={validate} style={styles.btn}>
-          <Text style={styles.btnText}>Confirmer</Text>
+          <Text style={styles.btnText}>{btnName}</Text>
         </TouchableOpacity>
       </View>
     );
   };
 
-  if (captureResult.failed) {
+  // Capture has failed because of an error in the process of saving the Amos onto the server
+  if (captureResult.failed !== undefined && captureResult.error === true) {
     return (
       <View style={styles.container}>
-        <Text>L'Amos s'est enfui !</Text>
-        <Buttons />
+        <Text
+          style={[
+            styles.successInfoTxt,
+            { backgroundColor: error_c, color: "white", marginBottom: 15 },
+          ]}
+        >
+          Une erreur s'est produire durant l'enregistrement de l'Amos, veuillez
+          réessayer.
+        </Text>
+        <TouchableOpacity onPress={retrySave} style={styles.btn}>
+          <Text style={styles.btnText}>Réessayer</Text>
+        </TouchableOpacity>
+        <Buttons btnName={"Annuler"} />
       </View>
     );
   }
 
+  // Capture has failed, lost the combat / amos ran away etc
+  if (captureResult.failed !== undefined) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.successInfoTxt}>L'Amos s'est enfui !</Text>
+        <Buttons btnName={"Retour"} />
+      </View>
+    );
+  }
+
+  // The capture has succeeded, displays a summary of the Amos
   if (captureResult.id !== undefined) {
     return (
       <View style={styles.container}>
@@ -81,7 +117,7 @@ const CaptureResultScreen = ({ cbLoading }) => {
             {"Numéro d'Archamos: " + captureResult.id}
           </Text>
         </View>
-        <Buttons />
+        <Buttons btnName={"Retour"} />
         {/* TODO possibility to rename amos */}
       </View>
     );
@@ -92,7 +128,7 @@ const CaptureResultScreen = ({ cbLoading }) => {
       <Text style={styles.successInfoTxt}>
         Aucun Amos enregistré n'a été reconnu.
       </Text>
-      <Buttons />
+      <Buttons btnName={"Retour"} />
     </View>
   );
 };
@@ -101,6 +137,7 @@ export default CaptureResultScreen;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: "space-between",
     alignItems: "center",
   },
@@ -113,8 +150,9 @@ const styles = StyleSheet.create({
   },
   successInfoTxt: {
     textAlign: "center",
+    padding: 10,
     fontWeight: "bold",
-    fontSize: 16,
+    fontSize: 20,
   },
   btn: {
     backgroundColor: primary_c,

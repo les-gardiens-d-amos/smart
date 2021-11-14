@@ -16,7 +16,7 @@ import Amos from "../entities/Amos";
 import AmosDataFr from "../entities/AmosDataFr.json";
 import AmosIconColors from "../entities/AmosIconColors.json";
 
-import { icons as amosIcons, soulIcons } from "../../assets/amosIcons";
+import { icons as amosIcons } from "../../assets/amosIcons";
 
 import { colors } from "../style/theme";
 const { primary_c, secondary_c } = colors;
@@ -40,21 +40,22 @@ const CaptureDisplay = ({ cbLoading }) => {
     }
   }, []);
 
-  const fight = async () => {
+  const fight = () => {
     console.log("Fight function");
-    // TODO TEMPORARY, GO TO BATTLE SCREEN
+    // TODO Automatic capture TEMPORARY, next version -> Display battle screen
+    saveCapture();
+  };
 
+  const saveCapture = async () => {
     cbLoading("Capture de l'Amos...");
-    const amosSaving = await serviceSaveAmos(
+    await serviceSaveAmos(
       dispatch,
       capturedImage,
       currentUser,
       wildAmos,
       cameraLocation
     );
-    if (amosSaving.error !== undefined) {
-      cbLoading("");
-    }
+    cbLoading("");
   };
 
   const release = () => {
