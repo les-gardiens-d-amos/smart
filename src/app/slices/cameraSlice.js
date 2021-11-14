@@ -7,7 +7,7 @@ const cameraSlice = createSlice({
     cameraLocation: null,
   },
   reducers: {
-    setCapturedImageAction: (state, action) => {
+    setCapturedImage: (state, action) => {
       return {
         ...state,
         capturedImage: action.payload.image,
@@ -17,5 +17,5 @@ const cameraSlice = createSlice({
   },
 });
 
-export const { setCapturedImageAction } = cameraSlice.actions;
+export const { setCapturedImage } = cameraSlice.actions;
 export default cameraSlice.reducer;
