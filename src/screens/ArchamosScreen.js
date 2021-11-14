@@ -5,59 +5,40 @@ import { SearchBar } from "react-native-elements";
 import { API } from "../apis/axios";
 import { useSelector, useDispatch } from "react-redux";
 import { setAmosList } from "../app/slices/archamosSlice";
+import { serviceSetUserAmos } from "../services/archamosService";
 
 import { colors } from "../style/theme";
 const { primary_c } = colors;
 import Loader from "../components/CustomActivityLoader";
 
-import Amos from "../entities/Amos";
 import ArchamosSingle from "../components/ArchamosSingle";
+import AmosSingle from "../components/AmosSingle";
 
 const ArchamosScreen = ({ navigation }) => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.userSlice.currentUser);
-  const amosList = useSelector((state) => state.archamosSlice.amosList);
+  const { currentUser } = useSelector((state) => state.userSlice);
+  const { amosList, amosSingle } = useSelector((state) => state.archamosSlice);
 
   const [searchInput, _setSearchInput] = useState("");
 
-  const [statusMess, setStatusMess] = useState("Affichage des Amos...");
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState("Affichage des Amos...");
 
   useEffect(() => {
-    setUserInfos();
+    setUserAmos();
   }, []);
 
-  const setUserInfos = async () => {
-    API.get(`amos/find/user/?user_id=${currentUser.playerId}`, {
-      headers: { Authorization: "Bearer " + currentUser.playerToken },
-    })
-      .then((response) => {
-        setUserAmos(response.data);
-      })
-      .catch((error) => {
-        console.log("Get user Amos ERROR", error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+  const setUserAmos = async () => {
+    await serviceSetUserAmos(dispatch, currentUser);
+    setLoading("");
   };
 
-  const setUserAmos = (data) => {
-    let newList = [];
-
-    for (const amos of data) {
-      let amm = new Amos(amos).serialize();
-      newList.push(amm);
-    }
-
-    dispatch(setAmosList(newList));
+  const setSinglePage = (id) => {
+    serviceSetAmosSingle(dispatch, amosList, id);
   };
 
-  const goToSinglePage = (amosData) => {
-    navigation.navigate("AmosSingleScreen", { amosData });
-  };
+  if (amosSingle !== null) return <AmosSingle amosSingle={amosSingle} />; // Display single page of the chosen Amos
 
-  if (loading) return <Loader message={statusMess} />;
+  if (loading !== "") return <Loader message={loading} />;
 
   return (
     <View style={styles.container}>
@@ -75,7 +56,7 @@ const ArchamosScreen = ({ navigation }) => {
             <ArchamosSingle
               key={item.id}
               amos={item}
-              goToSinglePage={goToSinglePage}
+              goToSinglePage={() => setSinglePage(item.id)}
             />
           ))
         ) : (
