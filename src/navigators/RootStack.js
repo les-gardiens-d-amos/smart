@@ -56,7 +56,7 @@ const RootStack = () => {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: "Accueil" }}
+          options={{ title: "Accueil", headerShown: false }}
         />
         <Stack.Screen
           name="CaptureScreen"

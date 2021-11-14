@@ -1,10 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  FlatList,
-} from "react-native";
+import { StyleSheet, Text, View, FlatList } from "react-native";
 
 import { API } from "../apis/axios";
 import { useSelector } from "react-redux";
@@ -38,7 +33,7 @@ const AmodexScreen = () => {
       .finally(() => setLoading(false));
   };
 
-  if (loading) return (<Loader message={statusMess} />);
+  if (loading) return <Loader message={statusMess} />;
 
   return (
     <View style={styles.container}>
@@ -47,7 +42,7 @@ const AmodexScreen = () => {
       </Text>
       <FlatList
         contentContainerStyle={styles.listWrapper}
-        numColumns={4}
+        numColumns={3}
         showsVerticalScrollIndicator={false}
         showsHorizontalScrollIndicator={false}
         data={registeredAmos}
@@ -72,7 +67,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   completion: {
-		color: "#fff",
+    color: "#fff",
     width: "30%",
     alignSelf: "center",
     backgroundColor: secondary_c,
@@ -86,10 +81,6 @@ const styles = StyleSheet.create({
   },
   listWrapper: {
     width: "100%",
-    alignSelf: "flex-start",
     alignItems: "center",
-    justifyContent: "center",
-    padding: 15,
-    marginBottom: 10,
   },
 });

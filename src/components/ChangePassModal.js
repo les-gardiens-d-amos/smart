@@ -12,8 +12,16 @@ import { Input } from "react-native-elements";
 import { colors, deviceSize } from "../style/theme";
 const { primary_c, secondary_c, warning_c } = colors;
 
-const RenameModal = ({ title, cMax, cMin, placeholder, cbAction, cbClose }) => {
-  const [inputValue, setInputValue] = useState("");
+const ChangePassModal = ({
+  title,
+  cMax,
+  cMin,
+  placeholder,
+  cbAction,
+  cbClose,
+}) => {
+  const [oldPass, setOldPass] = useState("");
+  const [newPass, setNewPass] = useState("");
   const [notification, setNotification] = useState("");
 
   const displayNotification = (mess) => {
@@ -25,9 +33,17 @@ const RenameModal = ({ title, cMax, cMin, placeholder, cbAction, cbClose }) => {
       <Text style={styles.title}>{title}</Text>
       <Input
         style={styles.input}
-        placeholder={placeholder}
-        onChangeText={setInputValue}
-        value={inputValue}
+        placeholder={"Mot de passe"}
+        onChangeText={setOldPass}
+        value={oldPass}
+        secureTextEntry={true}
+      ></Input>
+      <Input
+        style={styles.input}
+        placeholder={"Nouveau mot de passe"}
+        onChangeText={setNewPass}
+        value={newPass}
+        secureTextEntry={true}
       ></Input>
       {notification !== "" && (
         <Text style={styles.notification}>{notification}</Text>
@@ -36,16 +52,19 @@ const RenameModal = ({ title, cMax, cMin, placeholder, cbAction, cbClose }) => {
         <TouchableOpacity
           style={styles.btns}
           onPress={() => {
-            if (cMax && inputValue.length > cMax) {
+            if (cMax && (oldPass.length > cMax || newPass.length > cMax)) {
               displayNotification(
                 `L'entrée est trop longue (pas plus de ${cMax} caractères)`
               );
-            } else if (cMin && inputValue.length < cMin) {
+            } else if (
+              cMin &&
+              (oldPass.length < cMin || newPass.length < cMin)
+            ) {
               displayNotification(
                 `L'entrée est trop courte (au moins ${cMin} caractères)`
               );
             } else {
-              cbAction(inputValue);
+              cbAction(oldPass);
               cbClose(false);
             }
           }}
@@ -65,14 +84,14 @@ const RenameModal = ({ title, cMax, cMin, placeholder, cbAction, cbClose }) => {
   );
 };
 
-export default RenameModal;
+export default ChangePassModal;
 
 const styles = StyleSheet.create({
   container: {
     position: "relative",
     backgroundColor: primary_c,
     width: deviceSize.width * 0.8,
-    height: deviceSize.height * 0.4,
+    height: deviceSize.height * 0.5,
     top: deviceSize.height * 0.1,
     borderRadius: 20,
     padding: 10,

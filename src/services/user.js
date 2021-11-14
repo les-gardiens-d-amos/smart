@@ -1,6 +1,23 @@
-import { registerUser, loginUser, logoutUser } from "../app/slices/userSlice";
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  changeName,
+  changeMail,
+} from "../app/slices/userSlice";
 import { API } from "../apis/axios";
 import * as SecureStore from "expo-secure-store";
+
+const setUpCurrentUser = (token, resData) => {
+  // Build an object to use as the state redux currentUser everywhere in the app
+  return {
+    playerToken: token,
+    playerId: resData.user_info.id,
+    playerMail: resData.user_info.email,
+    playerName: resData.user_info.name,
+    // playerGender: resData.user_info.gender,
+  };
+};
 
 export const serviceLoginUser = async (dispatch, userInput) => {
   try {
@@ -57,7 +74,7 @@ export const getCurrentUser = async (dispatch) => {
       if (response.status === 200) {
         const resData = response.data;
 
-      	const currentUserdata = setUpCurrentUser(jwt, resData);
+        const currentUserdata = setUpCurrentUser(jwt, resData);
 
         dispatch(loginUser(currentUserdata));
       } else {
@@ -66,7 +83,7 @@ export const getCurrentUser = async (dispatch) => {
     }
   } catch (error) {
     console.log("getCurrentUser error -", error);
-    return true;
+    return { error: true, mess: error };
   }
 };
 
@@ -76,12 +93,83 @@ export const serviceLogout = async (dispatch) => {
   dispatch(logoutUser());
 };
 
-const setUpCurrentUser = (token, resData) => {
-  // Build an object to use as the state redux currentUser everywhere in the app
-  return {
-    playerToken: token,
-    playerId: resData.user_info.id,
-    playerName: resData.user_info.name,
-    // playerGender: resData.user_info.gender,
-  };
+export const serviceDelete = async (dispatch, currentUser) => {
+  try {
+    await API.delete(`users/${currentUser.playerId}`, {
+      headers: { Authorization: "Bearer " + currentUser.playerToken },
+    });
+    if (response.status === 200) {
+      dispatch(logoutUser());
+    } else {
+      throw new Error("serviceDelete error -", response.status);
+    }
+  } catch (error) {
+    console.error("serviceDelete error", error);
+    return { error: true, mess: error };
+  }
+};
+
+export const serviceChangeName = async (dispatch, currentUser, userInput) => {
+  try {
+    const data = { name: userInput };
+    const response = await API.put(
+      `users/update/name?id=${currentUser.playerId}`,
+      data,
+      {
+        headers: { Authorization: "Bearer " + currentUser.playerToken },
+      }
+    );
+    if (response.status === 200) {
+      dispatch(changeName(userInput));
+    } else {
+      throw new Error("serviceChangeName error -", response.status);
+    }
+  } catch (error) {
+    console.error("serviceChangeName error", error);
+    return { error: true, mess: error };
+  }
+};
+
+export const serviceChangeMail = async (dispatch, currentUser, userInput) => {
+  try {
+    // Check if mail form
+    const data = { email: userInput };
+    const response = await API.put(
+      `users/update/email?id=${currentUser.playerId}`,
+      data,
+      {
+        headers: { Authorization: "Bearer " + currentUser.playerToken },
+      }
+    );
+    if (response.status === 200) {
+      dispatch(changeMail(userInput));
+    } else {
+      throw new Error("serviceChangeMail error -", response.status);
+    }
+  } catch (error) {
+    console.error("serviceChangeMail error", error);
+    return { error: true, mess: error };
+  }
+};
+
+export const serviceChangePassword = async (currentUser, oldPass, newPass) => {
+  try {
+    const data = {
+      last_password: oldPass,
+      password: newPass,
+    };
+    const response = await API.put(
+      `users/update/password?id=${currentUser.playerId}`,
+      data,
+      {
+        headers: { Authorization: "Bearer " + currentUser.playerToken },
+      }
+    );
+    if (response.status !== 200) {
+      throw new Error("serviceChangePassword error -", response.status);
+    }
+  } catch (error) {
+    console.error("User changeName error", error);
+    return { error: true, mess: error };
+  }
 };
