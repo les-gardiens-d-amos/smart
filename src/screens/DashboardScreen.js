@@ -64,7 +64,7 @@ const DashboardScreen = ({ navigation }) => {
       oldPass,
       newPass
     );
-    if (changedPassword.error) {
+    if (changedPassword.error !== undefined) {
       setNotification(
         "Une erreur s'est produite, vérifiez que les informations entrées soient bien correctes"
       );
@@ -157,7 +157,7 @@ const DashboardScreen = ({ navigation }) => {
           />
           <Text style={styles.nameTxt}>{currentUser.playerMail}</Text>
         </View>
-        <View style={styles.nameWrapper}>
+        {/* <View style={styles.nameWrapper}>
           <ButtonIcon
             type="clear"
             onPress={() => setModalPassword(true)}
@@ -165,7 +165,7 @@ const DashboardScreen = ({ navigation }) => {
             buttonStyle={styles.renameBtn}
           />
           <Text style={styles.nameTxt}>Mot de passe</Text>
-        </View>
+        </View> */}
       </View>
 
       {/* <ButtonIcon

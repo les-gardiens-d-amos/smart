@@ -79,7 +79,11 @@ const CaptureDisplay = ({ cbLoading }) => {
           <Text style={[styles.descTxt, styles.descTxtId]}>{wildAmos.id}</Text>
           <Image
             style={styles.descTypeImg}
-            source={amosIcons[wildAmos.species]}
+            source={
+              amosIcons[wildAmos.species] !== undefined
+                ? amosIcons[wildAmos.species]
+                : amosIcons.default
+            }
           />
           <Text style={styles.descTxt}>
             {Amos.capitalize(AmosDataFr.amos[wildAmos.species].species)}

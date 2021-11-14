@@ -61,7 +61,7 @@ const LoginScreen = () => {
     setNotification(mess);
     setTimeout(() => {
       setNotification(null);
-    }, 5000);
+    }, 3000);
   };
 
   const Header = () => (
