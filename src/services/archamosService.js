@@ -5,6 +5,7 @@ import {
   setAmosSingle,
   deleteAmos,
   setAmosNewName,
+  addAmos,
 } from "../app/slices/archamosSlice";
 
 export const serviceSetUserAmos = async (dispatch, currentUser) => {
@@ -34,6 +35,22 @@ export const serviceSetUserAmos = async (dispatch, currentUser) => {
 export const serviceSetAmosSingle = (dispatch, amosList, id) => {
   const amos = amosList.find((item) => item.id === id);
   dispatch(setAmosSingle(amos));
+};
+
+export const serviceAddAmos = async (dispatch, currentUser, id) => {
+  try {
+    const response = await API.get(`amos/${id}`, {
+      headers: { Authorization: "Bearer " + currentUser.playerToken },
+    });
+    if (response.status === 200) {
+      dispatch(addAmos(new Amos(response.data).serialize()));
+    } else {
+      throw new Error("API get amos status -> " + response.status);
+    }
+  } catch (error) {
+    // Delete amos on server ? Refresh the amosList ?
+    console.log("serviceAddAmos error:", error.toString());
+  }
 };
 
 export const serviceAddTeam = () => {

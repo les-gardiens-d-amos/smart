@@ -96,7 +96,7 @@ const saveLocation = async (idAmos, playerToken, localisation) => {
     headers: { Authorization: "Bearer " + playerToken },
   });
   if (response.status !== 201) {
-    console.log("serviceSaveAmos error", error);
+    console.log("saveLocation error", error);
     throw new Error("Save location API status ->", response.status);
   }
 };

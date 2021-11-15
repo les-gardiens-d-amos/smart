@@ -17,20 +17,22 @@ import ArchamosFilters from "../components/AmosSingle";
 const ArchamosScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.userSlice);
-  const { amosList, amosSingle } = useSelector((state) => state.archamosSlice);
+  const { amosList, amosSingle, filteredList } = useSelector(
+    (state) => state.archamosSlice
+  );
 
   const filtersMenu = useRef();
   const [toggleFiltersMenu, setToggleFiltersMenu] = useState(false);
   const [loading, setLoading] = useState("Affichage des Amos...");
 
   useEffect(() => {
-    if (amosList.error === undefined && amosList.length === 0) {
-      setUserAmos();
-    }
+    setUserAmos();
   }, []);
 
   const setUserAmos = async () => {
-    await serviceSetUserAmos(dispatch, currentUser);
+    if (amosList.error === undefined && amosList.length === 0) {
+      await serviceSetUserAmos(dispatch, currentUser);
+    }
     setLoading("");
   };
 

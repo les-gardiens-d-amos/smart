@@ -11,7 +11,6 @@ import {
 } from "react-native";
 import { Button as ButtonEle } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
-import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
@@ -28,7 +27,7 @@ import RenameModal from "../components/RenameModal";
 const AmosSingle = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.userSlice);
-  const { amosList, amosSingle } = useSelector((state) => state.archamosSlice);
+  const { amosSingle } = useSelector((state) => state.archamosSlice);
 
   const [modalRename, setModalRename] = useState(false);
 

@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCapturedImage } from "../app/slices/cameraSlice";
 import { setWildAmos, setCaptureResult } from "../app/slices/captureSlice";
 import { serviceSaveAmos } from "../services/captureService";
+import { serviceRenameAmos, serviceAddAmos } from "../services/archamosService";
 
 import Amos from "../entities/Amos";
 import AmosDataFr from "../entities/AmosDataFr.json";
@@ -22,9 +23,11 @@ const CaptureResultScreen = ({ cbLoading }) => {
   );
   const { currentUser } = useSelector((state) => state.userSlice);
 
-  // useEffect(() => {}, []);
-
-  const validate = () => {
+  const validate = async () => {
+    if (captureResult.id !== undefined) {
+      // If the amos is captured, add it into the list app side
+      await serviceAddAmos(dispatch, currentUser, captureResult.id);
+    }
     dispatch(
       setCapturedImage({
         image: null,
@@ -61,6 +64,10 @@ const CaptureResultScreen = ({ cbLoading }) => {
     cbLoading("");
   };
 
+  const renameBeforeSave = () => {
+    serviceRenameAmos(dispatch, currentUser, captureResult.id, "");
+  };
+
   const Buttons = ({ btnName }) => {
     return (
       <View style={styles.container}>
@@ -87,7 +94,7 @@ const CaptureResultScreen = ({ cbLoading }) => {
             { backgroundColor: error_c, color: "white", marginBottom: 15 },
           ]}
         >
-          Une erreur s'est produire durant l'enregistrement de l'Amos, veuillez
+          Une erreur s'est produite durant l'enregistrement de l'Amos, veuillez
           réessayer.
         </Text>
         <TouchableOpacity onPress={retrySave} style={styles.btn}>
@@ -122,7 +129,10 @@ const CaptureResultScreen = ({ cbLoading }) => {
             {"Numéro d'Archamos: " + captureResult.id}
           </Text>
         </View>
-        <Buttons btnName={"Retour"} />
+
+        {/* // Input rename */}
+
+        <Buttons btnName={"Confirmer"} />
         {/* TODO possibility to rename amos */}
       </View>
     );
@@ -163,9 +173,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: primary_c,
-    width: "60%",
     margin: 10,
-    padding: 10,
+    padding: 15,
     borderWidth: 1,
     borderRadius: 10,
   },
