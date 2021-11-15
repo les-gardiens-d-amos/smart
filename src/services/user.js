@@ -95,7 +95,7 @@ export const serviceLogout = async (dispatch) => {
 
 export const serviceDelete = async (dispatch, currentUser) => {
   try {
-    await API.delete(`users/${currentUser.playerId}`, {
+    const response = await API.delete(`users/${currentUser.playerId}`, {
       headers: { Authorization: "Bearer " + currentUser.playerToken },
     });
     if (response.status === 200) {
