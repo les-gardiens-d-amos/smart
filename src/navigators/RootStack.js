@@ -15,7 +15,6 @@ import HomeScreen from "../screens/HomeScreen";
 import CaptureScreen from "../screens/CaptureScreen";
 import ArchamosScreen from "../screens/ArchamosScreen";
 import AmodexScreen from "../screens/AmodexScreen";
-import AmosSingleScreen from "../screens/AmosSingleScreen";
 import DashboardScreen from "../screens/DashboardScreen";
 import LoginScreen from "../screens/LoginScreen";
 
@@ -72,11 +71,6 @@ const RootStack = () => {
           name="AmodexScreen"
           component={AmodexScreen}
           options={{ title: "Amodex" }}
-        />
-        <Stack.Screen
-          name="AmosSingleScreen"
-          component={AmosSingleScreen}
-          options={{ title: "Amos" }}
         />
         <Stack.Screen
           name="DashboardScreen"

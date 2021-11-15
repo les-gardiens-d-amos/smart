@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { serviceSetUserAmos } from "../services/archamosService";
 
 import { colors } from "../style/theme";
-const { primary_c } = colors;
+const { primary_c, error_c } = colors;
 import Loader from "../components/CustomActivityLoader";
 
 import ArchamosSingle from "../components/ArchamosSingle";
@@ -24,7 +24,9 @@ const ArchamosScreen = ({ navigation }) => {
   const [loading, setLoading] = useState("Affichage des Amos...");
 
   useEffect(() => {
-    setUserAmos();
+    if (amosList.error === undefined && amosList.length === 0) {
+      setUserAmos();
+    }
   }, []);
 
   const setUserAmos = async () => {
@@ -40,6 +42,13 @@ const ArchamosScreen = ({ navigation }) => {
 
   if (loading !== "") return <Loader message={loading} />;
 
+  if (amosList.error !== undefined)
+    return (
+      <View style={styles.container}>
+        <Text style={styles.notification}>Une erreur s'est produite</Text>
+      </View>
+    );
+
   return (
     <View style={styles.container}>
       {/* <SearchBar
@@ -50,7 +59,7 @@ const ArchamosScreen = ({ navigation }) => {
         value={searchInput}
       /> */}
 
-      <Drawer
+      {/* <Drawer
         open={toggleFiltersMenu}
         ref={filtersMenu}
         content={<ControlPanel />}
@@ -58,17 +67,11 @@ const ArchamosScreen = ({ navigation }) => {
         tweenHandler={Drawer.tweenPresets.parallax}
       >
         <ArchamosFilters />
-      </Drawer>
+      </Drawer> */}
 
       <ScrollView style={styles.listWrapper}>
-        {amosList.length > 0 ? (
-          amosList.map((item) => (
-            <ArchamosSingle
-              key={item.id}
-              amos={item}
-              setSinglePage={() => setSinglePage(item.id)}
-            />
-          ))
+        {amosList.error === undefined && amosList.length > 0 ? (
+          amosList.map((item) => <ArchamosSingle key={item.id} amos={item} />)
         ) : (
           <Text
             style={{
@@ -98,5 +101,13 @@ const styles = StyleSheet.create({
   },
   list: {
     flex: 1,
+  },
+  notification: {
+    backgroundColor: error_c,
+    marginTop: 25,
+    padding: 15,
+    fontSize: 20,
+    textAlign: "center",
+    fontWeight: "bold",
   },
 });

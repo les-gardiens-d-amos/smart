@@ -4,9 +4,14 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import { colors } from "../style/theme";
 const { primary_c, secondary_c, quaternary_c } = colors;
 import { Tooltip } from "react-native-elements";
+
+import { useSelector, useDispatch } from "react-redux";
 import { serviceSetAmosSingle } from "../services/archamosService";
 
 const ArchamosSingle = ({ amos }) => {
+  const dispatch = useDispatch();
+  const { amosList } = useSelector((state) => state.archamosSlice);
+
   const teamToggle = () => {
     // using amosData.idAmos and isTeammate useState variable
     // Add into current team (of 3)
@@ -44,7 +49,7 @@ const ArchamosSingle = ({ amos }) => {
           </Tooltip>
         </View>
 
-        <TouchableOpacity onPress={teamToggle} style={styles.btnFight}>
+        <TouchableOpacity onPress={teamToggle} style={styles.btnTeamToggle}>
           <MaterialCommunityIcons name="plus" color="white" size={26} />
           {/* <MaterialCommunityIcons name="minus" color="white" size={26} /> */}
         </TouchableOpacity>
@@ -118,7 +123,7 @@ const styles = StyleSheet.create({
     right: 10,
     bottom: 10,
   },
-  BtnaddRemove: {
+  btnTeamToggle: {
     backgroundColor: primary_c,
     width: 50,
     height: 50,

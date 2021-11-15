@@ -13,6 +13,12 @@ const archamosSlice = createSlice({
     addAmos: (state, action) => {
       return { ...state, amosList: [...state.amoslist, action.payload] };
     },
+    deleteAmos: (state, action) => {
+      return {
+        ...state,
+        amosList: state.amosList.filter((amos) => amos.id !== action.payload),
+      };
+    },
     setAmosSingle: (state, action) => {
       return { ...state, amosSingle: action.payload };
     },
@@ -20,17 +26,12 @@ const archamosSlice = createSlice({
       console.log("action.payload", action.payload);
       return {
         ...state,
-        amosList: state.amosList.map((amos) => {
+        amosSingle: { ...state.amosSingle, name: action.payload.name },
+        amosList: state.amosList.map((amos) =>
           amos.id === action.payload.id
             ? { ...amos, name: action.payload.name }
-            : amos;
-        }),
-      };
-    },
-    deleteAmos: (state, action) => {
-      return {
-        ...state,
-        amosList: state.amosList.filter((amos) => amos.id === action.payload),
+            : amos
+        ),
       };
     },
   },

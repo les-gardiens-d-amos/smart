@@ -4,11 +4,12 @@ import {
   setAmosList,
   setAmosSingle,
   deleteAmos,
+  setAmosNewName,
 } from "../app/slices/archamosSlice";
 
-export const serviceSetUserAmos = async (currentUser) => {
+export const serviceSetUserAmos = async (dispatch, currentUser) => {
   try {
-    const response = API.get(
+    const response = await API.get(
       `amos/find/user/?user_id=${currentUser.playerId}`,
       {
         headers: { Authorization: "Bearer " + currentUser.playerToken },
@@ -16,7 +17,7 @@ export const serviceSetUserAmos = async (currentUser) => {
     );
     if (response.status === 200) {
       let newList = [];
-      for (const amos of data) {
+      for (const amos of response.data) {
         let amm = new Amos(amos).serialize();
         newList.push(amm);
       }
@@ -25,15 +26,13 @@ export const serviceSetUserAmos = async (currentUser) => {
       throw new Error("API get amos list status -> " + response.status);
     }
   } catch (error) {
-    dispatch(setAmosList([{ error: true }]));
+    dispatch(setAmosList([{ error: true, mess: error.toString() }]));
     console.log("serviceSetUserAmos error:", error.toString());
   }
 };
 
 export const serviceSetAmosSingle = (dispatch, amosList, id) => {
-  const amos = amosList.map((item) => {
-    if (item.id === id) return item;
-  });
+  const amos = amosList.find((item) => item.id === id);
   dispatch(setAmosSingle(amos));
 };
 
@@ -62,12 +61,14 @@ export const serviceReleaseAmos = async (dispatch, currentUser, id) => {
     const response = await API.delete(`amos/${id}`, {
       headers: { Authorization: "Bearer " + currentUser.playerToken },
     });
-    if (response.status == 200) {
+    if (response.status == 204) {
       dispatch(deleteAmos(id));
+      dispatch(setAmosSingle(null));
     } else {
       throw new Error("API delete amos status -> " + response.status);
     }
   } catch (error) {
+    dispatch(setAmosList([{ error: true, mess: error.toString() }]));
     console.log("serviceReleaseAmos error:", error.toString());
   }
 };

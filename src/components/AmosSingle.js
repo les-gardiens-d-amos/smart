@@ -7,14 +7,17 @@ import {
   Image,
   Modal,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import { Button as ButtonEle } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
 
 import { useSelector, useDispatch } from "react-redux";
+import { setAmosSingle } from "../app/slices/archamosSlice";
 import {
   serviceRenameAmos,
   serviceReleaseAmos,
@@ -25,7 +28,7 @@ import RenameModal from "../components/RenameModal";
 const AmosSingle = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.userSlice);
-  const { amosSingle } = useSelector((state) => state.archamosSlice);
+  const { amosList, amosSingle } = useSelector((state) => state.archamosSlice);
 
   const [modalRename, setModalRename] = useState(false);
 
@@ -36,8 +39,8 @@ const AmosSingle = () => {
   }, []);
 
   const closePage = () => {
-    serviceSetAmosSingle(dispatch, amosList, amos.id);
-  }
+    dispatch(setAmosSingle(null));
+  };
 
   const changeName = (newName) => {
     serviceRenameAmos(dispatch, currentUser, amosSingle.id, newName);
@@ -81,9 +84,8 @@ const AmosSingle = () => {
         />
       </Modal>
 
-      <TouchableOpacity onPress={closePage} style={styles.btnFight}>
-        <MaterialCommunityIcons name="plus" color="white" size={26} />
-        {/* <MaterialCommunityIcons name="minus" color="white" size={26} /> */}
+      <TouchableOpacity onPress={closePage} style={styles.btnReturn}>
+        <Text style={styles.btnReturnTxt}>Retour</Text>
       </TouchableOpacity>
 
       <View style={styles.photoWrapper}>
@@ -194,5 +196,19 @@ const styles = StyleSheet.create({
   },
   releaseBtn: {
     padding: 10,
+  },
+  btnReturn: {
+    width: "50%",
+    backgroundColor: primary_c,
+    padding: 10,
+    margin: 6,
+    borderWidth: 1,
+    borderRadius: 8,
+  },
+  btnReturnTxt: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
+    fontSize: 16,
   },
 });
