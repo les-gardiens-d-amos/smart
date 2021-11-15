@@ -6,13 +6,12 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  KeyboardAvoidingView,
 } from "react-native";
 
 import { menuIcons } from "../../assets/menuIcons";
 
 import { colors } from "../style/theme";
-const { primary_c, tertiary_c, error_c } = colors;
+const { primary_c, error_c } = colors;
 import Loader from "../components/CustomActivityLoader";
 
 import { useDispatch } from "react-redux";
@@ -163,36 +162,13 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "space-around",
-  },
+  container: {},
   titleWrapper: {
-    flex: 1,
-    width: "100%",
     marginBottom: 15,
     alignItems: "center",
     justifyContent: "center",
   },
-  formWrapper: {
-    flex: 1,
-    width: "100%",
-    marginBottom: 25,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  switchBtnWrapper: {
-    flex: 1,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 15,
-    fontSize: 25,
-  },
   titleText: {
-    width: "100%",
     fontSize: 32,
     padding: 5,
     textAlign: "center",
@@ -202,6 +178,17 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     padding: 5,
+  },
+  formWrapper: {
+    marginBottom: 25,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  switchBtnWrapper: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 15,
+    fontSize: 25,
   },
   formInput: {
     width: "80%",
