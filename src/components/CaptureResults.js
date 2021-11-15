@@ -14,8 +14,13 @@ const { primary_c, error_c } = colors;
 
 const CaptureResultScreen = ({ cbLoading }) => {
   const dispatch = useDispatch();
-  const { captureResult } = useSelector((state) => state.captureSlice);
-  const { capturedImage } = useSelector((state) => state.cameraSlice);
+  const { wildAmos, captureResult } = useSelector(
+    (state) => state.captureSlice
+  );
+  const { capturedImage, cameraLocation } = useSelector(
+    (state) => state.cameraSlice
+  );
+  const { currentUser } = useSelector((state) => state.userSlice);
 
   // useEffect(() => {}, []);
 
@@ -144,6 +149,8 @@ const styles = StyleSheet.create({
   image: {
     height: 200,
     width: 200,
+    borderWidth: 2,
+    borderRadius: 12,
   },
   successInfo: {
     margin: 10,

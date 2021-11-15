@@ -6,6 +6,7 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import { menuIcons } from "../../assets/menuIcons";
@@ -65,12 +66,10 @@ const LoginScreen = () => {
   };
 
   const Header = () => (
-    <>
-      <View style={styles.titleWrapper}>
-        <Image style={styles.gameIcon} source={menuIcons.amosTitle} />
-        <Text style={styles.titleText}>Les Gardiens d'Amos</Text>
-      </View>
-    </>
+    <View style={styles.titleWrapper}>
+      <Image style={styles.gameIcon} source={menuIcons.amosTitle} />
+      <Text style={styles.titleText}>Les Gardiens d'Amos</Text>
+    </View>
   );
 
   if (loading) return <Loader message={"Chargement..."} />;
