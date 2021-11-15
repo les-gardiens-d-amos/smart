@@ -24,7 +24,7 @@ import RenameModal from "../components/RenameModal";
 
 const AmosSingle = () => {
   const dispatch = useDispatch();
-  const currentUser = useSelector((state) => state.userSlice.currentUser);
+  const { currentUser } = useSelector((state) => state.userSlice);
   const { amosSingle } = useSelector((state) => state.archamosSlice);
 
   const [modalRename, setModalRename] = useState(false);
@@ -34,6 +34,10 @@ const AmosSingle = () => {
     // Stats, how many fights, geoloc etc
     // Fow now the amos is from props from Archamos screen
   }, []);
+
+  const closePage = () => {
+    serviceSetAmosSingle(dispatch, amosList, amos.id);
+  }
 
   const changeName = (newName) => {
     serviceRenameAmos(dispatch, currentUser, amosSingle.id, newName);
@@ -76,6 +80,11 @@ const AmosSingle = () => {
           cbClose={setModalRename}
         />
       </Modal>
+
+      <TouchableOpacity onPress={closePage} style={styles.btnFight}>
+        <MaterialCommunityIcons name="plus" color="white" size={26} />
+        {/* <MaterialCommunityIcons name="minus" color="white" size={26} /> */}
+      </TouchableOpacity>
 
       <View style={styles.photoWrapper}>
         <Image

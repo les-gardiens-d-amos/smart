@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { StyleSheet, View, ScrollView, Text } from "react-native";
-import { SearchBar } from "react-native-elements";
+import Drawer from "react-native-drawer";
 
-import { API } from "../apis/axios";
 import { useSelector, useDispatch } from "react-redux";
-import { setAmosList } from "../app/slices/archamosSlice";
 import { serviceSetUserAmos } from "../services/archamosService";
 
 import { colors } from "../style/theme";
@@ -13,14 +11,16 @@ import Loader from "../components/CustomActivityLoader";
 
 import ArchamosSingle from "../components/ArchamosSingle";
 import AmosSingle from "../components/AmosSingle";
+import ArchamosSearchBar from "../components/ArchamosSearchBar";
+import ArchamosFilters from "../components/AmosSingle";
 
 const ArchamosScreen = ({ navigation }) => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.userSlice);
   const { amosList, amosSingle } = useSelector((state) => state.archamosSlice);
 
-  const [searchInput, _setSearchInput] = useState("");
-
+  const filtersMenu = useRef();
+  const [toggleFiltersMenu, setToggleFiltersMenu] = useState(false);
   const [loading, setLoading] = useState("Affichage des Amos...");
 
   useEffect(() => {
@@ -32,8 +32,8 @@ const ArchamosScreen = ({ navigation }) => {
     setLoading("");
   };
 
-  const setSinglePage = (id) => {
-    serviceSetAmosSingle(dispatch, amosList, id);
+  const toogleFilters = () => {
+    filtersMenu.close();
   };
 
   if (amosSingle !== null) return <AmosSingle amosSingle={amosSingle} />; // Display single page of the chosen Amos
@@ -50,13 +50,23 @@ const ArchamosScreen = ({ navigation }) => {
         value={searchInput}
       /> */}
 
+      <Drawer
+        open={toggleFiltersMenu}
+        ref={filtersMenu}
+        content={<ControlPanel />}
+        styles={drawerStyles}
+        tweenHandler={Drawer.tweenPresets.parallax}
+      >
+        <ArchamosFilters />
+      </Drawer>
+
       <ScrollView style={styles.listWrapper}>
         {amosList.length > 0 ? (
           amosList.map((item) => (
             <ArchamosSingle
               key={item.id}
               amos={item}
-              goToSinglePage={() => setSinglePage(item.id)}
+              setSinglePage={() => setSinglePage(item.id)}
             />
           ))
         ) : (

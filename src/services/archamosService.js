@@ -37,6 +37,10 @@ export const serviceSetAmosSingle = (dispatch, amosList, id) => {
   dispatch(setAmosSingle(amos));
 };
 
+export const serviceAddTeam = () => {
+  // dispatch(addTeam(amos));
+};
+
 export const serviceRenameAmos = async (dispatch, currentUser, id, newName) => {
   try {
     let data = { name: newName };
@@ -44,7 +48,6 @@ export const serviceRenameAmos = async (dispatch, currentUser, id, newName) => {
       headers: { Authorization: "Bearer " + currentUser.playerToken },
     });
     if (response.status == 200) {
-      // TODO To fix "TypeError: undefined is not an object (evaluating 'item.id')"
       dispatch(setAmosNewName({ id: id, name: newName }));
     } else {
       throw new Error("API put rename amos status -> " + response.status);
