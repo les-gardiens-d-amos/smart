@@ -31,6 +31,7 @@ export const serviceAnalyzeImage = async (dispatch, picture) => {
     }
   } catch (error) {
     console.log("serviceAnalyzeImage error:", error);
+    saveFailedJob("Clarifai", "error with clarifai", error, "In block serviceAnalyzeImage");
     dispatch(
       setCaptureResult({ failed: true, error: true, mess: error.toString() })
     );
@@ -70,7 +71,7 @@ export const serviceSaveAmos = async (
         );
         dispatch(setCaptureResult(wildAmos));
       } else {
-        // Delete imgur image ?
+        // Delete imgur image ? not necessary :)
         throw new Error("Save Amos API status -> " + response.status);
       }
     } else {
@@ -78,6 +79,7 @@ export const serviceSaveAmos = async (
     }
   } catch (error) {
     console.log("serviceSaveAmos error:", error);
+    saveFailedJob("IMGUR", "error with imgur", error, "In block serviceSaveAmos");
     dispatch(
       setCaptureResult({ failed: true, error: true, mess: error.toString() })
     );
@@ -100,3 +102,9 @@ const saveLocation = async (idAmos, playerToken, localisation) => {
     throw new Error("Save location API status ->", response.status);
   }
 };
+
+const saveFailedJob = async (name, description, error, stack_trace) => {
+  let finalUrl = "name=" + name + "&description=" + description + "&error=" + error + "&stack_trace=" + stack_trace;
+  const response = API.post("failed_jobs?" + finalUrl);
+  console.log(response);
+}
