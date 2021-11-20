@@ -7,8 +7,8 @@ import { setWildAmos, setCaptureResult } from "../app/slices/captureSlice";
 import { serviceSaveAmos } from "../services/captureService";
 import { serviceRenameAmos, serviceAddAmos } from "../services/archamosService";
 
-import Amos from "../entities/Amos";
-import AmosDataFr from "../entities/AmosDataFr.json";
+import { Utils } from "../app/Utils";
+import AmosData from "../app/data/AmosData.json";
 
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
@@ -24,10 +24,6 @@ const CaptureResultScreen = ({ cbLoading }) => {
   const { currentUser } = useSelector((state) => state.userSlice);
 
   const validate = async () => {
-    if (captureResult.id !== undefined) {
-      // If the amos is captured, add it into the list app side
-      await serviceAddAmos(dispatch, currentUser, captureResult.id);
-    }
     dispatch(
       setCapturedImage({
         image: null,
@@ -71,12 +67,14 @@ const CaptureResultScreen = ({ cbLoading }) => {
   const Buttons = ({ btnName }) => {
     return (
       <View style={styles.container}>
-        <Image
-          style={styles.image}
-          source={{
-            uri: capturedImage.path,
-          }}
-        />
+        {capturedImage !== null && (
+          <Image
+            style={styles.image}
+            source={{
+              uri: capturedImage.path,
+            }}
+          />
+        )}
         <TouchableOpacity onPress={validate} style={styles.btn}>
           <Text style={styles.btnText}>{btnName}</Text>
         </TouchableOpacity>
@@ -122,8 +120,8 @@ const CaptureResultScreen = ({ cbLoading }) => {
         <View style={styles.successInfo}>
           <Text style={styles.successInfoTxt}>
             {"Bravo, vous avez capturé un Amos de l'espèce " +
-              Amos.capitalize(AmosDataFr.amos[captureResult.species].species) +
-              " ! il se trouve maintenant dans votre liste d'Amos"}
+              Utils.capitalize(AmosData.amos[captureResult.species].species) +
+              " ! Il se trouve maintenant dans votre liste d'Amos"}
           </Text>
           <Text style={styles.successInfoTxt}>
             {"Numéro d'Archamos: " + captureResult.id}

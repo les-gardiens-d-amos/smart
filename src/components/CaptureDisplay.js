@@ -12,9 +12,9 @@ import { setWildAmos, setCaptureResult } from "../app/slices/captureSlice";
 
 import Loader from "../components/CustomActivityLoader";
 
-import Amos from "../entities/Amos";
-import AmosDataFr from "../entities/AmosDataFr.json";
-import AmosIconColors from "../entities/AmosIconColors.json";
+import { Utils } from "../app/Utils";
+import AmosData from "../app/data/AmosData.json";
+import AmosIconColors from "../app/data/AmosIconColors.json";
 
 import { icons as amosIcons } from "../../assets/amosIcons";
 
@@ -86,7 +86,7 @@ const CaptureDisplay = ({ cbLoading }) => {
             }
           />
           <Text style={styles.descTxt}>
-            {Amos.capitalize(AmosDataFr.amos[wildAmos.species].species)}
+            {Utils.capitalize(AmosData.amos[wildAmos.species].species)}
           </Text>
         </View>
         <Text
@@ -100,7 +100,7 @@ const CaptureDisplay = ({ cbLoading }) => {
             },
           ]}
         >
-          {Amos.capitalize(AmosDataFr.amos[wildAmos.species].type)}
+          {Utils.capitalize(AmosData.amos[wildAmos.species].type)}
         </Text>
         <Text style={[styles.descTxt, styles.descTxtLevel]}>
           Niveau: {" " + wildAmos.level > 1 ? wildAmos.level : 1}

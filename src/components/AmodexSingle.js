@@ -2,22 +2,22 @@ import React from "react";
 import { StyleSheet, Text, View, Image } from "react-native";
 import { icons as amosIcons, soulIcons } from "../../assets/amosIcons";
 
-import Amos from "../entities/Amos";
-import amosDataFr from "../entities/AmosDataFr.json";
+import { Utils } from "../app/Utils";
+import AmosData from "../app/data/AmosData.json";
 
 import { deviceSize } from "../style/theme";
 
-const AmodexSingle = ({ listCaptures, amosData }) => {
+const AmodexSingle = ({ listCaptures, amosBase }) => {
   return (
     <View style={styles.amosBox}>
-      {listCaptures.includes(amosData.id) ? (
+      {listCaptures.includes(amosBase.id) ? (
         <>
-          <Image style={styles.typeIcon} source={soulIcons[amosData.type]} />
+          <Image style={styles.typeIcon} source={soulIcons[amosBase.type]} />
           <Image
             style={styles.speciesIcon}
             source={
-              amosIcons[amosData.species] !== undefined
-                ? amosIcons[amosData.species]
+              amosIcons[amosBase.species] !== undefined
+                ? amosIcons[amosBase.species]
                 : amosIcons.default
             }
           />
@@ -28,9 +28,9 @@ const AmodexSingle = ({ listCaptures, amosData }) => {
         </>
       )}
       <Text style={styles.speciesName}>
-        {Amos.capitalize(amosDataFr.amos[amosData.species].species)}
+        {Utils.capitalize(AmosData.amos[amosBase.species].species)}
       </Text>
-      <Text style={styles.idAmodex}>{amosData.id}</Text>
+      <Text style={styles.idAmodex}>{amosBase.id}</Text>
     </View>
   );
 };

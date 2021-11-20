@@ -32,9 +32,7 @@ const AmosSingle = () => {
   const [modalRename, setModalRename] = useState(false);
 
   useEffect(() => {
-    // Request to get information on this particular amos
-    // Stats, how many fights, geoloc etc
-    // Fow now the amos is from props from Archamos screen
+    // TODO Stats, how many fights, geoloc etc
   }, []);
 
   const closePage = () => {

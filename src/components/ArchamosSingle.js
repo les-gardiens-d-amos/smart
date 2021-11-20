@@ -50,7 +50,7 @@ const ArchamosSingle = ({ amos }) => {
         </View>
 
         <TouchableOpacity onPress={teamToggle} style={styles.btnTeamToggle}>
-          <MaterialCommunityIcons name="plus" color="white" size={26} />
+          <MaterialCommunityIcons name="plus" color="white" size={35} />
           {/* <MaterialCommunityIcons name="minus" color="white" size={26} /> */}
         </TouchableOpacity>
 
