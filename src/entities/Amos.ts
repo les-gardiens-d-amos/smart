@@ -14,6 +14,7 @@ class Amos {
     "amos_type",
     "name",
     "species",
+    "location",
     "created_at",
     "updated_at",
   ];
@@ -29,6 +30,7 @@ class Amos {
     // 	"level": 1,
     // 	"name": "snail",
     // 	"species": "snail",
+    // 	"location": "9f5d65d",
     // 	"updated_at": "2021-10-29T15:59:17.721Z",
     // 	"user_id": "10888037-76d5-4329-aec9-9d1dccc6dd2b",
     //   },
@@ -61,6 +63,7 @@ class Amos {
   public amos_type: string;
   public name: string;
   public species: string;
+  public location: string;
   public date: Date;
 
   constructor(data: Object) {
@@ -88,6 +91,7 @@ class Amos {
     val["typeColor"] = AmosIconColors[val.amos_type];
     val.species = speciesLocal;
     val["amos_type"] = typeLocal;
+    val["location"] = this.location;
     val["capturedAt"] = this.capturedAt();
     delete val.date;
 

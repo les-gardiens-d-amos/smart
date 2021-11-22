@@ -199,6 +199,7 @@ const styles = StyleSheet.create({
     backgroundColor: primary_c,
     padding: 10,
     margin: 6,
+    marginTop: 12,
     borderWidth: 1,
     borderRadius: 8,
   },

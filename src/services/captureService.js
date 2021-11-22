@@ -2,6 +2,7 @@ import { API, CLARIFAI, IMGUR } from "../apis/axios";
 import { setWildAmos, setCaptureResult } from "../app/slices/captureSlice";
 import AmosData from "../app/data/AmosData.json";
 import { Utils } from "../app/Utils";
+const geohash = require("../../node_modules/ngeohash");
 
 export const serviceAnalyzeImage = async (dispatch, picture) => {
   try {
@@ -55,13 +56,14 @@ export const serviceSaveAmos = async (
 ) => {
   try {
     const resImgur = await saveImage(capturedImage);
-    const resApi = await saveAmos(
+    await saveAmos(
       dispatch,
       currentUser,
       resImgur.data.data.link,
-      wildAmos
+      wildAmos,
+      localisation
     );
-    await saveLocation(resApi.data.id, currentUser.playerToken, localisation);
+    // await saveLocation(resApi.data.id, currentUser.playerToken, localisation);
     dispatch(setCaptureResult(wildAmos));
   } catch (error) {
     console.log("serviceSaveAmos error:", error);
@@ -93,7 +95,13 @@ const saveImage = async (capturedImage) => {
   }
 };
 
-const saveAmos = async (dispatch, currentUser, image, wildAmos) => {
+const saveAmos = async (
+  dispatch,
+  currentUser,
+  image,
+  wildAmos,
+  localisation
+) => {
   try {
     let amos = JSON.stringify({
       user_id: currentUser.playerId,
@@ -102,6 +110,11 @@ const saveAmos = async (dispatch, currentUser, image, wildAmos) => {
       amos_type: wildAmos.type,
       name: Utils.capitalize(AmosData.amos[wildAmos.species].species),
       image_path: image,
+      location: geohash.encode(
+        localisation.lat,
+        localisation.long,
+        (precision = 8)
+      ),
     });
     const response = await API.post("amos", amos, {
       headers: { Authorization: "Bearer " + currentUser.playerToken },
@@ -117,26 +130,6 @@ const saveAmos = async (dispatch, currentUser, image, wildAmos) => {
   }
 };
 
-const saveLocation = async (idAmos, playerToken, localisation) => {
-  try {
-    let coordInfo = JSON.stringify({
-      long: localisation.long,
-      lat: localisation.lat,
-      altitude: localisation.altitude,
-      accuracy: localisation.accuracy,
-      amos_id: idAmos,
-    });
-    const response = await API.post("catches", coordInfo, {
-      headers: { Authorization: "Bearer " + playerToken },
-    });
-    if (response.status !== 201) {
-      throw new Error("response status: ", response.status);
-    }
-  } catch (error) {
-    throw new Error("API Amos location " + error);
-  }
-};
-
 const saveFailedJob = async (name, description, error, stack_trace) => {
   let finalUrl =
     "name=" +
@@ -148,5 +141,5 @@ const saveFailedJob = async (name, description, error, stack_trace) => {
     "&stack_trace=" +
     stack_trace;
   const response = await API.post("failed_jobs?" + finalUrl);
-  console.log("saveFailedJob response", response);
+  // console.log("saveFailedJob response", response);
 };
