@@ -24,6 +24,8 @@ import {
 
 import RenameModal from "../components/RenameModal";
 
+import MapView from 'react-native-maps';
+
 const AmosSingle = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.userSlice);
@@ -112,6 +114,18 @@ const AmosSingle = () => {
         <Text style={styles.level}>{" de niveau " + amosSingle.level}</Text>
       </View>
 
+      <View style={styles.map}>
+        <MapView
+          style={styles.map}
+          initialRegion={{
+            latitude: 47.654839,
+            longitude: -2.759640,
+            latitudeDelta: 0.0922,
+            longitudeDelta: 0.0421,
+          }}
+        />
+      </View>
+
       <View style={styles.dateWrapper}>
         <Text style={styles.date}>
           {"Date de capture : " + amosSingle.capturedAt}
@@ -184,6 +198,10 @@ const styles = StyleSheet.create({
   },
   species: {},
   level: {},
+  map: {
+    width: 400,
+    height: 250
+  },
   dateWrapper: {
     padding: 10,
   },
