@@ -1,6 +1,8 @@
 import { API, CLARIFAI, IMGUR } from "../apis/axios";
 import { setWildAmos, setCaptureResult } from "../app/slices/captureSlice";
-import Amos from "../entities/Amos";
+import AmosData from "../app/data/AmosData.json";
+import { Utils } from "../app/Utils";
+const geohash = require("../../node_modules/ngeohash");
 
 export const serviceAnalyzeImage = async (dispatch, picture) => {
   try {
@@ -19,7 +21,7 @@ export const serviceAnalyzeImage = async (dispatch, picture) => {
     const response = await CLARIFAI.post("", raw);
     if (response.status === 200) {
       const pictureData = response.data.outputs[0].data.concepts;
-      const foundAmos = Amos.isRegistered(pictureData);
+      const foundAmos = Utils.isAmosRegistered(pictureData);
       if (foundAmos !== null) {
         // Calculations for the level of the wild amos
         dispatch(setWildAmos(foundAmos));
@@ -27,13 +29,20 @@ export const serviceAnalyzeImage = async (dispatch, picture) => {
         dispatch(setCaptureResult({}));
       }
     } else {
-      throw new Error("CLARIFAI post status -> " + response.status);
+      dispatch(
+        setCaptureResult({ failed: true, error: true, mess: error.toString() })
+      );
+      throw new Error("CLARIFAI error, response status: " + response.status);
     }
   } catch (error) {
-    console.log("serviceAnalyzeImage error:", error);
-    saveFailedJob("Clarifai", "error with clarifai", error, "In block serviceAnalyzeImage");
     dispatch(
       setCaptureResult({ failed: true, error: true, mess: error.toString() })
+    );
+    saveFailedJob(
+      "Clarifai",
+      "Error during the process of analyzing the picture",
+      error,
+      "In block serviceAnalyzeImage"
     );
   }
 };
@@ -46,65 +55,91 @@ export const serviceSaveAmos = async (
   localisation
 ) => {
   try {
-    const imgurData = JSON.stringify({
-      image: capturedImage.data.base64,
-      type: "base64",
-    });
-    const imgurRes = await IMGUR.post("", imgurData);
-    if (imgurRes.status === 200) {
-      let amos = JSON.stringify({
-        user_id: currentUser.playerId,
-        animal_id: wildAmos.id,
-        species: wildAmos.species,
-        amos_type: wildAmos.type,
-        name: wildAmos.species,
-        image_path: imgurRes.data.data.link,
-      });
-      const response = await API.post("amos", amos, {
-        headers: { Authorization: "Bearer " + currentUser.playerToken },
-      });
-      if (response.status === 201) {
-        await saveLocation(
-          response.data.id,
-          currentUser.playerToken,
-          localisation
-        );
-        dispatch(setCaptureResult(wildAmos));
-      } else {
-        // Delete imgur image ? not necessary :)
-        throw new Error("Save Amos API status -> " + response.status);
-      }
-    } else {
-      throw new Error("imgur status -> " + imgurRes.status);
-    }
+    const resImgur = await saveImage(capturedImage);
+    await saveAmos(
+      dispatch,
+      currentUser,
+      resImgur.data.data.link,
+      wildAmos,
+      localisation
+    );
+    // await saveLocation(resApi.data.id, currentUser.playerToken, localisation);
+    dispatch(setCaptureResult(wildAmos));
   } catch (error) {
     console.log("serviceSaveAmos error:", error);
-    saveFailedJob("IMGUR", "error with imgur", error, "In block serviceSaveAmos");
+    saveFailedJob(
+      "Save Amos",
+      "Error during the saving process of an Amos",
+      error,
+      "In block serviceSaveAmos"
+    );
     dispatch(
       setCaptureResult({ failed: true, error: true, mess: error.toString() })
     );
   }
 };
 
-const saveLocation = async (idAmos, playerToken, localisation) => {
-  let coordInfo = JSON.stringify({
-    long: localisation.long,
-    lat: localisation.lat,
-    altitude: localisation.altitude,
-    accuracy: localisation.accuracy,
-    amos_id: idAmos,
-  });
-  const response = await API.post("catches", coordInfo, {
-    headers: { Authorization: "Bearer " + playerToken },
-  });
-  if (response.status !== 201) {
-    console.log("serviceSaveAmos error", error);
-    throw new Error("Save location API status ->", response.status);
+const saveImage = async (capturedImage) => {
+  try {
+    const imgurData = JSON.stringify({
+      image: capturedImage.data.base64,
+      type: "base64",
+    });
+    const response = await IMGUR.post("", imgurData);
+    if (response.status !== 200) {
+      throw new Error("response status: " + response.status);
+    }
+    return response;
+  } catch (error) {
+    throw new Error("IMGUR " + error);
+  }
+};
+
+const saveAmos = async (
+  dispatch,
+  currentUser,
+  image,
+  wildAmos,
+  localisation
+) => {
+  try {
+    let amos = JSON.stringify({
+      user_id: currentUser.playerId,
+      animal_id: wildAmos.id,
+      species: wildAmos.species,
+      amos_type: wildAmos.type,
+      name: Utils.capitalize(AmosData.amos[wildAmos.species].species),
+      image_path: image,
+      location: geohash.encode(
+        localisation.lat,
+        localisation.long,
+        (precision = 8)
+      ),
+    });
+    const response = await API.post("amos", amos, {
+      headers: { Authorization: "Bearer " + currentUser.playerToken },
+    });
+    if (response.status === 201) {
+      dispatch(setCaptureResult(wildAmos));
+    } else {
+      throw new Error("response status: " + response.status);
+    }
+    return response;
+  } catch (error) {
+    throw new Error("API Amos " + error);
   }
 };
 
 const saveFailedJob = async (name, description, error, stack_trace) => {
-  let finalUrl = "name=" + name + "&description=" + description + "&error=" + error + "&stack_trace=" + stack_trace;
-  const response = API.post("failed_jobs?" + finalUrl);
-  console.log(response);
-}
+  let finalUrl =
+    "name=" +
+    name +
+    "&description=" +
+    description +
+    "&error=" +
+    error +
+    "&stack_trace=" +
+    stack_trace;
+  const response = await API.post("failed_jobs?" + finalUrl);
+  // console.log("saveFailedJob response", response);
+};

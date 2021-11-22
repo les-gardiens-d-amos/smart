@@ -5,9 +5,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCapturedImage } from "../app/slices/cameraSlice";
 import { setWildAmos, setCaptureResult } from "../app/slices/captureSlice";
 import { serviceSaveAmos } from "../services/captureService";
+import { serviceRenameAmos, serviceAddAmos } from "../services/archamosService";
 
-import Amos from "../entities/Amos";
-import AmosDataFr from "../entities/AmosDataFr.json";
+import { Utils } from "../app/Utils";
+import AmosData from "../app/data/AmosData.json";
 
 import { colors } from "../style/theme";
 const { primary_c, error_c } = colors;
@@ -22,9 +23,7 @@ const CaptureResultScreen = ({ cbLoading }) => {
   );
   const { currentUser } = useSelector((state) => state.userSlice);
 
-  // useEffect(() => {}, []);
-
-  const validate = () => {
+  const validate = async () => {
     dispatch(
       setCapturedImage({
         image: null,
@@ -61,15 +60,21 @@ const CaptureResultScreen = ({ cbLoading }) => {
     cbLoading("");
   };
 
+  const renameBeforeSave = () => {
+    serviceRenameAmos(dispatch, currentUser, captureResult.id, "");
+  };
+
   const Buttons = ({ btnName }) => {
     return (
       <View style={styles.container}>
-        <Image
-          style={styles.image}
-          source={{
-            uri: capturedImage.path,
-          }}
-        />
+        {capturedImage !== null && (
+          <Image
+            style={styles.image}
+            source={{
+              uri: capturedImage.path,
+            }}
+          />
+        )}
         <TouchableOpacity onPress={validate} style={styles.btn}>
           <Text style={styles.btnText}>{btnName}</Text>
         </TouchableOpacity>
@@ -87,7 +92,7 @@ const CaptureResultScreen = ({ cbLoading }) => {
             { backgroundColor: error_c, color: "white", marginBottom: 15 },
           ]}
         >
-          Une erreur s'est produire durant l'enregistrement de l'Amos, veuillez
+          Une erreur s'est produite durant l'enregistrement de l'Amos, veuillez
           réessayer.
         </Text>
         <TouchableOpacity onPress={retrySave} style={styles.btn}>
@@ -115,14 +120,17 @@ const CaptureResultScreen = ({ cbLoading }) => {
         <View style={styles.successInfo}>
           <Text style={styles.successInfoTxt}>
             {"Bravo, vous avez capturé un Amos de l'espèce " +
-              Amos.capitalize(AmosDataFr.amos[captureResult.species].species) +
-              " ! il se trouve maintenant dans votre liste d'Amos"}
+              Utils.capitalize(AmosData.amos[captureResult.species].species) +
+              " ! Il se trouve maintenant dans votre liste d'Amos"}
           </Text>
           <Text style={styles.successInfoTxt}>
             {"Numéro d'Archamos: " + captureResult.id}
           </Text>
         </View>
-        <Buttons btnName={"Retour"} />
+
+        {/* // Input rename */}
+
+        <Buttons btnName={"Confirmer"} />
         {/* TODO possibility to rename amos */}
       </View>
     );
@@ -163,9 +171,8 @@ const styles = StyleSheet.create({
   },
   btn: {
     backgroundColor: primary_c,
-    width: "60%",
     margin: 10,
-    padding: 10,
+    padding: 15,
     borderWidth: 1,
     borderRadius: 10,
   },

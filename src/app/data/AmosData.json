@@ -101,12 +101,12 @@
       "type": "mammifère"
     }
   },
-	"types": {
+  "types": {
     "mammal": "mammifère",
     "bird": "oiseau",
     "fish": "poisson",
     "amphibian": "amphibien",
-    "reptile": "réptile",
+    "reptile": "reptile",
     "invertebrate": "invertébré"
   }
 }

@@ -1,13 +1,18 @@
 import React from "react";
-import { Pressable, Image, StyleSheet, Text, View } from "react-native";
+import { TouchableOpacity, Image, StyleSheet, Text, View } from "react-native";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import { colors } from "../style/theme";
 const { primary_c, secondary_c, quaternary_c } = colors;
 import { Tooltip } from "react-native-elements";
 
-const ArchamosSingle = ({ amos, goToSinglePage }) => {
+import { useSelector, useDispatch } from "react-redux";
+import { serviceSetAmosSingle } from "../services/archamosService";
 
-  const handleAddRemove = () => {
+const ArchamosSingle = ({ amos }) => {
+  const dispatch = useDispatch();
+  const { amosList } = useSelector((state) => state.archamosSlice);
+
+  const teamToggle = () => {
     // using amosData.idAmos and isTeammate useState variable
     // Add into current team (of 3)
     // If the current team is already full,
@@ -16,6 +21,9 @@ const ArchamosSingle = ({ amos, goToSinglePage }) => {
   };
 
   // const [isTeammate, setIsTeammate] = useState(amos.isTeammate);
+  const setSinglePage = () => {
+    serviceSetAmosSingle(dispatch, amosList, amos.id);
+  };
 
   return (
     <View style={styles.container}>
@@ -35,28 +43,20 @@ const ArchamosSingle = ({ amos, goToSinglePage }) => {
 
         <Text style={styles.level}>Niveau: {amos.level}</Text>
 
-        <View
-          style={[styles.iconWrapper, { backgroundColor: amos.typeColor }]}
-        >
+        <View style={[styles.iconWrapper, { backgroundColor: amos.typeColor }]}>
           <Tooltip popover={<Text>{amos.amos_type}</Text>}>
             <Image style={styles.typeIcon} source={amos.icon} />
           </Tooltip>
         </View>
 
-        <Pressable
-          style={styles.BtnaddRemove}
-          onPress={() => handleAddRemove()}
-        >
-          <MaterialCommunityIcons name="plus" color="white" size={26} />
+        <TouchableOpacity onPress={teamToggle} style={styles.btnTeamToggle}>
+          <MaterialCommunityIcons name="plus" color="white" size={35} />
           {/* <MaterialCommunityIcons name="minus" color="white" size={26} /> */}
-        </Pressable>
+        </TouchableOpacity>
 
-        <Pressable
-          style={styles.btnDetails}
-          onPress={() => goToSinglePage(amos)}
-        >
+        <TouchableOpacity style={styles.btnDetails} onPress={setSinglePage}>
           <Text>Détails</Text>
-        </Pressable>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     right: 10,
     bottom: 10,
   },
-  BtnaddRemove: {
+  btnTeamToggle: {
     backgroundColor: primary_c,
     width: 50,
     height: 50,

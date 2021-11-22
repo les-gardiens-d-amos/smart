@@ -4,7 +4,8 @@ import { StyleSheet, Text, View, FlatList } from "react-native";
 import { API } from "../apis/axios";
 import { useSelector } from "react-redux";
 
-import AmosData from "../entities/AmosData.json";
+import AmosData from "../app/data/AmosData.json";
+import AmosDataBase from "../app/data/AmosDataBase.json";
 
 import { colors } from "../style/theme";
 const { primary_c, secondary_c } = colors;
@@ -48,12 +49,7 @@ const AmodexScreen = () => {
         data={registeredAmos}
         keyExtractor={(item) => AmosData.amos[item].id}
         renderItem={({ item }) => {
-          return (
-            <AmodexSingle
-              listCaptures={listCaptures}
-              amosData={AmosData.amos[item]}
-            />
-          );
+          return <AmodexSingle listCaptures={listCaptures} amosBase={AmosDataBase.amos[item]} />;
         }}
       />
     </View>
