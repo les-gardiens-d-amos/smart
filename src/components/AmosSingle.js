@@ -25,11 +25,28 @@ import {
 import RenameModal from "../components/RenameModal";
 
 import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+
+const geohash = require('ngeohash');
 
 const AmosSingle = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.userSlice);
   const { amosSingle } = useSelector((state) => state.archamosSlice);
+  // var latlon = geohash.decode('ww8p1r4t8');
+  const latitude = geohash.decode(amosSingle.location).latitude;
+  const longitude = geohash.decode(amosSingle.location).longitude;
+  const latitudeDelta = geohash.decode(amosSingle.location).error.latitude;
+  const longitudeDelta = geohash.decode(amosSingle.location).error.longitude;
+
+  console.log(geohash.decode(amosSingle.location));
+  console.log("lat =>");
+  console.log(latitude);
+  console.log("longitude =>");
+  console.log(longitude);
+  console.log("error ? =>");
+  console.log(geohash.decode(amosSingle.location).error.latitude);
+  console.log(geohash.decode(amosSingle.location).error.longitude);
 
   const [modalRename, setModalRename] = useState(false);
 
@@ -114,17 +131,22 @@ const AmosSingle = () => {
         <Text style={styles.level}>{" de niveau " + amosSingle.level}</Text>
       </View>
 
-      <View style={styles.map}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: 47.654839,
-            longitude: -2.759640,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
-          }}
+      {/* <View style={styles.map}> */}
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: latitude,
+          longitude: longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        }}
+      >
+        <Marker
+          coordinate={{ latitude : latitude , longitude : longitude }}
+          title="title"
         />
-      </View>
+      </MapView>
+      {/* </View> */}
 
       <View style={styles.dateWrapper}>
         <Text style={styles.date}>
@@ -171,6 +193,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   photoWrapper: {
+    flex: 1,
     margin: 10,
     borderWidth: 2,
     borderRadius: 10,
@@ -191,7 +214,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   speciesLvlWrapper: {
-    flex: 1,
+    
     flexDirection: "row",
     justifyContent: "center",
     padding: 10,
@@ -199,8 +222,12 @@ const styles = StyleSheet.create({
   species: {},
   level: {},
   map: {
-    width: 400,
-    height: 250
+    width: 380,
+    height: 250,
+    justifyContent: "center",
+    borderWidth: 4,
+    borderColor: primary_c,
+    borderRadius: 8
   },
   dateWrapper: {
     padding: 10,
