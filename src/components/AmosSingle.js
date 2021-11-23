@@ -24,10 +24,19 @@ import {
 
 import RenameModal from "../components/RenameModal";
 
+import MapView from 'react-native-maps';
+import { Marker } from 'react-native-maps';
+
+import { icons as amosIcons, soulIcons } from "../../assets/amosIcons/index";
+
+const geohash = require('ngeohash');
+
 const AmosSingle = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.userSlice);
   const { amosSingle } = useSelector((state) => state.archamosSlice);
+  const latitude = geohash.decode(amosSingle.location).latitude;
+  const longitude = geohash.decode(amosSingle.location).longitude;
 
   const [modalRename, setModalRename] = useState(false);
 
@@ -111,6 +120,26 @@ const AmosSingle = () => {
         <Text style={styles.level}>{amosSingle.species}</Text>
         <Text style={styles.level}>{" de niveau " + amosSingle.level}</Text>
       </View>
+      <Text>Capturer ici :</Text>
+      <MapView
+        style={styles.map}
+        initialRegion={{
+          latitude: latitude,
+          longitude: longitude,
+          latitudeDelta: 0.005,
+          longitudeDelta: 0.005,
+        }}
+      >
+        <Marker
+          coordinate={{ latitude : latitude , longitude : longitude }}
+          title={amosSingle.name}
+        >
+          <Image 
+            style={styles.speciesIcon} 
+            source={amosIcons.default}
+          />
+        </Marker>
+      </MapView>
 
       <View style={styles.dateWrapper}>
         <Text style={styles.date}>
@@ -157,6 +186,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   photoWrapper: {
+    flex: 1,
     margin: 10,
     borderWidth: 2,
     borderRadius: 10,
@@ -177,13 +207,26 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   speciesLvlWrapper: {
-    flex: 1,
+    
     flexDirection: "row",
     justifyContent: "center",
     padding: 10,
   },
   species: {},
   level: {},
+  map: {
+    width: 380,
+    height: 250,
+    justifyContent: "center",
+    borderWidth: 4,
+    borderColor: primary_c,
+    borderRadius: 8
+  },
+  speciesIcon: {
+    width: 50,
+    height: 50,
+    zIndex: 10
+  },
   dateWrapper: {
     padding: 10,
   },
