@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import {
   Text,
   View,
+  ScrollView,
   StyleSheet,
   Button,
   Image,
@@ -12,7 +13,7 @@ import {
 import { Button as ButtonEle } from "react-native-elements";
 import Icon from "react-native-vector-icons/FontAwesome";
 
-import { colors } from "../style/theme";
+import { colors, deviceSize } from "../style/theme";
 const { primary_c, error_c } = colors;
 
 import { useSelector, useDispatch } from "react-redux";
@@ -24,12 +25,12 @@ import {
 
 import RenameModal from "../components/RenameModal";
 
-import MapView from 'react-native-maps';
-import { Marker } from 'react-native-maps';
+import MapView from "react-native-maps";
+import { Marker } from "react-native-maps";
 
-import { icons as amosIcons, soulIcons } from "../../assets/amosIcons/index";
+import { icons as amosIcons } from "../../assets/amosIcons/index";
 
-const geohash = require('ngeohash');
+const geohash = require("ngeohash");
 
 const AmosSingle = () => {
   const dispatch = useDispatch();
@@ -73,87 +74,93 @@ const AmosSingle = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Modal
-        visible={modalRename}
-        transparent={true}
-        animationType="slide"
-        onRequestClose={() => setModalRename(false)}
-      >
-        <RenameModal
-          title={"Changer le nom"}
-          cMin={3}
-          cMax={10}
-          placeholder={amosSingle.name}
-          cbAction={changeName}
-          cbClose={setModalRename}
-        />
-      </Modal>
-
-      <TouchableOpacity onPress={closePage} style={styles.btnReturn}>
-        <Text style={styles.btnReturnTxt}>Retour</Text>
-      </TouchableOpacity>
-
-      <View style={styles.photoWrapper}>
-        <Image
-          style={styles.photo}
-          source={{
-            uri: amosSingle.image_path,
-          }}
-        />
-      </View>
-
-      <View style={styles.nameWrapper}>
-        <ButtonEle
-          type="clear"
-          onPress={() => setModalRename(true)}
-          icon={<Icon name="edit" size={25} color={primary_c} />}
-          buttonStyle={styles.renameBtn}
-        />
-        <Text style={styles.name}>{amosSingle.name}</Text>
-      </View>
-
-      <Text style={[styles.type, { backgroundColor: amosSingle.typeColor }]}>
-        {amosSingle.amos_type}
-      </Text>
-      <View style={styles.speciesLvlWrapper}>
-        <Text style={styles.level}>{amosSingle.species}</Text>
-        <Text style={styles.level}>{" de niveau " + amosSingle.level}</Text>
-      </View>
-      <Text>Capturer ici :</Text>
-      <MapView
-        style={styles.map}
-        initialRegion={{
-          latitude: latitude,
-          longitude: longitude,
-          latitudeDelta: 0.005,
-          longitudeDelta: 0.005,
-        }}
-      >
-        <Marker
-          coordinate={{ latitude : latitude , longitude : longitude }}
-          title={amosSingle.name}
+    <ScrollView>
+      <View style={styles.container}>
+        <Modal
+          visible={modalRename}
+          transparent={true}
+          animationType="slide"
+          onRequestClose={() => setModalRename(false)}
         >
-          <Image 
-            style={styles.speciesIcon} 
-            source={amosIcons.default}
+          <RenameModal
+            title={"Changer le nom"}
+            cMin={3}
+            cMax={10}
+            placeholder={amosSingle.name}
+            cbAction={changeName}
+            cbClose={setModalRename}
           />
-        </Marker>
-      </MapView>
+        </Modal>
 
-      <View style={styles.dateWrapper}>
-        <Text style={styles.date}>
-          {"Date de capture : " + amosSingle.capturedAt}
+        <TouchableOpacity onPress={closePage} style={styles.btnReturn}>
+          <Text style={styles.btnReturnTxt}>Retour</Text>
+        </TouchableOpacity>
+
+        <View style={styles.photoWrapper}>
+          <Image
+            style={styles.photo}
+            source={{
+              uri: amosSingle.image_path,
+            }}
+          />
+        </View>
+
+        <View style={styles.nameWrapper}>
+          <ButtonEle
+            type="clear"
+            onPress={() => setModalRename(true)}
+            icon={<Icon name="edit" size={25} color={primary_c} />}
+            buttonStyle={styles.renameBtn}
+          />
+          <Text style={styles.name}>{amosSingle.name}</Text>
+        </View>
+
+        <Text style={[styles.type, { backgroundColor: amosSingle.typeColor }]}>
+          {amosSingle.amos_type}
         </Text>
-      </View>
+        <View style={styles.speciesLvlWrapper}>
+          <Text style={styles.level}>{amosSingle.species}</Text>
+          <Text style={styles.level}>{" de niveau " + amosSingle.level}</Text>
+        </View>
 
-      <Button
-        buttonStyle={styles.releaseBtn}
-        color={error_c}
-        title="Relâcher l'Amos"
-        onPress={release}
-      />
-    </View>
+        <View style={styles.mapDescWrapper}>
+          <Icon name="map-marker" size={25} color={primary_c} />
+          <Text style={styles.mapDesc}>Lieu de capture :</Text>
+        </View>
+
+        <View style={styles.mapWrapper}>
+          <MapView
+            style={styles.map}
+            initialRegion={{
+              latitude: latitude,
+              longitude: longitude,
+              latitudeDelta: 0.005,
+              longitudeDelta: 0.005,
+            }}
+          >
+            <Marker
+              coordinate={{ latitude: latitude, longitude: longitude }}
+              title={amosSingle.name}
+            >
+              <Image style={styles.speciesIcon} source={amosIcons.default} />
+            </Marker>
+          </MapView>
+        </View>
+
+        <View style={styles.dateWrapper}>
+          <Text style={styles.date}>
+            {"Date de capture : " + amosSingle.capturedAt}
+          </Text>
+        </View>
+
+        <Button
+          buttonStyle={styles.releaseBtn}
+          color={error_c}
+          title="Relâcher l'Amos"
+          onPress={release}
+        />
+      </View>
+    </ScrollView>
   );
 };
 
@@ -164,7 +171,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 15,
+    padding: 15,
   },
   nameWrapper: {
     padding: 10,
@@ -186,12 +193,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   photoWrapper: {
-    flex: 1,
-    margin: 10,
+    width: 300,
+    height: 300,
+    marginBottom: 10,
     borderWidth: 2,
     borderRadius: 10,
-    width: 200,
-    height: 200,
   },
   photo: {
     width: "100%",
@@ -207,25 +213,40 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   speciesLvlWrapper: {
-    
     flexDirection: "row",
     justifyContent: "center",
     padding: 10,
   },
   species: {},
   level: {},
-  map: {
-    width: 380,
-    height: 250,
+  mapDescWrapper: {
+    flexDirection: "row",
     justifyContent: "center",
-    borderWidth: 4,
+    alignItems: "center",
+  },
+  mapDesc: {
+    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "bold",
+    marginBottom: 5,
+    marginLeft: 5,
+  },
+  mapWrapper: {
+    width: "90%",
+    height: 200,
+    borderWidth: 2,
     borderColor: primary_c,
-    borderRadius: 8
+  },
+  map: {
+    width: "100%",
+    height: "100%",
+    justifyContent: "center",
+    marginBottom: 10,
   },
   speciesIcon: {
     width: 50,
     height: 50,
-    zIndex: 10
+    zIndex: 10,
   },
   dateWrapper: {
     padding: 10,
@@ -241,8 +262,7 @@ const styles = StyleSheet.create({
     width: "50%",
     backgroundColor: primary_c,
     padding: 10,
-    margin: 6,
-    marginTop: 12,
+    marginBottom: 10,
     borderWidth: 1,
     borderRadius: 8,
   },
