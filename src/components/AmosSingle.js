@@ -27,26 +27,16 @@ import RenameModal from "../components/RenameModal";
 import MapView from 'react-native-maps';
 import { Marker } from 'react-native-maps';
 
+import { icons as amosIcons, soulIcons } from "../../assets/amosIcons/index";
+
 const geohash = require('ngeohash');
 
 const AmosSingle = () => {
   const dispatch = useDispatch();
   const { currentUser } = useSelector((state) => state.userSlice);
   const { amosSingle } = useSelector((state) => state.archamosSlice);
-  // var latlon = geohash.decode('ww8p1r4t8');
   const latitude = geohash.decode(amosSingle.location).latitude;
   const longitude = geohash.decode(amosSingle.location).longitude;
-  const latitudeDelta = geohash.decode(amosSingle.location).error.latitude;
-  const longitudeDelta = geohash.decode(amosSingle.location).error.longitude;
-
-  console.log(geohash.decode(amosSingle.location));
-  console.log("lat =>");
-  console.log(latitude);
-  console.log("longitude =>");
-  console.log(longitude);
-  console.log("error ? =>");
-  console.log(geohash.decode(amosSingle.location).error.latitude);
-  console.log(geohash.decode(amosSingle.location).error.longitude);
 
   const [modalRename, setModalRename] = useState(false);
 
@@ -130,8 +120,7 @@ const AmosSingle = () => {
         <Text style={styles.level}>{amosSingle.species}</Text>
         <Text style={styles.level}>{" de niveau " + amosSingle.level}</Text>
       </View>
-
-      {/* <View style={styles.map}> */}
+      <Text>Capturer ici :</Text>
       <MapView
         style={styles.map}
         initialRegion={{
@@ -143,10 +132,14 @@ const AmosSingle = () => {
       >
         <Marker
           coordinate={{ latitude : latitude , longitude : longitude }}
-          title="title"
-        />
+          title={amosSingle.name}
+        >
+          <Image 
+            style={styles.speciesIcon} 
+            source={amosIcons.default}
+          />
+        </Marker>
       </MapView>
-      {/* </View> */}
 
       <View style={styles.dateWrapper}>
         <Text style={styles.date}>
@@ -228,6 +221,11 @@ const styles = StyleSheet.create({
     borderWidth: 4,
     borderColor: primary_c,
     borderRadius: 8
+  },
+  speciesIcon: {
+    width: 50,
+    height: 50,
+    zIndex: 10
   },
   dateWrapper: {
     padding: 10,
