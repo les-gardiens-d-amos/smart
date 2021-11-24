@@ -55,15 +55,13 @@ export const serviceSaveAmos = async (
   localisation
 ) => {
   try {
-    const resImgur = await saveImage(capturedImage);
     await saveAmos(
       dispatch,
       currentUser,
-      resImgur.data.data.link,
       wildAmos,
-      localisation
+      localisation,
+      capturedImage
     );
-    // await saveLocation(resApi.data.id, currentUser.playerToken, localisation);
     dispatch(setCaptureResult(wildAmos));
   } catch (error) {
     console.log("serviceSaveAmos error:", error);
@@ -79,28 +77,12 @@ export const serviceSaveAmos = async (
   }
 };
 
-const saveImage = async (capturedImage) => {
-  try {
-    const imgurData = JSON.stringify({
-      image: capturedImage.data.base64,
-      type: "base64",
-    });
-    const response = await IMGUR.post("", imgurData);
-    if (response.status !== 200) {
-      throw new Error("response status: " + response.status);
-    }
-    return response;
-  } catch (error) {
-    throw new Error("IMGUR " + error);
-  }
-};
-
 const saveAmos = async (
   dispatch,
   currentUser,
-  image,
   wildAmos,
-  localisation
+  localisation,
+  capturedImage
 ) => {
   try {
     let amos = JSON.stringify({
@@ -109,12 +91,12 @@ const saveAmos = async (
       species: wildAmos.species,
       amos_type: wildAmos.type,
       name: Utils.capitalize(AmosData.amos[wildAmos.species].species),
-      image_path: image,
       location: geohash.encode(
         localisation.lat,
         localisation.long,
         (precision = 8)
       ),
+      base64: "data:image/png;base64," + capturedImage.data.base64
     });
     const response = await API.post("amos", amos, {
       headers: { Authorization: "Bearer " + currentUser.playerToken },
@@ -141,5 +123,4 @@ const saveFailedJob = async (name, description, error, stack_trace) => {
     "&stack_trace=" +
     stack_trace;
   const response = await API.post("failed_jobs?" + finalUrl);
-  // console.log("saveFailedJob response", response);
 };
