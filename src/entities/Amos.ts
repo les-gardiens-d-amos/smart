@@ -16,8 +16,7 @@ class Amos {
     "species",
     "location",
     "created_at",
-    "updated_at",
-    "image_id"
+    "updated_at"
   ];
   private static readonly EXPECTED_PROPS = ["name", "species", "amos_type"];
 
@@ -66,7 +65,6 @@ class Amos {
   public species: string;
   public location: string;
   public date: Date;
-  public image_id: string;
 
   constructor(data: Object) {
     Amos.validate(data);
