@@ -15,6 +15,7 @@ class Amos {
     "name",
     "species",
     "location",
+    "image_id",
     "created_at",
     "updated_at"
   ];
@@ -64,6 +65,7 @@ class Amos {
   public name: string;
   public species: string;
   public location: string;
+  public image_id: string;
   public date: Date;
 
   constructor(data: Object) {
@@ -92,6 +94,7 @@ class Amos {
     val.species = speciesLocal;
     val["amos_type"] = typeLocal;
     val["location"] = this.location;
+    val["image_id"] = this.image_id
     val["capturedAt"] = this.capturedAt();
     delete val.date;
 
