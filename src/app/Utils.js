@@ -1,4 +1,5 @@
 import AmosDataBase from "../app/data/AmosDataBase.json";
+import * as ImageManipulator from "expo-image-manipulator";
 
 const capitalize = (str) => {
   let capi = str.charAt(0).toUpperCase();
@@ -18,4 +19,16 @@ const isAmosRegistered = (pictureData) => {
   return null;
 };
 
-export const Utils = { capitalize, isAmosRegistered };
+const ImageProcess = async (image) => {
+  const imgProcessed = await ImageManipulator.manipulateAsync(
+    image.localUri || image.uri,
+    [{ rotate: 90 }, { flip: FlipType.Vertical }],
+    { height: number, width: number },
+    { base64: true },
+    { compress: 0.5, format: SaveFormat.PNG }
+  );
+  console.log("imgProcessed function ", imgProcessed);
+  return imgProcessed;
+};
+
+export const Utils = { capitalize, isAmosRegistered, ImageProcess };
