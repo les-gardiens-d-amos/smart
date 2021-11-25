@@ -35,10 +35,8 @@ const CaptureScreen = ({ navigation }) => {
   const takePicture = async () => {
     setLoading("Chargement...");
     const options = {
-      // base64: true,
       allowsEditing: true,
       aspect: [4, 4],
-      // quality: 0.2,
     };
     let image = await ImagePicker.launchCameraAsync(options);
     if (!image.cancelled) {
@@ -49,10 +47,6 @@ const CaptureScreen = ({ navigation }) => {
         [{ resize: { width: 1024, height: 1024 } }],
         { base64: true, compress: 0.5, format: "jpeg" }
       );
-
-      // console.log("imgProcessed function ", imgProcessed);
-      // const imgProcessed = await Utils.ImageProcess();
-      // console.log("takePicture imgProcessed", imgProcessed);
 
       dispatch(
         setCapturedImage({
