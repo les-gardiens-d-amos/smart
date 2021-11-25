@@ -12,7 +12,6 @@ export const serviceAnalyzeImage = async (dispatch, picture) => {
           data: {
             image: {
               base64: picture.data.base64,
-              //url: TestUrls["cat"],
             },
           },
         },
@@ -91,12 +90,8 @@ const saveAmos = async (
       species: wildAmos.species,
       amos_type: wildAmos.type,
       name: Utils.capitalize(AmosData.amos[wildAmos.species].species),
-      location: geohash.encode(
-        localisation.lat,
-        localisation.long,
-        (precision = 8)
-      ),
-      base64: "data:image/png;base64," + capturedImage.data.base64
+      location: geohash.encode(localisation.lat, localisation.long, 8),
+      base64: "data:image/png;base64," + capturedImage.data.base64,
     });
     const response = await API.post("amos", amos, {
       headers: { Authorization: "Bearer " + currentUser.playerToken },

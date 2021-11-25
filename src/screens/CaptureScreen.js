@@ -4,8 +4,9 @@ import * as ImagePicker from "expo-image-picker";
 import * as Location from "expo-location";
 
 import { useDispatch, useSelector } from "react-redux";
-
 import { setCapturedImage } from "../app/slices/cameraSlice";
+import Utils from "../app/Utils";
+import * as ImageManipulator from "expo-image-manipulator";
 
 import Permissions from "../components/Permissions";
 import CaptureDisplay from "../components/CaptureDisplay";
@@ -34,17 +35,22 @@ const CaptureScreen = ({ navigation }) => {
   const takePicture = async () => {
     setLoading("Chargement...");
     const options = {
-      base64: true,
       allowsEditing: true,
       aspect: [4, 4],
-      quality: 0.5,
     };
-    const image = await ImagePicker.launchCameraAsync(options);
+    let image = await ImagePicker.launchCameraAsync(options);
     if (!image.cancelled) {
       const location = await Location.getCurrentPositionAsync({});
+
+      const imgProcessed = await ImageManipulator.manipulateAsync(
+        image.localUri || image.uri,
+        [{ resize: { width: 1024, height: 1024 } }],
+        { base64: true, compress: 0.5, format: "jpeg" }
+      );
+
       dispatch(
         setCapturedImage({
-          image: { data: image, path: image.uri },
+          image: { data: imgProcessed, path: imgProcessed.uri },
           cameraLocation: {
             lat: location.coords.latitude,
             long: location.coords.longitude,
